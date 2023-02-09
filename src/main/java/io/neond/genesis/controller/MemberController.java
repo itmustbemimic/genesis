@@ -17,5 +17,10 @@ public class MemberController {
         return ResponseEntity.ok(memberService.createMember(createDto));
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<MemberCreateDto> login(@RequestBody String memberId, @RequestBody String password) {
+        return null;
+    }
+
 
 }
