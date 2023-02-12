@@ -1,10 +1,10 @@
 package io.neond.genesis.service;
 
-import io.neond.genesis.domain.member.Member;
-import io.neond.genesis.domain.member.MemberRepository;
-import io.neond.genesis.domain.role.Role;
-import io.neond.genesis.domain.role.RoleRepository;
-import io.neond.genesis.domain.role.RoleToMemberRequestDto;
+import io.neond.genesis.domain.entity.Member;
+import io.neond.genesis.domain.repository.MemberRepository;
+import io.neond.genesis.domain.entity.Role;
+import io.neond.genesis.domain.repository.RoleRepository;
+import io.neond.genesis.domain.dto.RoleToMemberRequestDto;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

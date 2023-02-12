@@ -1,12 +1,11 @@
 package io.neond.genesis.service;
 
-import io.neond.genesis.domain.member.MemberCreateDto;
-import io.neond.genesis.domain.token.LoginResponseDto;
+import io.neond.genesis.domain.dto.MemberCreateDto;
 
 import java.util.Map;
 
 public interface MemberService {
-    Long createMember(MemberCreateDto createDto);
+    String createMember(MemberCreateDto createDto);
 
     void updateRefreshToken(String meberId, String refreshToken);
 

@@ -1,6 +1,6 @@
 package io.neond.genesis.controller;
 
-import io.neond.genesis.domain.role.RoleToMemberRequestDto;
+import io.neond.genesis.domain.dto.RoleToMemberRequestDto;
 import io.neond.genesis.service.RoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

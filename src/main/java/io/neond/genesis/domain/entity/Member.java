@@ -1,6 +1,5 @@
-package io.neond.genesis.domain.member;
+package io.neond.genesis.domain.entity;
 
-import io.neond.genesis.domain.role.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

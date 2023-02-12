@@ -1,4 +1,4 @@
-package io.neond.genesis.domain.role;
+package io.neond.genesis.domain.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

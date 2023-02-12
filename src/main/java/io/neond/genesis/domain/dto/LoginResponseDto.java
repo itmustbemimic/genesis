@@ -1,4 +1,4 @@
-package io.neond.genesis.domain.token;
+package io.neond.genesis.domain.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

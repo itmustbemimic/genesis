@@ -1,5 +1,6 @@
-package io.neond.genesis.domain.member;
+package io.neond.genesis.domain.dto;
 
+import io.neond.genesis.domain.entity.Member;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

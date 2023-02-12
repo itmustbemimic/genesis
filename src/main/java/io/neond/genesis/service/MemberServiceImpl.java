@@ -5,13 +5,14 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import io.neond.genesis.domain.member.Member;
-import io.neond.genesis.domain.member.MemberCreateDto;
-import io.neond.genesis.domain.member.MemberRepository;
-import io.neond.genesis.domain.role.Role;
+import io.neond.genesis.domain.entity.Member;
+import io.neond.genesis.domain.dto.MemberCreateDto;
+import io.neond.genesis.domain.repository.MemberRepository;
+import io.neond.genesis.domain.entity.Role;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -52,13 +53,13 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     }
 
     @Override
-    public Long createMember(MemberCreateDto createDto) {
+    public String createMember(MemberCreateDto createDto) {
         if (memberRepository.existsByMemberId(createDto.getMemberId())) {
             throw new RuntimeException("이미 존재하는 아이디");
         }
 
         createDto.encodePassword(passwordEncoder.encode(createDto.getPassword()));
-        return memberRepository.save(createDto.toEntity()).getId();
+        return memberRepository.save(createDto.toEntity()).getMemberId();
     }
 
     @Override
