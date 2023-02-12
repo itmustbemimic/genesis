@@ -63,6 +63,16 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     }
 
     @Override
+    public boolean idCheck(String memberId) {
+        return memberRepository.existsByMemberId(memberId);
+    }
+
+    @Override
+    public boolean nicknameCheck(String nickname) {
+        return memberRepository.existsByNickname(nickname);
+    }
+
+    @Override
     public void updateRefreshToken(String meberId, String refreshToken) {
         Member member = memberRepository.findByMemberId(meberId).orElseThrow(() -> new RuntimeException("찾을 수 없는 아이디 "));
         member.updateRefreshToken(refreshToken);
@@ -96,6 +106,8 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
         accessTokenResponseMap.put("access_token", accessToken);
         return accessTokenResponseMap;
     }
+
+
 
 
 }

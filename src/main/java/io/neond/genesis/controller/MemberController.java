@@ -5,12 +5,15 @@ import io.neond.genesis.domain.repository.MemberRepository;
 import io.neond.genesis.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @Slf4j
 @RestController
@@ -28,6 +31,35 @@ public class MemberController {
     @PostMapping("/join")
     public ResponseEntity<String> join(@RequestBody MemberCreateDto createDto) {
         return ResponseEntity.ok().body(memberService.createMember(createDto));
+    }
+
+    @Operation(summary = "아이디 중복 체크")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "중복 아님. 사용 가능"),
+            @ApiResponse(responseCode = "409", description = "중복. 사용 불가")
+    })
+    @GetMapping("/idcheck")
+    public ResponseEntity idCheck(@RequestParam String memberId) {
+        if (memberService.idCheck(memberId)) {
+            return new ResponseEntity<>(HttpStatusCode.valueOf(409));
+        } else {
+            return new ResponseEntity<>(HttpStatusCode.valueOf(200));
+        }
+    }
+
+    @Operation(summary = "닉네임 중복 체크")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "중복 아님. 사용 가능"),
+            @ApiResponse(responseCode = "409", description = "중복. 사용 불가")
+    })
+    @GetMapping("/nicknamecheck")
+    public ResponseEntity nicknameCheck(@RequestParam String nickname) {
+        log.info(nickname);
+        if (memberService.nicknameCheck(nickname)) {
+            return new ResponseEntity<>(HttpStatusCode.valueOf(409));
+        } else {
+            return new ResponseEntity<>(HttpStatusCode.valueOf(200));
+        }
     }
 
 
