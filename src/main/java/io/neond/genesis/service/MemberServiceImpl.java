@@ -59,7 +59,7 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
         }
 
         createDto.encodePassword(passwordEncoder.encode(createDto.getPassword()));
-        return memberRepository.save(createDto.toEntity()).getMemberId();
+        return memberRepository.save(createDto.toEntity()).getNickname();
     }
 
     @Override

@@ -27,7 +27,7 @@ public class MemberController {
     private final PasswordEncoder passwordEncoder;
 
     @Operation(summary = "회원가입")
-    @ApiResponse(responseCode = "200", description = "회원 아이디 리턴")
+    @ApiResponse(responseCode = "200", description = "닉네임 리턴")
     @PostMapping("/join")
     public ResponseEntity<String> join(@RequestBody MemberCreateDto createDto) {
         return ResponseEntity.ok().body(memberService.createMember(createDto));
