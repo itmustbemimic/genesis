@@ -9,5 +9,4 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class RoleToMemberRequestDto {
     private String memberId;
-    private String roleName;
 }
