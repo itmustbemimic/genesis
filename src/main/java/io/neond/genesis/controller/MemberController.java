@@ -13,7 +13,6 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @Slf4j
 @RestController
@@ -26,11 +25,12 @@ public class MemberController {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
+    //TODO 푸시 구현되면 회원 가입 리스폰스에 푸시용 폰 토큰 전송
     @Operation(summary = "회원가입")
-    @ApiResponse(responseCode = "200", description = "닉네임 리턴")
+    @ApiResponse(responseCode = "201", description = "닉네임 리턴")
     @PostMapping("/join")
     public ResponseEntity<String> join(@RequestBody MemberCreateDto createDto) {
-        return ResponseEntity.ok().body(memberService.createMember(createDto));
+        return ResponseEntity.created(null).body(memberService.createMember(createDto));
     }
 
     @Operation(summary = "아이디 중복 체크")
@@ -61,7 +61,4 @@ public class MemberController {
             return new ResponseEntity<>(HttpStatusCode.valueOf(200));
         }
     }
-
-
-
 }
