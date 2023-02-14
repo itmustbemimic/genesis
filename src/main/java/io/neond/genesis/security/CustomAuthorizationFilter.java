@@ -52,7 +52,6 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
             DecodedJWT decodedJWT = verifier.verify(accessToken);
 
             List<String> strAuthorities = decodedJWT.getClaim("roles").asList(String.class);
-            log.info("#######" + strAuthorities);
             List<SimpleGrantedAuthority> authorities = strAuthorities.stream().map(SimpleGrantedAuthority::new).toList();
 
             String memberId = decodedJWT.getSubject();

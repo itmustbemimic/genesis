@@ -21,17 +21,33 @@ public class Member {
     private Long id;
 
     private String uuid;
+
     @Schema(example = "itmustbemimic")
     private String memberId;
+
     private String password;
+
+    @Schema(example = "안진기")
     private String name;
+
+    @Schema(example = "혀가입안에갇혔어요")
     private String nickname;
+
+    @Schema(example = "01033332222")
     private String phone;
+
+    @Schema(example = "961112")
     private String birth;
+
+    @Schema(example = "male")
     private String gender;
 
     @ManyToMany
     private List<Role> roles = new ArrayList<>();
+
+    @OneToOne
+    @JoinColumn(unique = true, name = "ticket_id")
+    private Ticket ticket;
 
     private String refreshToken;
 

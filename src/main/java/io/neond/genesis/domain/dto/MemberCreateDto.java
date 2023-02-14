@@ -1,6 +1,8 @@
 package io.neond.genesis.domain.dto;
 
 import io.neond.genesis.domain.entity.Member;
+import io.neond.genesis.domain.entity.Ticket;
+import io.neond.genesis.domain.repository.TicketRepository;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -34,7 +36,7 @@ public class MemberCreateDto {
     @Schema(example = "male")
     private String gender;
 
-    public Member toEntity(){
+    public Member toEntity(Ticket ticket){
         return Member.builder()
                 .uuid(UUID.randomUUID().toString())
                 .memberId(memberId)
@@ -44,6 +46,7 @@ public class MemberCreateDto {
                 .phone(phone)
                 .birth(birth)
                 .gender(gender)
+                .ticket(ticket)
                 .build();
     }
 

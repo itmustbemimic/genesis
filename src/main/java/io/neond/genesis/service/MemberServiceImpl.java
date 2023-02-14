@@ -7,8 +7,10 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import io.neond.genesis.domain.entity.Member;
 import io.neond.genesis.domain.dto.MemberCreateDto;
+import io.neond.genesis.domain.entity.Ticket;
 import io.neond.genesis.domain.repository.MemberRepository;
 import io.neond.genesis.domain.entity.Role;
+import io.neond.genesis.domain.repository.TicketRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,6 +33,7 @@ import java.util.stream.Collectors;
 public class MemberServiceImpl implements MemberService, UserDetailsService {
 
     private final MemberRepository memberRepository;
+    private final TicketRepository ticketRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Value("${jwt.secret}")
@@ -57,8 +60,17 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
             throw new RuntimeException("이미 존재하는 아이디");
         }
 
+        // 회원가입할때 티켓 테이블 항목 생성
+        Ticket ticket = ticketRepository.save(
+                Ticket.builder()
+                        .black(0)
+                        .red(0)
+                        .gold(0)
+                        .build()
+        );
+
         createDto.encodePassword(passwordEncoder.encode(createDto.getPassword()));
-        return memberRepository.save(createDto.toEntity()).getNickname();
+        return memberRepository.save(createDto.toEntity(ticket)).getNickname();
     }
 
     @Override

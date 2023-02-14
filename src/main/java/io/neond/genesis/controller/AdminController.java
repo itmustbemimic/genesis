@@ -1,9 +1,10 @@
 package io.neond.genesis.controller;
 
 import io.neond.genesis.domain.dto.RoleToMemberRequestDto;
+import io.neond.genesis.domain.dto.addTicketRequestDto;
 import io.neond.genesis.service.RoleService;
+import io.neond.genesis.service.TicketService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "관리자용 api", description = "가입 승인, 게임 만들기 뭐 이런거")
 public class AdminController {
     private final RoleService roleService;
+    private final TicketService ticketService;
 
     @Operation(summary = "admin 권한 테스트")
     @ApiResponses(value = {
@@ -34,6 +36,11 @@ public class AdminController {
     @PutMapping("/permit")
     public ResponseEntity<String> permitMember(@RequestBody RoleToMemberRequestDto requestDto) {
         return ResponseEntity.created(null).body(roleService.permitMember(requestDto));
+    }
+
+    @PutMapping("/addtickets")
+    public ResponseEntity<String> addBlackTicketToUser(@RequestBody addTicketRequestDto requestDto) {
+        return ResponseEntity.created(null).body(ticketService.addTickets(requestDto));
     }
 
 
