@@ -37,7 +37,7 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
         String servletPath = request.getServletPath();
         String authorizationHeader = request.getHeader(AUTHORIZATION);
 
-        if (authorizationHeader == null || !authorizationHeader.startsWith(TOKEN_HEADER_PREFIX)) {
+        if (authorizationHeader == null || !authorizationHeader.startsWith(TOKEN_HEADER_PREFIX) || servletPath.equals("/refresh")) {
             // 토큰 없음. id + pw 로그인
             filterChain.doFilter(request, response);
             return;

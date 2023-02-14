@@ -6,10 +6,18 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
+
+import static io.neond.genesis.security.Constants.*;
+import static io.neond.genesis.security.Constants.RT_HEADER;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @RestController
 @RequiredArgsConstructor
@@ -52,5 +60,27 @@ public class RootController {
         } else {
             return new ResponseEntity<>(HttpStatusCode.valueOf(200));
         }
+    }
+
+
+    @Operation(summary = "리프레시 토큰으로 액세스 토큰 재발급")
+    @ApiResponse(responseCode = "200", description = "액세스 토큰 리턴")
+    @GetMapping("/refresh")
+    public ResponseEntity<Map<String, String>> refresh(HttpServletRequest request, HttpServletResponse response) {
+        String authorizationHeader = request.getHeader(AUTHORIZATION);
+
+        if (authorizationHeader == null || !authorizationHeader.startsWith(TOKEN_HEADER_PREFIX)) {
+            throw new RuntimeException("TestController: 토큰 존재 x");
+        }
+
+        String refreshToken = authorizationHeader.substring(TOKEN_HEADER_PREFIX.length());
+        Map<String, String> tokens = memberService.refresh(refreshToken);
+        response.setHeader(AT_HEADER, tokens.get(AT_HEADER));
+
+        if (tokens.get(RT_HEADER) != null) {
+            response.setHeader(RT_HEADER, tokens.get(RT_HEADER));
+        }
+
+        return ResponseEntity.ok(tokens);
     }
 }

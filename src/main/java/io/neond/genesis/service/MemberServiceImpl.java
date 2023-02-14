@@ -39,9 +39,9 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     @Value("${jwt.secret}")
     private String secretKey;
     @Value("${jwt.access.validity}")
-    private String accessValidity;
+    private Long accessValidity;
     @Value("${jwt.refresh.validity}")
-    private String refreshValidity;
+    private Long refreshValidity;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -84,8 +84,8 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     }
 
     @Override
-    public void updateRefreshToken(String meberId, String refreshToken) {
-        Member member = memberRepository.findByMemberId(meberId).orElseThrow(() -> new RuntimeException("찾을 수 없는 아이디 "));
+    public void updateRefreshToken(String memberId, String refreshToken) {
+        Member member = memberRepository.findByMemberId(memberId).orElseThrow(() -> new RuntimeException("찾을 수 없는 아이디 "));
         member.updateRefreshToken(refreshToken);
     }
 
