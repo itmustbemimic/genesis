@@ -1,7 +1,6 @@
 package io.neond.genesis.service;
 
 import io.neond.genesis.domain.dto.MemberCreateDto;
-
 import java.util.Map;
 
 public interface MemberService {

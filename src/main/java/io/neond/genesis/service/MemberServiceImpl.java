@@ -12,7 +12,6 @@ import io.neond.genesis.domain.entity.Role;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -106,8 +105,5 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
         accessTokenResponseMap.put("access_token", accessToken);
         return accessTokenResponseMap;
     }
-
-
-
 
 }
