@@ -4,5 +4,5 @@ import io.neond.genesis.domain.dto.RoleToMemberRequestDto;
 
 public interface RoleService {
     Long saveRole(String roleName);
-    Long permitMember(RoleToMemberRequestDto requestDto);
+    String permitMember(RoleToMemberRequestDto requestDto);
 }

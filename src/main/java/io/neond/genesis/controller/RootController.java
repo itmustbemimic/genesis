@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@Tag(name = "로그인 전에 쓸 친구들", description = "회원가입 로그인 뭐 그런거...")
+@Tag(name = "로그인 전에 쓸 친구들", description = "회원가입 로그인 뭐 그런거")
 public class RootController {
 
     private final MemberService memberService;

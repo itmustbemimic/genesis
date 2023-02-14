@@ -1,5 +1,6 @@
 package io.neond.genesis.domain.entity;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,6 +21,7 @@ public class Member {
     private Long id;
 
     private String uuid;
+    @Schema(example = "itmustbemimic")
     private String memberId;
     private String password;
     private String name;

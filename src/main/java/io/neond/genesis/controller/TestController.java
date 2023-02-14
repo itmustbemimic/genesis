@@ -4,6 +4,7 @@ import io.neond.genesis.domain.entity.Member;
 import io.neond.genesis.domain.repository.MemberRepository;
 import io.neond.genesis.service.MemberService;
 import io.neond.genesis.service.RoleService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/test")
+@Tag(name = "테스트 api")
 public class TestController {
 
     private final RoleService roleService;
