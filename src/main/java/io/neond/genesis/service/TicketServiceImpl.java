@@ -2,6 +2,7 @@ package io.neond.genesis.service;
 
 import io.neond.genesis.domain.dto.addTicketRequestDto;
 import io.neond.genesis.domain.entity.Member;
+import io.neond.genesis.domain.entity.Role;
 import io.neond.genesis.domain.entity.Ticket;
 import io.neond.genesis.domain.repository.MemberRepository;
 import io.neond.genesis.domain.repository.TicketRepository;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Transactional
@@ -27,14 +29,15 @@ public class TicketServiceImpl implements TicketService{
 
         Ticket ticket = member.getTicket();
 
-        ticket = Ticket.builder()
-                .black(ticket.getBlack() + requestDto.getBlackAmount())
-                .red(ticket.getRed() + requestDto.getRedAmount())
-                .gold(ticket.getGold() + requestDto.getGoldAmount())
-                .build();
+        Ticket update = new Ticket(
+                ticket.getId(),
+                ticket.getBlack() + requestDto.getBlackAmount(),
+                ticket.getRed() + requestDto.getRedAmount(),
+                ticket.getGold() + requestDto.getGoldAmount()
+                );
 
-        ticketRepository.save(ticket);
-        log.info("HI");
+        ticketRepository.save(update);
+
         return "sss";
     }
 }
