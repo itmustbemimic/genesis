@@ -2,7 +2,6 @@ package io.neond.genesis.service;
 
 import io.neond.genesis.domain.dto.addTicketRequestDto;
 import io.neond.genesis.domain.entity.Member;
-import io.neond.genesis.domain.entity.Role;
 import io.neond.genesis.domain.entity.Ticket;
 import io.neond.genesis.domain.repository.MemberRepository;
 import io.neond.genesis.domain.repository.TicketRepository;
@@ -11,8 +10,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
 
 @Transactional
 @Service
