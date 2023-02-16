@@ -1,5 +1,9 @@
 package io.neond.genesis.controller;
 
+import io.neond.genesis.domain.entity.Member;
+import io.neond.genesis.domain.entity.Ticket;
+import io.neond.genesis.domain.repository.MemberRepository;
+import io.neond.genesis.domain.repository.TicketRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -15,6 +19,9 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "가입 승인 후에 쓸 친구들", description = "뭐 있지")
 public class MemberController {
 
+    private final MemberRepository memberRepository;
+    private final TicketRepository ticketRepository;
+
     @Operation(summary = "가입 승인된 유저 권한 테스트")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "승인된 유저 맞음"),
@@ -23,6 +30,18 @@ public class MemberController {
     @GetMapping("/test")
     public String checkUser() {
         return "유저 ㅎㅇ";
+    }
+
+    @Operation(summary = "가진 티켓 조회", description = "지금은 get parameter에 있는 uuid로 티켓정보 가져옴 (나중에 jwt에 있는 유저아이디로 가져오게 변경할 수도 있음...)")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "블랙 레드 골드 티켓 수량 리턴"),
+            @ApiResponse(responseCode = "500", description = "uuid에 해당하는 유저 못찾음. 에러코드 나중에 수정할게여... 근데 여기서 에러나는거 이 경우 밖에 없음...ㅠ")
+    })
+    @GetMapping("/tickets")
+    public Ticket getMyTickets(@RequestParam String uuid) {
+        Member member = memberRepository.findByUuid(uuid).orElseThrow(() -> new RuntimeException("uuid에 해당하는 유저를 찾을 수 없습니다."));
+        // TODO ticket_id 출력 안되게
+        return member.getTicket();
     }
 
 
