@@ -89,7 +89,7 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
         member.updateRefreshToken(refreshToken);
     }
 
-    @Override
+    @Override //액세스 토큰 재발급
     public Map<String, String> refresh(String refreshToken) {
         // refresh token 유효성 검사
         JWTVerifier verifier = JWT.require(Algorithm.HMAC256(secretKey)).build();

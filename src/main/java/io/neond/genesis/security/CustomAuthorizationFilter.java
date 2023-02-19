@@ -5,6 +5,8 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.neond.genesis.domain.dto.ErrorResponse;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -62,11 +64,15 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.setContentType(APPLICATION_JSON_VALUE);
             response.setCharacterEncoding("utf-8");
+            ErrorResponse errorResponse = new ErrorResponse(401, "토큰 만료");
+            new ObjectMapper().writeValue(response.getWriter(), errorResponse);
         } catch (Exception e) {
             log.info("토큰 에러 " + e.getMessage());
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.setContentType(APPLICATION_JSON_VALUE);
             response.setCharacterEncoding("utf-8");
+            ErrorResponse errorResponse = new ErrorResponse(400, "토큰이 뭐 좀 이상하다");
+            new ObjectMapper().writeValue(response.getWriter(), errorResponse);
         }
 
     }

@@ -64,7 +64,11 @@ public class RootController {
 
 
     @Operation(summary = "리프레시 토큰으로 액세스 토큰 재발급")
-    @ApiResponse(responseCode = "200", description = "액세스 토큰 리턴")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "액세스 토큰 리턴"),
+            @ApiResponse(responseCode = "400", description = "유효하지 않은 리프레시 토큰"),
+            @ApiResponse(responseCode = "401", description = "리프레시 토큰 만료")
+    })
     @GetMapping("/refresh")
     public ResponseEntity<Map<String, String>> refresh(HttpServletRequest request, HttpServletResponse response) {
         String authorizationHeader = request.getHeader(AUTHORIZATION);
