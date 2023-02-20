@@ -45,13 +45,13 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
 
         User user = (User) authentication.getPrincipal();
-        Member member = memberRepository.findMemberByMemberId(user.getUsername());
+        Optional<Member> member = memberRepository.findByMemberId(user.getUsername());
 
         String accessToken = JWT.create()
                 .withSubject(user.getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() + accessValidity))
                 .withClaim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList())
-                .withClaim("nickname", member.getNickname())
+                .withClaim("nickname", member.get().getNickname())
                 .withIssuedAt(new Date(System.currentTimeMillis()))
                 .sign(Algorithm.HMAC256(secretKey));
 
