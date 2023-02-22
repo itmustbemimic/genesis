@@ -1,16 +1,29 @@
 package io.neond.genesis.controller;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import io.neond.genesis.domain.entity.Member;
 import io.neond.genesis.domain.entity.Ticket;
 import io.neond.genesis.domain.repository.MemberRepository;
 import io.neond.genesis.domain.repository.TicketRepository;
+import io.neond.genesis.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
+
+import static io.neond.genesis.security.Constants.TOKEN_HEADER_PREFIX;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @Slf4j
 @RestController
@@ -20,6 +33,7 @@ import org.springframework.web.bind.annotation.*;
 public class MemberController {
 
     private final MemberRepository memberRepository;
+    private final MemberService memberService;
     private final TicketRepository ticketRepository;
 
     @Operation(summary = "가입 승인된 유저 권한 테스트")
@@ -42,6 +56,22 @@ public class MemberController {
         Member member = memberRepository.findByUuid(uuid).orElseThrow(() -> new RuntimeException("uuid에 해당하는 유저를 찾을 수 없습니다."));
         // TODO ticket_id 출력 안되게
         return member.getTicket();
+    }
+
+    @PutMapping("/changenick")
+    public ResponseEntity changeNickname(@RequestBody String nickname, HttpServletRequest request) {
+        if (memberService.nicknameCheck(nickname)) {
+            return new ResponseEntity<>(HttpStatusCode.valueOf(409));
+        } else {
+            String authorizationHeader = request.getHeader(AUTHORIZATION);
+            String accessToken = authorizationHeader.substring(TOKEN_HEADER_PREFIX.length());
+            memberService.updateNickname(accessToken, nickname);
+
+            return ResponseEntity.created(null).body("뭐 돌려주지");
+        }
+
+
+
     }
 
 

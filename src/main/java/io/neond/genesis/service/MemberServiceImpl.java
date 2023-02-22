@@ -11,9 +11,12 @@ import io.neond.genesis.domain.entity.Ticket;
 import io.neond.genesis.domain.repository.MemberRepository;
 import io.neond.genesis.domain.entity.Role;
 import io.neond.genesis.domain.repository.TicketRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,11 +24,12 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
+import java.util.*;
 import java.util.stream.Collectors;
+
+import static io.neond.genesis.security.Constants.TOKEN_HEADER_PREFIX;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @RequiredArgsConstructor
 @Service
@@ -117,5 +121,20 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
         accessTokenResponseMap.put("access_token", accessToken);
         return accessTokenResponseMap;
     }
+
+    @Override
+    public void updateNickname(String accessToken, String newNickname) {
+
+        JWTVerifier verifier = JWT.require(Algorithm.HMAC256(secretKey)).build();
+        DecodedJWT decodedJWT = verifier.verify(accessToken);
+
+        String memberId = decodedJWT.getSubject();
+
+        Member member = memberRepository.findByMemberId(memberId)
+                .orElseThrow(() -> new UsernameNotFoundException("찾을 수 없는 아이디"));
+
+        member.updateNickname(newNickname);
+    }
+
 
 }

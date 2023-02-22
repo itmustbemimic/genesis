@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static io.neond.genesis.security.Constants.*;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RequiredArgsConstructor
 @Component
@@ -63,6 +64,7 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
 
         memberService.updateRefreshToken(user.getUsername(), refreshToken);
 
+        response.setContentType(APPLICATION_JSON_VALUE);
         response.setCharacterEncoding("utf-8");
         response.setHeader(AT_HEADER, accessToken);
         response.setHeader(RT_HEADER, refreshToken);

@@ -2,6 +2,8 @@ package io.neond.genesis.controller;
 
 import io.neond.genesis.domain.dto.RoleToMemberRequestDto;
 import io.neond.genesis.domain.dto.addTicketRequestDto;
+import io.neond.genesis.domain.entity.Member;
+import io.neond.genesis.service.AdminService;
 import io.neond.genesis.service.RoleService;
 import io.neond.genesis.service.TicketService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/admin")
@@ -19,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 public class AdminController {
     private final RoleService roleService;
     private final TicketService ticketService;
+    private final AdminService adminService;
 
     @Operation(summary = "admin 권한 테스트")
     @ApiResponses(value = {

@@ -51,6 +51,10 @@ public class Member {
 
     private String refreshToken;
 
+    public void updateNickname(String newNickname) {
+        this.nickname = newNickname;
+    }
+
     public void updateRefreshToken(String newToken) {
         this.refreshToken = newToken;
     }
