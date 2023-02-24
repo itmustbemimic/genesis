@@ -1,7 +1,6 @@
 package io.neond.genesis.domain.repository;
 
 import io.neond.genesis.domain.entity.Member;
-import io.neond.genesis.domain.entity.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

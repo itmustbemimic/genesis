@@ -136,5 +136,18 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
         member.updateNickname(newNickname);
     }
 
+    @Override
+    public Member findByAccessToken(String accessToken) {
+        JWTVerifier verifier = JWT.require(Algorithm.HMAC256(secretKey)).build();
+        DecodedJWT decodedJWT = verifier.verify(accessToken);
+
+        String memberId = decodedJWT.getSubject();
+
+        Member member = memberRepository.findByMemberId(memberId)
+                .orElseThrow(() -> new UsernameNotFoundException("찾을 수 없는 아이디"));
+
+        return member;
+    }
+
 
 }

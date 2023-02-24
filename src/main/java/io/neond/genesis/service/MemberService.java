@@ -1,6 +1,7 @@
 package io.neond.genesis.service;
 
 import io.neond.genesis.domain.dto.MemberCreateDto;
+import io.neond.genesis.domain.entity.Member;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.Map;
@@ -11,8 +12,8 @@ public interface MemberService {
     boolean nicknameCheck(String nickname);
     void updateRefreshToken(String meberId, String refreshToken);
     Map<String, String> refresh(String refreshToken);
-
     void updateNickname(String accessToken, String newNickname);
+    Member findByAccessToken(String accessToken);
 
 
 }

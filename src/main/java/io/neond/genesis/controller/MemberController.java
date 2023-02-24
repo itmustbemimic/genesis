@@ -1,9 +1,5 @@
 package io.neond.genesis.controller;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTVerifier;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.interfaces.DecodedJWT;
 import io.neond.genesis.domain.entity.Member;
 import io.neond.genesis.domain.entity.Ticket;
 import io.neond.genesis.domain.repository.MemberRepository;
@@ -46,18 +42,25 @@ public class MemberController {
         return "유저 ㅎㅇ";
     }
 
-    @Operation(summary = "가진 티켓 조회", description = "지금은 get parameter에 있는 uuid로 티켓정보 가져옴 (나중에 jwt에 있는 유저아이디로 가져오게 변경할 수도 있음...)")
+    @Operation(summary = "가진 티켓 조회", description = "jwt에 있는 subject로 티켓 수량 조회")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "블랙 레드 골드 티켓 수량 리턴"),
-            @ApiResponse(responseCode = "500", description = "uuid에 해당하는 유저 못찾음. 에러코드 나중에 수정할게여... 근데 여기서 에러나는거 이 경우 밖에 없음...ㅠ")
+            @ApiResponse(responseCode = "200", description = "블랙 레드 골드 티켓 수량 리턴")
     })
     @GetMapping("/tickets")
-    public Ticket getMyTickets(@RequestParam String uuid) {
-        Member member = memberRepository.findByUuid(uuid).orElseThrow(() -> new RuntimeException("uuid에 해당하는 유저를 찾을 수 없습니다."));
+    public Ticket getMyTickets(HttpServletRequest request) {
+
+        String authorizationHeader = request.getHeader(AUTHORIZATION);
+        String accessToken = authorizationHeader.substring(TOKEN_HEADER_PREFIX.length());
+
         // TODO ticket_id 출력 안되게
-        return member.getTicket();
+        return memberService.findByAccessToken(accessToken).getTicket();
     }
 
+    @Operation(summary = "닉네임 변경")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "닉네임 변경 성공"),
+            @ApiResponse(responseCode = "409", description = "닉네임 중복. 변경 실패")
+    })
     @PutMapping("/changenick")
     public ResponseEntity changeNickname(@RequestBody String nickname, HttpServletRequest request) {
         if (memberService.nicknameCheck(nickname)) {
@@ -69,9 +72,6 @@ public class MemberController {
 
             return ResponseEntity.created(null).body("뭐 돌려주지");
         }
-
-
-
     }
 
 

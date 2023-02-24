@@ -11,8 +11,5 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class AdminServiceImpl implements AdminService{
 
-    private final MemberRepository memberRepository;
-    private final RoleRepository roleRepository;
-
 
 }

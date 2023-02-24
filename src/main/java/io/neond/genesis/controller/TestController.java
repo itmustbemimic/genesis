@@ -5,17 +5,11 @@ import io.neond.genesis.domain.repository.MemberRepository;
 import io.neond.genesis.service.MemberService;
 import io.neond.genesis.service.RoleService;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
-
-import static io.neond.genesis.security.Constants.*;
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @RequiredArgsConstructor
 @RestController
