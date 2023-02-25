@@ -3,6 +3,7 @@ package io.neond.genesis.controller;
 import io.neond.genesis.domain.dto.RoleToMemberRequestDto;
 import io.neond.genesis.domain.dto.addTicketRequestDto;
 import io.neond.genesis.domain.entity.Member;
+import io.neond.genesis.domain.entity.Ticket;
 import io.neond.genesis.service.AdminService;
 import io.neond.genesis.service.RoleService;
 import io.neond.genesis.service.TicketService;
@@ -43,8 +44,13 @@ public class AdminController {
         return ResponseEntity.created(null).body(roleService.permitMember(requestDto));
     }
 
+    @Operation(summary = "유저에게 티켓 추가")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "티켓 추가 성공. 해당 티켓 테이블 리턴"),
+            @ApiResponse(responseCode = "400", description = "찾을 수 없는 아이디 or 입력값 에러")
+    })
     @PutMapping("/addtickets")
-    public ResponseEntity<String> addBlackTicketToUser(@RequestBody addTicketRequestDto requestDto) {
+    public ResponseEntity<Ticket> addBlackTicketToUser(@RequestBody addTicketRequestDto requestDto) {
         return ResponseEntity.created(null).body(ticketService.addTickets(requestDto));
     }
 

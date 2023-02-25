@@ -9,6 +9,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 
 
 @Transactional
@@ -21,7 +22,7 @@ public class TicketServiceImpl implements TicketService{
     private final TicketRepository ticketRepository;
 
     @Override
-    public String addTickets(addTicketRequestDto requestDto) {
+    public Ticket addTickets(addTicketRequestDto requestDto) {
         Member member = memberRepository.findByMemberId(requestDto.getMemberId()).orElseThrow(() -> new RuntimeException("찾을 수 없는 아이디"));
 
         Ticket ticket = member.getTicket();
@@ -33,8 +34,8 @@ public class TicketServiceImpl implements TicketService{
                 ticket.getGold() + requestDto.getGoldAmount()
                 );
 
-        ticketRepository.save(update);
 
-        return "sss";
+
+        return ticketRepository.save(update);
     }
 }

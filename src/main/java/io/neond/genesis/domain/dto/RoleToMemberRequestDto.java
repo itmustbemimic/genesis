@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RoleToMemberRequestDto {
-    @Schema(example = "132")
+    @Schema(example = "itmustbemimic")
     private String memberId;
 }
