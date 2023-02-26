@@ -1,5 +1,12 @@
 package io.neond.genesis.service;
 
+import com.amazonaws.AmazonServiceException;
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -14,6 +21,7 @@ import io.neond.genesis.domain.repository.TicketRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -24,13 +32,22 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static io.neond.genesis.security.Constants.TOKEN_HEADER_PREFIX;
+import static io.neond.genesis.security.Constants.*;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 @Transactional
@@ -100,7 +117,6 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
         DecodedJWT decodedJWT = verifier.verify(refreshToken);
 
         // access token 재발급
-        long now = System.currentTimeMillis();
         String memberId = decodedJWT.getSubject();
         Member member = memberRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new UsernameNotFoundException("찾을 수 없는 아이디"));
@@ -111,14 +127,23 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
 
         String accessToken = JWT.create()
                 .withSubject(member.getMemberId())
-                .withExpiresAt(new Date(now + accessValidity))
-                .withClaim("roles", member.getRoles().stream().map(Role::getName)
-                        .collect(Collectors.toList()))
+                .withExpiresAt(new Date(System.currentTimeMillis() + accessValidity))
+                .withClaim("roles", member.getRoles().stream().map(Role::getName).collect(Collectors.toList()))
+                .withClaim("nickname", member.getNickname())
                 .sign(Algorithm.HMAC256(secretKey));
+
+        String newRefreshToken = JWT.create()
+                .withSubject(member.getMemberId())
+                .withExpiresAt(new Date(System.currentTimeMillis() + refreshValidity))
+                .withIssuedAt(new Date(System.currentTimeMillis()))
+                .sign(Algorithm.HMAC256(secretKey));
+
+        updateRefreshToken(member.getMemberId(), newRefreshToken);
 
         Map<String, String> accessTokenResponseMap = new HashMap<>();
 
-        accessTokenResponseMap.put("access_token", accessToken);
+        accessTokenResponseMap.put(AT_HEADER, accessToken);
+        accessTokenResponseMap.put(RT_HEADER, newRefreshToken);
         return accessTokenResponseMap;
     }
 
@@ -147,6 +172,13 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("찾을 수 없는 아이디"));
 
         return member;
+    }
+
+    @Override
+    public Member uploadImage(String accessToken, MultipartFile file) throws IOException {
+
+
+        return null;
     }
 
 

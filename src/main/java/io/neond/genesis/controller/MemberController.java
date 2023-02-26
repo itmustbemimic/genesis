@@ -15,7 +15,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Map;
 
 import static io.neond.genesis.security.Constants.TOKEN_HEADER_PREFIX;
@@ -65,13 +67,26 @@ public class MemberController {
     public ResponseEntity changeNickname(@RequestBody String nickname, HttpServletRequest request) {
         if (memberService.nicknameCheck(nickname)) {
             return new ResponseEntity<>(HttpStatusCode.valueOf(409));
-        } else {
-            String authorizationHeader = request.getHeader(AUTHORIZATION);
-            String accessToken = authorizationHeader.substring(TOKEN_HEADER_PREFIX.length());
-            memberService.updateNickname(accessToken, nickname);
-
-            return ResponseEntity.created(null).body("뭐 돌려주지");
         }
+
+        String authorizationHeader = request.getHeader(AUTHORIZATION);
+        String accessToken = authorizationHeader.substring(TOKEN_HEADER_PREFIX.length());
+        memberService.updateNickname(accessToken, nickname);
+
+        return ResponseEntity.created(null).body("뭐 돌려주지");
+
+    }
+
+    @PostMapping("/image")
+    public ResponseEntity uploadImage(MultipartFile file, HttpServletRequest request) throws IOException {
+        if(file.isEmpty()) {
+            return ResponseEntity.badRequest().body("이미지 없음");
+        }
+
+        String authorizationHeader = request.getHeader(AUTHORIZATION);
+        String accessToken = authorizationHeader.substring(TOKEN_HEADER_PREFIX.length());
+
+        return ResponseEntity.created(null).body(memberService.uploadImage(accessToken, file));
     }
 
 
