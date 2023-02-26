@@ -89,5 +89,13 @@ public class MemberController {
         return ResponseEntity.created(null).body(memberService.uploadImage(accessToken, file));
     }
 
+    @GetMapping("/image")
+    public ResponseEntity<byte[]> getImage(HttpServletRequest request) throws IOException {
+        String authorizationHeader = request.getHeader(AUTHORIZATION);
+        String accessToken = authorizationHeader.substring(TOKEN_HEADER_PREFIX.length());
+
+        return memberService.getImage(accessToken);
+    }
+
 
 }

@@ -1,12 +1,11 @@
 package io.neond.genesis.service;
 
-import com.amazonaws.AmazonServiceException;
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.GetObjectRequest;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.S3ObjectInputStream;
+import com.amazonaws.util.IOUtils;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -18,12 +17,13 @@ import io.neond.genesis.domain.entity.Ticket;
 import io.neond.genesis.domain.repository.MemberRepository;
 import io.neond.genesis.domain.entity.Role;
 import io.neond.genesis.domain.repository.TicketRepository;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -32,20 +32,15 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
+import javax.swing.text.html.HTML;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.net.URLEncoder;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static io.neond.genesis.security.Constants.*;
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -56,6 +51,7 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     private final MemberRepository memberRepository;
     private final TicketRepository ticketRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AmazonS3 amazonS3;
 
     @Value("${jwt.secret}")
     private String secretKey;
@@ -63,6 +59,8 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     private Long accessValidity;
     @Value("${jwt.refresh.validity}")
     private Long refreshValidity;
+    @Value("${cloud.aws.s3.bucket}")
+    private String bucket;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -175,10 +173,32 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     }
 
     @Override
-    public Member uploadImage(String accessToken, MultipartFile file) throws IOException {
+    public String uploadImage(String accessToken, MultipartFile file) throws IOException {
+        Member member = findByAccessToken(accessToken);
 
+        ObjectMetadata objectMetadata = new ObjectMetadata();
+        objectMetadata.setContentLength(file.getInputStream().available());
 
-        return null;
+        amazonS3.putObject(bucket, member.getMemberId(), file.getInputStream(), objectMetadata);
+
+        return amazonS3.getUrl(bucket, member.getMemberId()).toString();
+    }
+
+    @Override
+    public ResponseEntity<byte[]> getImage(String accessToken) throws IOException {
+        Member member = findByAccessToken(accessToken);
+        S3Object s3Object = amazonS3.getObject(new GetObjectRequest(bucket, member.getMemberId()));
+        S3ObjectInputStream objectInputStream = ((S3Object) s3Object).getObjectContent();
+        byte[] bytes = IOUtils.toByteArray(objectInputStream);
+
+        String filename = URLEncoder.encode(member.getMemberId(), "UTF-8");
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.IMAGE_PNG);
+        httpHeaders.setContentLength(bytes.length);
+        httpHeaders.setContentDispositionFormData("attatchment", member.getMemberId());
+
+        return new ResponseEntity<>(bytes, httpHeaders, HttpStatus.OK);
+
     }
 
 
