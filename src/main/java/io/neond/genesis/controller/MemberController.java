@@ -77,6 +77,12 @@ public class MemberController {
 
     }
 
+    @Operation(summary = "프로필 이미지 업로드")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "이미지 업로드 성공"),
+            @ApiResponse(responseCode = "400", description = "전송된 이미지 없음"),
+            @ApiResponse(responseCode = "500", description = "서버에러... 로그 확인 필요")
+    })
     @PostMapping("/image")
     public ResponseEntity uploadImage(MultipartFile file, HttpServletRequest request) throws IOException {
         if(file.isEmpty()) {
@@ -89,6 +95,11 @@ public class MemberController {
         return ResponseEntity.created(null).body(memberService.uploadImage(accessToken, file));
     }
 
+    @Operation(summary = "프로필 이미지 받아오기", description = "액세스 토큰으로 받아옵니다 꺅")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "이미지 다운로드 성공"),
+            @ApiResponse(responseCode = "500", description = "서버 에러. 로그 확인하기 싫어!")
+    })
     @GetMapping("/image")
     public ResponseEntity<byte[]> getImage(HttpServletRequest request) throws IOException {
         String authorizationHeader = request.getHeader(AUTHORIZATION);
