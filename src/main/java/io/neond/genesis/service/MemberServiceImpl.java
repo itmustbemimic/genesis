@@ -1,10 +1,7 @@
 package io.neond.genesis.service;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.GetObjectRequest;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.S3Object;
-import com.amazonaws.services.s3.model.S3ObjectInputStream;
+import com.amazonaws.services.s3.model.*;
 import com.amazonaws.util.IOUtils;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
@@ -201,9 +198,8 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
 
 
         HttpHeaders httpHeaders = new HttpHeaders();
-        //httpHeaders.setContentType(MediaType.IMAGE_PNG);
-        //httpHeaders.setContentLength(bytes.length);
-        //httpHeaders.setContentDispositionFormData("attatchment", member.getMemberId());
+        // httpHeaders.setContentType(MediaType.IMAGE_PNG);
+        httpHeaders.setContentLength(images.size());
 
         return new ResponseEntity<>(images, httpHeaders, HttpStatus.OK);
 
@@ -212,20 +208,23 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     @Override
     public ResponseEntity<byte[]> getImage(String memberId) throws IOException {
 
-        S3Object s3Object = amazonS3.getObject(new GetObjectRequest(bucket, memberId));
-        S3ObjectInputStream objectInputStream = s3Object.getObjectContent();
+        try {
 
-        byte[] bytes = IOUtils.toByteArray(objectInputStream);
+            S3Object s3Object = amazonS3.getObject(new GetObjectRequest(bucket, memberId));
+            S3ObjectInputStream objectInputStream = s3Object.getObjectContent();
 
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.IMAGE_PNG);
-        httpHeaders.setContentLength(bytes.length);
-        httpHeaders.setContentDispositionFormData("attatchment", memberId);
 
-        log.info(bytes.toString());
+            byte[] bytes = IOUtils.toByteArray(objectInputStream);
 
-        return new ResponseEntity<>(bytes, httpHeaders, HttpStatus.OK);
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.setContentType(MediaType.IMAGE_PNG);
+            httpHeaders.setContentLength(bytes.length);
+            httpHeaders.setContentDispositionFormData("attatchment", memberId);
+
+            return new ResponseEntity<>(bytes, httpHeaders, HttpStatus.OK);
+
+        } catch (AmazonS3Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
-
-
 }

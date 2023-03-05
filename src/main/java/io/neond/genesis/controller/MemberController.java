@@ -107,7 +107,7 @@ public class MemberController {
     @Operation(summary = "프로필 이미지 한장 받아오기")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "이미지 다운로드 성공"),
-            @ApiResponse(responseCode = "500", description = "서버 에러. 로그 확인하기 싫어!")
+            @ApiResponse(responseCode = "404", description = "등록된 유저 이미지 없음")
     })
     @GetMapping("/image")
     public ResponseEntity<byte[]> getImage(@RequestParam String member) throws IOException {
