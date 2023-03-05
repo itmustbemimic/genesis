@@ -1,6 +1,5 @@
 package io.neond.genesis.controller;
 
-import io.neond.genesis.domain.entity.Member;
 import io.neond.genesis.domain.entity.Ticket;
 import io.neond.genesis.domain.repository.MemberRepository;
 import io.neond.genesis.domain.repository.TicketRepository;
@@ -18,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Map;
+import java.util.List;
 
 import static io.neond.genesis.security.Constants.TOKEN_HEADER_PREFIX;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -95,17 +94,24 @@ public class MemberController {
         return ResponseEntity.created(null).body(memberService.uploadImage(accessToken, file));
     }
 
-    @Operation(summary = "프로필 이미지 받아오기", description = "액세스 토큰으로 받아옵니다 꺅")
+    @Operation(summary = "프로필 이미지 여러장 한번에 받아오기")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "이미지 다운로드 성공"),
+            @ApiResponse(responseCode = "500", description = "서버 에러. 로그 확인하기 싫어!")
+    })
+    @GetMapping("/images")
+    public ResponseEntity<List<byte[]>> getImages(@RequestParam List<String> members) throws IOException {
+        return memberService.getImages(members);
+    }
+
+    @Operation(summary = "프로필 이미지 한장 받아오기")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "이미지 다운로드 성공"),
             @ApiResponse(responseCode = "500", description = "서버 에러. 로그 확인하기 싫어!")
     })
     @GetMapping("/image")
-    public ResponseEntity<byte[]> getImage(HttpServletRequest request) throws IOException {
-        String authorizationHeader = request.getHeader(AUTHORIZATION);
-        String accessToken = authorizationHeader.substring(TOKEN_HEADER_PREFIX.length());
-
-        return memberService.getImage(accessToken);
+    public ResponseEntity<byte[]> getImage(@RequestParam String member) throws IOException {
+        return memberService.getImage(member);
     }
 
 

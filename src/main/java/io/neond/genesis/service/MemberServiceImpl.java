@@ -34,9 +34,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.swing.text.html.HTML;
 import java.io.IOException;
-import java.net.URLEncoder;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -185,20 +183,48 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     }
 
     @Override
-    public ResponseEntity<byte[]> getImage(String accessToken) throws IOException {
-        Member member = findByAccessToken(accessToken);
-        S3Object s3Object = amazonS3.getObject(new GetObjectRequest(bucket, member.getMemberId()));
-        S3ObjectInputStream objectInputStream = ((S3Object) s3Object).getObjectContent();
+    public ResponseEntity<List<byte[]>> getImages(List<String> memberList) throws IOException {
+
+        List<byte[]> images = new ArrayList<>();
+
+        memberList.stream().forEach(member -> {
+            S3Object s3Object = amazonS3.getObject(new GetObjectRequest(bucket, member));
+            S3ObjectInputStream objectInputStream = s3Object.getObjectContent();
+
+            try {
+                images.add(IOUtils.toByteArray(objectInputStream));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+        });
+
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        //httpHeaders.setContentType(MediaType.IMAGE_PNG);
+        //httpHeaders.setContentLength(bytes.length);
+        //httpHeaders.setContentDispositionFormData("attatchment", member.getMemberId());
+
+        return new ResponseEntity<>(images, httpHeaders, HttpStatus.OK);
+
+    }
+
+    @Override
+    public ResponseEntity<byte[]> getImage(String memberId) throws IOException {
+
+        S3Object s3Object = amazonS3.getObject(new GetObjectRequest(bucket, memberId));
+        S3ObjectInputStream objectInputStream = s3Object.getObjectContent();
+
         byte[] bytes = IOUtils.toByteArray(objectInputStream);
 
-        String filename = URLEncoder.encode(member.getMemberId(), "UTF-8");
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.IMAGE_PNG);
         httpHeaders.setContentLength(bytes.length);
-        httpHeaders.setContentDispositionFormData("attatchment", member.getMemberId());
+        httpHeaders.setContentDispositionFormData("attatchment", memberId);
+
+        log.info(bytes.toString());
 
         return new ResponseEntity<>(bytes, httpHeaders, HttpStatus.OK);
-
     }
 
 
