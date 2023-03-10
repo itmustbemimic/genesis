@@ -21,5 +21,6 @@ public interface MemberService {
     String uploadImage(Member member, MultipartFile file) throws IOException;
     ResponseEntity<List<byte[]>> getImages(List<String> memberList) throws IOException;
     ResponseEntity<byte[]> getImage(String memberId) throws IOException;
+    ResponseEntity getQrToken(Member member);
 
 }

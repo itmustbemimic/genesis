@@ -3,6 +3,7 @@ package io.neond.genesis.controller;
 import io.neond.genesis.domain.entity.Ticket;
 import io.neond.genesis.domain.repository.MemberRepository;
 import io.neond.genesis.domain.repository.TicketRepository;
+import io.neond.genesis.service.AdminService;
 import io.neond.genesis.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -13,14 +14,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
-
-import static io.neond.genesis.security.Constants.TOKEN_HEADER_PREFIX;
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @Slf4j
 @RestController
@@ -29,9 +28,8 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 @Tag(name = "가입 승인 후에 쓸 친구들", description = "뭐 있지")
 public class MemberController {
 
-    private final MemberRepository memberRepository;
     private final MemberService memberService;
-    private final TicketRepository ticketRepository;
+    private final AdminService adminService;
 
     @Operation(summary = "가입 승인된 유저 권한 테스트")
     @ApiResponses(value = {
@@ -108,5 +106,16 @@ public class MemberController {
     public ResponseEntity<byte[]> getImage(@RequestParam String member) throws IOException {
         return memberService.getImage(member);
     }
+
+    @Operation(summary = "qr코드에 쓸 jwt 토큰 받아오기")
+    @ApiResponse(responseCode = "200", description = "토큰 발급")
+    @GetMapping("/getqrtoken")
+    public ResponseEntity getQrToken(HttpServletRequest request) {
+        return memberService.getQrToken(
+                memberService.findMemberByAccessToken(request)
+        );
+    }
+
+
 
 }

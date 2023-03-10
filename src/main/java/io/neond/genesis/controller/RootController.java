@@ -62,7 +62,6 @@ public class RootController {
         }
     }
 
-
     @Operation(summary = "리프레시 토큰으로 액세스 토큰 재발급")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "액세스 토큰 리턴"),

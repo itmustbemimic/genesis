@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -53,6 +54,17 @@ public class AdminController {
     public ResponseEntity<Ticket> addBlackTicketToUser(@RequestBody addTicketRequestDto requestDto) {
         return ResponseEntity.created(null).body(ticketService.addTickets(requestDto));
     }
+
+    @Operation(summary = "qr코드 토큰 검증")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "유저 실명 리턴"),
+            @ApiResponse(responseCode = "400", description = "만료 or 유효하지 않은 토큰")
+    })
+    @GetMapping("/verifyqr")
+    public ResponseEntity verifyQr(HttpServletRequest request) {
+        return adminService.verifyQrToken(request.getHeader("qrToken"));
+    }
+
 
 
 }

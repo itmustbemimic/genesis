@@ -7,7 +7,9 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import io.neond.genesis.domain.dto.ErrorResponse;
 import io.neond.genesis.domain.entity.Member;
 import io.neond.genesis.domain.dto.MemberCreateDto;
 import io.neond.genesis.domain.entity.Ticket;
@@ -52,10 +54,14 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
 
     @Value("${jwt.secret}")
     private String secretKey;
+    @Value("${jwt.secret.qr")
+    private String qrSecretKey;
     @Value("${jwt.access.validity}")
     private Long accessValidity;
     @Value("${jwt.refresh.validity}")
     private Long refreshValidity;
+    @Value("${jwt.qr.validity}")
+    private Long qrValidity;
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
@@ -221,4 +227,23 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    @Override
+    public ResponseEntity getQrToken(Member member) {
+        String qrToken = JWT.create()
+                .withSubject(member.getMemberId())
+                .withExpiresAt(new Date(System.currentTimeMillis() + qrValidity))
+                .withIssuedAt(new Date(System.currentTimeMillis()))
+                .sign(Algorithm.HMAC256(qrSecretKey));
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        String body = "{\"qrToken\" : \"" + qrToken + "\"}";
+
+        return new ResponseEntity(body, headers, HttpStatus.OK);
+    }
+
+
+
 }
