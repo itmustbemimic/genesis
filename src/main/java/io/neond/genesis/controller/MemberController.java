@@ -83,9 +83,6 @@ public class MemberController {
             return ResponseEntity.badRequest().body("이미지 없음");
         }
 
-        String authorizationHeader = request.getHeader(AUTHORIZATION);
-        String accessToken = authorizationHeader.substring(TOKEN_HEADER_PREFIX.length());
-
         return ResponseEntity.created(null).body(
                 memberService.uploadImage(
                         memberService.findMemberByAccessToken(request),
