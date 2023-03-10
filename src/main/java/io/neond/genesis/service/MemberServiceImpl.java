@@ -14,6 +14,7 @@ import io.neond.genesis.domain.entity.Ticket;
 import io.neond.genesis.domain.repository.MemberRepository;
 import io.neond.genesis.domain.entity.Role;
 import io.neond.genesis.domain.repository.TicketRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,6 +37,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static io.neond.genesis.security.Constants.*;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -141,21 +143,15 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     }
 
     @Override
-    public void updateNickname(String accessToken, String newNickname) {
-
-        JWTVerifier verifier = JWT.require(Algorithm.HMAC256(secretKey)).build();
-        DecodedJWT decodedJWT = verifier.verify(accessToken);
-
-        String memberId = decodedJWT.getSubject();
-
-        Member member = memberRepository.findByMemberId(memberId)
-                .orElseThrow(() -> new UsernameNotFoundException("찾을 수 없는 아이디"));
-
+    public void updateNickname(Member member, String newNickname) {
         member.updateNickname(newNickname);
     }
 
     @Override
-    public Member findByAccessToken(String accessToken) {
+    public Member findMemberByAccessToken(HttpServletRequest request) {
+        String authorizationHeader = request.getHeader(AUTHORIZATION);
+        String accessToken = authorizationHeader.substring(TOKEN_HEADER_PREFIX.length());
+
         JWTVerifier verifier = JWT.require(Algorithm.HMAC256(secretKey)).build();
         DecodedJWT decodedJWT = verifier.verify(accessToken);
 
@@ -168,9 +164,7 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     }
 
     @Override
-    public String uploadImage(String accessToken, MultipartFile file) throws IOException {
-        Member member = findByAccessToken(accessToken);
-
+    public String uploadImage(Member member, MultipartFile file) throws IOException {
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentLength(file.getInputStream().available());
 

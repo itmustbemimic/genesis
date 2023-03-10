@@ -16,9 +16,10 @@ public interface MemberService {
     boolean nicknameCheck(String nickname);
     void updateRefreshToken(String meberId, String refreshToken);
     Map<String, String> refresh(String refreshToken);
-    void updateNickname(String accessToken, String newNickname);
-    Member findByAccessToken(String accessToken);
-    String uploadImage(String accessToken, MultipartFile file) throws IOException;
+    void updateNickname(Member member, String newNickname);
+    Member findMemberByAccessToken(HttpServletRequest request);
+    String uploadImage(Member member, MultipartFile file) throws IOException;
     ResponseEntity<List<byte[]>> getImages(List<String> memberList) throws IOException;
     ResponseEntity<byte[]> getImage(String memberId) throws IOException;
+
 }

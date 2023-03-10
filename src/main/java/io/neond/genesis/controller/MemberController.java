@@ -49,12 +49,8 @@ public class MemberController {
     })
     @GetMapping("/tickets")
     public Ticket getMyTickets(HttpServletRequest request) {
-
-        String authorizationHeader = request.getHeader(AUTHORIZATION);
-        String accessToken = authorizationHeader.substring(TOKEN_HEADER_PREFIX.length());
-
         // TODO ticket_id 출력 안되게
-        return memberService.findByAccessToken(accessToken).getTicket();
+        return memberService.findMemberByAccessToken(request).getTicket();
     }
 
     @Operation(summary = "닉네임 변경")
@@ -67,10 +63,9 @@ public class MemberController {
         if (memberService.nicknameCheck(nickname)) {
             return new ResponseEntity<>(HttpStatusCode.valueOf(409));
         }
-
-        String authorizationHeader = request.getHeader(AUTHORIZATION);
-        String accessToken = authorizationHeader.substring(TOKEN_HEADER_PREFIX.length());
-        memberService.updateNickname(accessToken, nickname);
+        memberService.updateNickname(
+                memberService.findMemberByAccessToken(request),
+                nickname);
 
         return ResponseEntity.created(null).body("뭐 돌려주지");
 
@@ -91,7 +86,10 @@ public class MemberController {
         String authorizationHeader = request.getHeader(AUTHORIZATION);
         String accessToken = authorizationHeader.substring(TOKEN_HEADER_PREFIX.length());
 
-        return ResponseEntity.created(null).body(memberService.uploadImage(accessToken, file));
+        return ResponseEntity.created(null).body(
+                memberService.uploadImage(
+                        memberService.findMemberByAccessToken(request),
+                        file));
     }
 
     @Operation(summary = "프로필 이미지 여러장 한번에 받아오기")
@@ -113,6 +111,5 @@ public class MemberController {
     public ResponseEntity<byte[]> getImage(@RequestParam String member) throws IOException {
         return memberService.getImage(member);
     }
-
 
 }
