@@ -53,6 +53,7 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
                 .withExpiresAt(new Date(System.currentTimeMillis() + accessValidity))
                 .withClaim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList())
                 .withClaim("nickname", member.get().getNickname())
+                .withClaim("uuid", member.get().getUuid())
                 .withIssuedAt(new Date(System.currentTimeMillis()))
                 .sign(Algorithm.HMAC256(secretKey));
 
