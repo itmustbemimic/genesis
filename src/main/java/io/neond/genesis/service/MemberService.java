@@ -2,6 +2,7 @@ package io.neond.genesis.service;
 
 import io.neond.genesis.domain.dto.MemberCreateDto;
 import io.neond.genesis.domain.entity.Member;
+import io.neond.genesis.domain.entity.MemberGameResult;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,5 +23,6 @@ public interface MemberService {
     ResponseEntity<List<byte[]>> getImages(List<String> memberList) throws IOException;
     ResponseEntity<byte[]> getImage(String memberId) throws IOException;
     ResponseEntity getQrToken(Member member);
+    List<MemberGameResult> getMemberGameResult(Member member);
 
 }

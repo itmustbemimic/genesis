@@ -1,9 +1,7 @@
 package io.neond.genesis.controller;
 
+import io.neond.genesis.domain.entity.MemberGameResult;
 import io.neond.genesis.domain.entity.Ticket;
-import io.neond.genesis.domain.repository.MemberRepository;
-import io.neond.genesis.domain.repository.TicketRepository;
-import io.neond.genesis.service.AdminService;
 import io.neond.genesis.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -14,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,7 +26,6 @@ import java.util.List;
 public class MemberController {
 
     private final MemberService memberService;
-    private final AdminService adminService;
 
     @Operation(summary = "가입 승인된 유저 권한 테스트")
     @ApiResponses(value = {
@@ -112,6 +108,19 @@ public class MemberController {
     @GetMapping("/getqrtoken")
     public ResponseEntity getQrToken(HttpServletRequest request) {
         return memberService.getQrToken(
+                memberService.findMemberByAccessToken(request)
+        );
+    }
+
+
+    @Operation(summary = "마이페이지 - 내 게임 기록")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "최신순으로 주르륵"),
+            @ApiResponse(responseCode = "500", description = "DB에러 로그 확인 필요")
+    })
+    @GetMapping("/mygames")
+    public List<MemberGameResult> memberGameResult(HttpServletRequest request) {
+        return memberService.getMemberGameResult(
                 memberService.findMemberByAccessToken(request)
         );
     }

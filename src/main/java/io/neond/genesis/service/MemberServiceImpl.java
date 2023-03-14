@@ -1,5 +1,9 @@
 package io.neond.genesis.service;
 
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
+import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.*;
 import com.amazonaws.util.IOUtils;
@@ -7,11 +11,10 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import io.neond.genesis.domain.dto.ErrorResponse;
 import io.neond.genesis.domain.entity.Member;
 import io.neond.genesis.domain.dto.MemberCreateDto;
+import io.neond.genesis.domain.entity.MemberGameResult;
 import io.neond.genesis.domain.entity.Ticket;
 import io.neond.genesis.domain.repository.MemberRepository;
 import io.neond.genesis.domain.entity.Role;
@@ -51,6 +54,8 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     private final TicketRepository ticketRepository;
     private final PasswordEncoder passwordEncoder;
     private final AmazonS3 amazonS3;
+    private final AmazonDynamoDB amazonDynamoDB;
+    private final DynamoDBMapper dbMapper;
 
     @Value("${jwt.secret}")
     private String secretKey;
@@ -242,6 +247,28 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
         String body = "{\"qrToken\" : \"" + qrToken + "\"}";
 
         return new ResponseEntity(body, headers, HttpStatus.OK);
+    }
+
+    @Override
+    public List<MemberGameResult> getMemberGameResult(Member member) {
+        List<MemberGameResult> results;
+
+        Map<String, AttributeValue> eav = new HashMap<>();
+        eav.put(":val1", new AttributeValue().withS(member.getNickname()));
+
+        DynamoDBQueryExpression<MemberGameResult> queryExpression =
+                new DynamoDBQueryExpression<MemberGameResult>()
+                        .withKeyConditionExpression("user_id = :val1")
+                        .withExpressionAttributeValues(eav)
+                        .withScanIndexForward(false);
+
+        try {
+            return dbMapper.query(MemberGameResult.class, queryExpression);
+        } catch (Throwable t) {
+            log.info("getMemberGameResult error: " + t);
+            return null;
+        }
+
     }
 
 
