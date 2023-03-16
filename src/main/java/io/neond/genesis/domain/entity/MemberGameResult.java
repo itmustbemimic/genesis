@@ -23,6 +23,9 @@ public class MemberGameResult {
     private int point;
 
     @DynamoDBAttribute
+    private int place;
+
+    @DynamoDBAttribute
     private int prize_amount;
 
     @DynamoDBAttribute

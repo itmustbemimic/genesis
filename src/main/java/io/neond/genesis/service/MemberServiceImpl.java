@@ -12,6 +12,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import io.neond.genesis.domain.dto.MyGamesResponseDto;
 import io.neond.genesis.domain.entity.Member;
 import io.neond.genesis.domain.dto.MemberCreateDto;
 import io.neond.genesis.domain.entity.MemberGameResult;
@@ -250,11 +251,12 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     }
 
     @Override
-    public List<MemberGameResult> getMemberGameResult(Member member) {
+    public List<MyGamesResponseDto> getMemberGameResult(Member member) {
         List<MemberGameResult> results;
+        List<MyGamesResponseDto> responseDtoList = new ArrayList<>();
 
         Map<String, AttributeValue> eav = new HashMap<>();
-        eav.put(":val1", new AttributeValue().withS(member.getNickname()));
+        eav.put(":val1", new AttributeValue().withS(member.getUuid()));
 
         DynamoDBQueryExpression<MemberGameResult> queryExpression =
                 new DynamoDBQueryExpression<MemberGameResult>()
@@ -263,12 +265,28 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
                         .withScanIndexForward(false);
 
         try {
-            return dbMapper.query(MemberGameResult.class, queryExpression);
+            results = dbMapper.query(MemberGameResult.class, queryExpression);
         } catch (Throwable t) {
             log.info("getMemberGameResult error: " + t);
             return null;
         }
 
+        for (MemberGameResult result : results) {
+            MyGamesResponseDto dto = MyGamesResponseDto.builder()
+                    .user_id(member.getNickname())
+                    .date(result.getDate())
+                    .game_id(result.getGame_id())
+                    .point(result.getPoint())
+                    .place(result.getPlace())
+                    .prize_type(result.getPrize_type())
+                    .prize_amount(result.getPrize_amount())
+                    .build();
+
+            responseDtoList.add(dto);
+
+        }
+
+        return responseDtoList;
     }
 
 
