@@ -1,6 +1,6 @@
 package io.neond.genesis.controller;
 
-import io.neond.genesis.domain.dto.MyGamesResponseDto;
+import io.neond.genesis.domain.entity.MemberGameResult;
 import io.neond.genesis.domain.entity.Ticket;
 import io.neond.genesis.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -119,7 +119,7 @@ public class MemberController {
             @ApiResponse(responseCode = "500", description = "DB에러 로그 확인 필요")
     })
     @GetMapping("/mygames")
-    public List<MyGamesResponseDto> memberGameResult(HttpServletRequest request) {
+    public List<MemberGameResult> memberGameResult(HttpServletRequest request) {
         return memberService.getMemberGameResult(
                 memberService.findMemberByAccessToken(request)
         );
