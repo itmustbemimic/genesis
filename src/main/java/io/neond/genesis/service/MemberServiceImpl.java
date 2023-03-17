@@ -182,44 +182,17 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentLength(file.getInputStream().available());
 
-        amazonS3.putObject(bucket, member.getMemberId(), file.getInputStream(), objectMetadata);
+        amazonS3.putObject(bucket, member.getUuid(), file.getInputStream(), objectMetadata);
 
         return amazonS3.getUrl(bucket, member.getMemberId()).toString();
     }
 
     @Override
-    public ResponseEntity<List<byte[]>> getImages(List<String> memberList) throws IOException {
-        log.info(memberList.toString());
-
-        List<byte[]> images = new ArrayList<>();
-
-        memberList.stream().forEach(member -> {
-            S3Object s3Object = amazonS3.getObject(new GetObjectRequest(bucket, member));
-            S3ObjectInputStream objectInputStream = s3Object.getObjectContent();
-
-            try {
-                images.add(IOUtils.toByteArray(objectInputStream));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-
-        });
-
-
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.IMAGE_PNG);
-        httpHeaders.setContentLength(images.size());
-
-        return new ResponseEntity<>(images, httpHeaders, HttpStatus.OK);
-
-    }
-
-    @Override
-    public ResponseEntity<byte[]> getImage(String memberId) throws IOException {
+    public ResponseEntity<byte[]> getImage(String uuid) throws IOException {
 
         try {
 
-            S3Object s3Object = amazonS3.getObject(new GetObjectRequest(bucket, memberId));
+            S3Object s3Object = amazonS3.getObject(new GetObjectRequest(bucket, uuid));
             S3ObjectInputStream objectInputStream = s3Object.getObjectContent();
 
 
@@ -228,7 +201,7 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.setContentType(MediaType.IMAGE_PNG);
             httpHeaders.setContentLength(bytes.length);
-            httpHeaders.setContentDispositionFormData("attatchment", memberId);
+            httpHeaders.setContentDispositionFormData("attatchment", uuid);
 
             return new ResponseEntity<>(bytes, httpHeaders, HttpStatus.OK);
 

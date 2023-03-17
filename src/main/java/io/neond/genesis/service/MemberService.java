@@ -21,7 +21,6 @@ public interface MemberService {
     void updateNickname(Member member, String newNickname);
     Member findMemberByAccessToken(HttpServletRequest request);
     String uploadImage(Member member, MultipartFile file) throws IOException;
-    ResponseEntity<List<byte[]>> getImages(List<String> memberList) throws IOException;
     ResponseEntity<byte[]> getImage(String memberId) throws IOException;
     ResponseEntity getQrToken(Member member);
     List<MemberGameResult> getMemberGameResult(Member member);

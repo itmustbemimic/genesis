@@ -86,24 +86,14 @@ public class MemberController {
                         file));
     }
 
-    @Operation(summary = "프로필 이미지 여러장 한번에 받아오기")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "이미지 다운로드 성공"),
-            @ApiResponse(responseCode = "500", description = "서버 에러. 로그 확인하기 싫어!")
-    })
-    @GetMapping("/images")
-    public ResponseEntity<List<byte[]>> getImages(@RequestParam List<String> members) throws IOException {
-        return memberService.getImages(members);
-    }
-
     @Operation(summary = "프로필 이미지 한장 받아오기")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "이미지 다운로드 성공"),
-            @ApiResponse(responseCode = "404", description = "등록된 유저 이미지 없음")
+            @ApiResponse(responseCode = "200", description = "누군가의 요청으로 이미지가 없어도 200")
     })
     @GetMapping("/image")
-    public ResponseEntity<byte[]> getImage(@RequestParam String member) throws IOException {
-        return memberService.getImage(member);
+    public ResponseEntity<byte[]> getImage(@RequestParam String memberUuid) throws IOException {
+        return memberService.getImage(memberUuid);
     }
 
     @Operation(summary = "qr코드에 쓸 jwt 토큰 받아오기")
