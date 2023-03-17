@@ -10,12 +10,15 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -119,10 +122,16 @@ public class MemberController {
             @ApiResponse(responseCode = "500", description = "DB에러 로그 확인 필요")
     })
     @GetMapping("/mygames")
-    public List<MemberGameResult> memberGameResult(HttpServletRequest request) {
+    public List<MemberGameResult> getMemberGameResult(HttpServletRequest request) {
         return memberService.getMemberGameResult(
                 memberService.findMemberByAccessToken(request)
         );
+    }
+
+
+    @GetMapping("/ranking/weekly")
+    public List<?> getWeeklyRank(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date date) {
+        return memberService.getWeeklyRank(date);
     }
 
 

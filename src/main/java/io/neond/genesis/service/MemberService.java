@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -24,5 +25,6 @@ public interface MemberService {
     ResponseEntity<byte[]> getImage(String memberId) throws IOException;
     ResponseEntity getQrToken(Member member);
     List<MemberGameResult> getMemberGameResult(Member member);
+    List<?> getWeeklyRank(Date weekStart);
 
 }

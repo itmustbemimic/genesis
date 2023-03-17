@@ -3,6 +3,7 @@ package io.neond.genesis.service;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.*;
@@ -12,6 +13,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import io.neond.genesis.domain.dto.rankingResponseDto;
 import io.neond.genesis.domain.entity.Member;
 import io.neond.genesis.domain.dto.MemberCreateDto;
 import io.neond.genesis.domain.entity.MemberGameResult;
@@ -38,6 +40,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -186,6 +189,7 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
 
     @Override
     public ResponseEntity<List<byte[]>> getImages(List<String> memberList) throws IOException {
+        log.info(memberList.toString());
 
         List<byte[]> images = new ArrayList<>();
 
@@ -203,7 +207,7 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
 
 
         HttpHeaders httpHeaders = new HttpHeaders();
-        // httpHeaders.setContentType(MediaType.IMAGE_PNG);
+        httpHeaders.setContentType(MediaType.IMAGE_PNG);
         httpHeaders.setContentLength(images.size());
 
         return new ResponseEntity<>(images, httpHeaders, HttpStatus.OK);
@@ -229,7 +233,7 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
             return new ResponseEntity<>(bytes, httpHeaders, HttpStatus.OK);
 
         } catch (AmazonS3Exception e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.OK);
         }
     }
 
@@ -274,6 +278,32 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
         return results;
     }
 
+    @Override
+    public List<?> getWeeklyRank(Date date) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.setFirstDayOfWeek(2);
+        int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK) - cal.getFirstDayOfWeek();
+
+        cal.add(Calendar.DAY_OF_MONTH, -dayOfWeek);
+        String weekStart = dateFormat.format(cal.getTime());
+        cal.add(Calendar.DAY_OF_MONTH, 7);
+        String weekEnd = dateFormat.format(cal.getTime());
+
+        Map<String, AttributeValue> eav = new HashMap<>();
+        eav.put(":val1", new AttributeValue().withS(weekStart));
+        eav.put(":val2", new AttributeValue().withS(weekEnd));
+
+        DynamoDBScanExpression scanExpression = new DynamoDBScanExpression()
+                .withFilterExpression("game_date between :val1 and :val2")
+                .withExpressionAttributeValues(eav);
+
+        List<?> scanResult = dbMapper.scan(MemberGameResult.class, scanExpression);
+
+        return scanResult;
+    }
 
 
 }

@@ -13,8 +13,8 @@ public class MemberGameResult {
     @DynamoDBHashKey(attributeName = "user_id")
     private String user_id;
 
-    @DynamoDBRangeKey(attributeName = "date")
-    private String date;
+    @DynamoDBRangeKey(attributeName = "game_date")
+    private String game_date;
 
     @DynamoDBAttribute
     private String game_id;
