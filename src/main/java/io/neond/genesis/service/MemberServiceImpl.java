@@ -14,6 +14,7 @@ import io.neond.genesis.domain.entity.Member;
 import io.neond.genesis.domain.dto.request.MemberCreateDto;
 import io.neond.genesis.domain.entity.MemberGameResult;
 import io.neond.genesis.domain.entity.Ticket;
+import io.neond.genesis.domain.repository.MemberGameResultRepository;
 import io.neond.genesis.domain.repository.MemberRepository;
 import io.neond.genesis.domain.entity.Role;
 import io.neond.genesis.domain.repository.TicketRepository;
@@ -51,6 +52,7 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
 
     private final MemberRepository memberRepository;
     private final TicketRepository ticketRepository;
+    private final MemberGameResultRepository memberGameResultRepository;
     private final PasswordEncoder passwordEncoder;
     private final AmazonS3 amazonS3;
     private final AmazonDynamoDB amazonDynamoDB;
@@ -233,19 +235,31 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
         dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
-        cal.setFirstDayOfWeek(2);
-        int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK) - cal.getFirstDayOfWeek();
+        cal.setFirstDayOfWeek(Calendar.MONDAY);
 
-        cal.add(Calendar.DAY_OF_MONTH, -dayOfWeek);
+        cal.add(Calendar.DAY_OF_WEEK, 1);
         String weekStart = dateFormat.format(cal.getTime());
-        cal.add(Calendar.DAY_OF_MONTH, 7);
+        cal.add(Calendar.DAY_OF_WEEK, 7);
         String weekEnd = dateFormat.format(cal.getTime());
 
+        return memberGameResultRepository.getRank(weekStart, weekEnd);
+    }
 
+    @Override
+    public List<?> getMonthlyRank(Date date) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
 
+        cal.set(Calendar.DAY_OF_MONTH, cal.getMinimum(Calendar.DAY_OF_MONTH));
+        String monthStart = dateFormat.format(cal.getTime());
+        cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+        String monthEnd = dateFormat.format(cal.getTime());
 
+        log.info(monthStart + "+++++" + monthEnd);
 
-        return null;
+        return memberGameResultRepository.getRank(monthStart, monthEnd);
     }
 
 

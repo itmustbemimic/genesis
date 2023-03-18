@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public interface MemberService {
     String createMember(MemberCreateDto createDto);
@@ -25,5 +26,6 @@ public interface MemberService {
     ResponseEntity getQrToken(Member member);
     List<MemberGameResult> getMemberGameResult(Member member);
     List<?> getWeeklyRank(Date weekStart);
+    List<?> getMonthlyRank(Date weekStart);
 
 }

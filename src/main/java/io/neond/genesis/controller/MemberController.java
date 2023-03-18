@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -118,10 +119,22 @@ public class MemberController {
         );
     }
 
-
+    @Operation(summary = "주간 랭킹")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "dto 이쁘게 포장 예정")
+    })
     @GetMapping("/ranking/weekly")
     public List<?> getWeeklyRank(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date date) {
         return memberService.getWeeklyRank(date);
+    }
+
+    @Operation(summary = "월간 랭킹")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "dto 이쁘게 포장 예정")
+    })
+    @GetMapping("/ranking/monthly")
+    public List<?> getMonthlyRank(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date date) {
+        return memberService.getMonthlyRank(date);
     }
 
 
