@@ -1,4 +1,4 @@
-package io.neond.genesis.domain.dto;
+package io.neond.genesis.domain.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 @Builder
 @AllArgsConstructor
-public class rankingResponseDto {
+public class RankingResponseDto {
     private int rank;
     private String nickname;
     private int points;

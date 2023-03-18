@@ -1,6 +1,6 @@
 package io.neond.genesis.service;
 
-import io.neond.genesis.domain.dto.MemberCreateDto;
+import io.neond.genesis.domain.dto.request.MemberCreateDto;
 import io.neond.genesis.domain.entity.Member;
 import io.neond.genesis.domain.entity.MemberGameResult;
 import jakarta.servlet.http.HttpServletRequest;

@@ -1,34 +1,14 @@
 package io.neond.genesis.domain.entity;
 
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBRangeKey;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
-import lombok.Data;
-import lombok.Setter;
+import lombok.Getter;
 
-@Data
-@DynamoDBTable(tableName = "genesis-user")
+@Getter
 public class MemberGameResult {
-    @DynamoDBHashKey(attributeName = "user_id")
-    private String user_id;
-
-    @DynamoDBRangeKey(attributeName = "game_date")
+    private Member member;
     private String game_date;
-
-    @DynamoDBAttribute
     private String game_id;
-
-    @DynamoDBAttribute
-    private int point;
-
-    @DynamoDBAttribute
     private int place;
-
-    @DynamoDBAttribute
-    private int prize_amount;
-
-    @DynamoDBAttribute
+    private int point;
     private String prize_type;
-
+    private String prize_amount;
 }

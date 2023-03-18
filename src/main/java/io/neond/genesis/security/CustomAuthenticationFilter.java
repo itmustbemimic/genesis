@@ -1,7 +1,7 @@
 package io.neond.genesis.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.neond.genesis.domain.dto.LoginRequestDto;
+import io.neond.genesis.domain.dto.request.LoginRequestDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

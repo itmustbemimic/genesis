@@ -1,7 +1,7 @@
 package io.neond.genesis.controller;
 
-import io.neond.genesis.domain.dto.RoleToMemberRequestDto;
-import io.neond.genesis.domain.dto.addTicketRequestDto;
+import io.neond.genesis.domain.dto.request.RoleToMemberRequestDto;
+import io.neond.genesis.domain.dto.request.addTicketRequestDto;
 import io.neond.genesis.domain.entity.Ticket;
 import io.neond.genesis.service.AdminService;
 import io.neond.genesis.service.RoleService;

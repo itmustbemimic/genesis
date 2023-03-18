@@ -1,4 +1,4 @@
-package io.neond.genesis.domain.dto;
+package io.neond.genesis.domain.dto.request;
 
 import io.neond.genesis.domain.entity.Member;
 import io.neond.genesis.domain.entity.Ticket;

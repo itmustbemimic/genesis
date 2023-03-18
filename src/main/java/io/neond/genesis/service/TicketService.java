@@ -1,6 +1,6 @@
 package io.neond.genesis.service;
 
-import io.neond.genesis.domain.dto.addTicketRequestDto;
+import io.neond.genesis.domain.dto.request.addTicketRequestDto;
 import io.neond.genesis.domain.entity.Ticket;
 
 

@@ -2,9 +2,6 @@ package io.neond.genesis.service;
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
-import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.*;
 import com.amazonaws.util.IOUtils;
@@ -13,9 +10,8 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import io.neond.genesis.domain.dto.rankingResponseDto;
 import io.neond.genesis.domain.entity.Member;
-import io.neond.genesis.domain.dto.MemberCreateDto;
+import io.neond.genesis.domain.dto.request.MemberCreateDto;
 import io.neond.genesis.domain.entity.MemberGameResult;
 import io.neond.genesis.domain.entity.Ticket;
 import io.neond.genesis.domain.repository.MemberRepository;
@@ -228,27 +224,7 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
 
     @Override
     public List<MemberGameResult> getMemberGameResult(Member member) {
-        List<MemberGameResult> results;
-
-        Map<String, AttributeValue> eav = new HashMap<>();
-        eav.put(":val1", new AttributeValue().withS(member.getUuid()));
-
-        DynamoDBQueryExpression<MemberGameResult> queryExpression =
-                new DynamoDBQueryExpression<MemberGameResult>()
-                        .withKeyConditionExpression("user_id = :val1")
-                        .withExpressionAttributeValues(eav)
-                        .withScanIndexForward(false);
-
-        try {
-            results = dbMapper.query(MemberGameResult.class, queryExpression);
-        } catch (Throwable t) {
-            log.info("getMemberGameResult error: " + t);
-            return null;
-        }
-
-        results.forEach(s->s.setUser_id(member.getNickname()));
-
-        return results;
+        return null;
     }
 
     @Override
@@ -265,17 +241,11 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
         cal.add(Calendar.DAY_OF_MONTH, 7);
         String weekEnd = dateFormat.format(cal.getTime());
 
-        Map<String, AttributeValue> eav = new HashMap<>();
-        eav.put(":val1", new AttributeValue().withS(weekStart));
-        eav.put(":val2", new AttributeValue().withS(weekEnd));
 
-        DynamoDBScanExpression scanExpression = new DynamoDBScanExpression()
-                .withFilterExpression("game_date between :val1 and :val2")
-                .withExpressionAttributeValues(eav);
 
-        List<?> scanResult = dbMapper.scan(MemberGameResult.class, scanExpression);
 
-        return scanResult;
+
+        return null;
     }
 
 

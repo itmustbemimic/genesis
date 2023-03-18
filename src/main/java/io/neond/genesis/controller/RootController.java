@@ -1,6 +1,6 @@
 package io.neond.genesis.controller;
 
-import io.neond.genesis.domain.dto.MemberCreateDto;
+import io.neond.genesis.domain.dto.request.MemberCreateDto;
 import io.neond.genesis.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

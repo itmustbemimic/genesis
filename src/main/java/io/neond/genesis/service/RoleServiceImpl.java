@@ -4,7 +4,7 @@ import io.neond.genesis.domain.entity.Member;
 import io.neond.genesis.domain.repository.MemberRepository;
 import io.neond.genesis.domain.entity.Role;
 import io.neond.genesis.domain.repository.RoleRepository;
-import io.neond.genesis.domain.dto.RoleToMemberRequestDto;
+import io.neond.genesis.domain.dto.request.RoleToMemberRequestDto;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

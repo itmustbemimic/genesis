@@ -1,4 +1,4 @@
-package io.neond.genesis.domain.dto;
+package io.neond.genesis.domain.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

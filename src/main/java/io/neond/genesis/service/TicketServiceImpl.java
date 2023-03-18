@@ -1,6 +1,6 @@
 package io.neond.genesis.service;
 
-import io.neond.genesis.domain.dto.addTicketRequestDto;
+import io.neond.genesis.domain.dto.request.addTicketRequestDto;
 import io.neond.genesis.domain.entity.Member;
 import io.neond.genesis.domain.entity.Ticket;
 import io.neond.genesis.domain.repository.MemberRepository;
@@ -9,7 +9,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
 
 
 @Transactional

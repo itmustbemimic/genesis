@@ -1,7 +1,7 @@
 package io.neond.genesis.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.neond.genesis.domain.dto.ErrorResponse;
+import io.neond.genesis.domain.dto.response.ErrorResponse;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
