@@ -2,6 +2,7 @@ package io.neond.genesis.domain.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
