@@ -2,9 +2,6 @@ package io.neond.genesis.domain.repository;
 
 import io.neond.genesis.domain.dto.response.RankingResponseDto;
 import io.neond.genesis.domain.entity.MemberGameResult;
-import jakarta.persistence.ColumnResult;
-import jakarta.persistence.ConstructorResult;
-import jakarta.persistence.SqlResultSetMapping;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -21,9 +18,5 @@ public interface MemberGameResultRepository extends JpaRepository<MemberGameResu
         nativeQuery = true)
     List<RankingResponseDto> getRank(@Param("startDate") String startDate, @Param("endDate") String endDate);
 
-    interface RankingResponseDto {
-        int getRanking();
-        String getNickname();
-        int getPoints();
-    }
+
 }

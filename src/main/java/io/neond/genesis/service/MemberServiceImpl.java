@@ -233,7 +233,7 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     }
 
     @Override
-    public List<?> getWeeklyRank(Date date) {
+    public List<RankingResponseDto> getWeeklyRank(Date date) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
         Calendar cal = Calendar.getInstance();
@@ -249,7 +249,7 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     }
 
     @Override
-    public List<?> getMonthlyRank(Date date) {
+    public List<RankingResponseDto> getMonthlyRank(Date date) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
         Calendar cal = Calendar.getInstance();

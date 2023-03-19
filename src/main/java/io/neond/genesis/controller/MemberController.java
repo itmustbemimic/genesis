@@ -1,9 +1,11 @@
 package io.neond.genesis.controller;
 
+import io.neond.genesis.domain.dto.response.RankingResponseDto;
 import io.neond.genesis.domain.entity.MemberGameResult;
 import io.neond.genesis.domain.entity.Ticket;
 import io.neond.genesis.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -121,19 +123,27 @@ public class MemberController {
 
     @Operation(summary = "주간 랭킹")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "dto 이쁘게 포장 예정")
+            @ApiResponse(responseCode = "200", description = "랭킹 1위부터 주르륵")
     })
     @GetMapping("/ranking/weekly")
-    public List<?> getWeeklyRank(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date date) {
+    public List<RankingResponseDto> getWeeklyRank(
+            @Parameter(name = "날짜", description = "해당 날짜가 속한 주의 랭킹. 2023-03-08 입력 시 3월 둘째주 랭킹 출력")
+            @RequestParam
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            Date date) {
         return memberService.getWeeklyRank(date);
     }
 
     @Operation(summary = "월간 랭킹")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "dto 이쁘게 포장 예정")
+            @ApiResponse(responseCode = "200", description = "랭킹 1위부터 주르륵")
     })
     @GetMapping("/ranking/monthly")
-    public List<?> getMonthlyRank(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date date) {
+    public List<RankingResponseDto> getMonthlyRank(
+            @Parameter(name = "날짜", description = "해당 날짜가 속한 월의 랭킹. 2023-03-08 입력 시 3월 랭킹 출력")
+            @RequestParam
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            Date date) {
         return memberService.getMonthlyRank(date);
     }
 
