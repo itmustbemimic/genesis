@@ -137,6 +137,8 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
                 .withExpiresAt(new Date(System.currentTimeMillis() + accessValidity))
                 .withClaim("roles", member.getRoles().stream().map(Role::getName).collect(Collectors.toList()))
                 .withClaim("nickname", member.getNickname())
+                .withClaim("uuid", member.getUuid())
+                .withIssuedAt(new Date(System.currentTimeMillis()))
                 .sign(Algorithm.HMAC256(secretKey));
 
         String newRefreshToken = JWT.create()
@@ -256,8 +258,6 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
         String monthStart = dateFormat.format(cal.getTime());
         cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
         String monthEnd = dateFormat.format(cal.getTime());
-
-        log.info(monthStart + "+++++" + monthEnd);
 
         return memberGameResultRepository.getRank(monthStart, monthEnd);
     }
