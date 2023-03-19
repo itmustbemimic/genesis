@@ -239,9 +239,9 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
         cal.setTime(date);
         cal.setFirstDayOfWeek(Calendar.MONDAY);
 
-        cal.add(Calendar.DAY_OF_WEEK, 1);
+        cal.add(Calendar.DATE, 2 - cal.get(Calendar.DAY_OF_WEEK));
         String weekStart = dateFormat.format(cal.getTime());
-        cal.add(Calendar.DAY_OF_WEEK, 7);
+        cal.add(Calendar.DATE, 9 - cal.get(Calendar.DAY_OF_WEEK));
         String weekEnd = dateFormat.format(cal.getTime());
 
         return memberGameResultRepository.getRank(weekStart, weekEnd);
@@ -256,11 +256,9 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
 
         cal.set(Calendar.DAY_OF_MONTH, cal.getMinimum(Calendar.DAY_OF_MONTH));
         String monthStart = dateFormat.format(cal.getTime());
-        cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+        cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH) +1);
         String monthEnd = dateFormat.format(cal.getTime());
 
         return memberGameResultRepository.getRank(monthStart, monthEnd);
     }
-
-
 }
