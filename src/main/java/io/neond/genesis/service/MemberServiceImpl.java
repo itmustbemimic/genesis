@@ -10,6 +10,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import io.neond.genesis.domain.dto.response.MyGamesDto;
 import io.neond.genesis.domain.dto.response.RankingResponseDto;
 import io.neond.genesis.domain.entity.Member;
 import io.neond.genesis.domain.dto.request.MemberCreateDto;
@@ -228,8 +229,8 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     }
 
     @Override
-    public List<MemberGameResult> getMemberGameResult(Member member) {
-        return null;
+    public List<MyGamesDto> getMemberGameResult(Member member) {
+        return memberGameResultRepository.getMyGames(member.getUuid());
     }
 
     @Override

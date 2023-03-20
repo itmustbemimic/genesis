@@ -1,5 +1,6 @@
 package io.neond.genesis.controller;
 
+import io.neond.genesis.domain.dto.response.MyGamesDto;
 import io.neond.genesis.domain.dto.response.RankingResponseDto;
 import io.neond.genesis.domain.entity.MemberGameResult;
 import io.neond.genesis.domain.entity.Ticket;
@@ -115,7 +116,7 @@ public class MemberController {
             @ApiResponse(responseCode = "500", description = "DB에러 로그 확인 필요")
     })
     @GetMapping("/mygames")
-    public List<MemberGameResult> getMemberGameResult(HttpServletRequest request) {
+    public List<MyGamesDto> getMemberGameResult(HttpServletRequest request) {
         return memberService.getMemberGameResult(
                 memberService.findMemberByAccessToken(request)
         );

@@ -2,20 +2,22 @@ package io.neond.genesis.domain.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 @Entity
 public class MemberGameResult {
-    private String user_uuid;
-    private String game_date;
-    private String game_id;
+    @Id
+    private String id;
+    private String nickname;
+    private String gameDate;
+    private String gameId;
     private int place;
     private int point;
-    private String prize_type;
-    private String prize_amount;
+    private String prizeType;
+    private String prizeAmount;
 
-    @Id
-    private Long id;
 }
