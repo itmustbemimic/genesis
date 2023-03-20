@@ -24,6 +24,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.entity.ContentType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -183,10 +184,11 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     public String uploadImage(Member member, MultipartFile file) throws IOException {
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentLength(file.getInputStream().available());
+        objectMetadata.setContentType("image/png");
 
         amazonS3.putObject(bucket, member.getUuid(), file.getInputStream(), objectMetadata);
 
-        return amazonS3.getUrl(bucket, member.getMemberId()).toString();
+        return amazonS3.getUrl(bucket, member.getUuid()).toString();
     }
 
     @Override
