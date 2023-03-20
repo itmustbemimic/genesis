@@ -11,4 +11,7 @@ public interface RankingResponseDto {
 
     @Schema(example = "47")
     int getPoints();
+
+    @Schema(example = "7a034705-7207-4791-9d0a-1e8371008b4b")
+    String getUuid();
 }

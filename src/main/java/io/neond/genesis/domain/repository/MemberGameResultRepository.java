@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface MemberGameResultRepository extends JpaRepository<MemberGameResult, String> {
     @Query(value =
-            "SELECT RANK() OVER (ORDER BY SUM(point) DESC) AS ranking, m.nickname AS nickname, SUM(point) AS points " +
+            "SELECT RANK() OVER (ORDER BY SUM(point) DESC) AS ranking, m.nickname AS nickname, SUM(point) AS points, user_uuid AS uuid " +
             "FROM user_game_history ugh " +
             "RIGHT JOIN member m ON ugh.user_uuid = m.uuid " +
             "WHERE game_date BETWEEN :startDate AND :endDate " +
