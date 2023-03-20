@@ -2,8 +2,10 @@ package io.neond.genesis.controller;
 
 import io.neond.genesis.domain.dto.response.MyGamesDto;
 import io.neond.genesis.domain.dto.response.RankingResponseDto;
+import io.neond.genesis.domain.dto.response.SearchNicknameDto;
 import io.neond.genesis.domain.entity.MemberGameResult;
 import io.neond.genesis.domain.entity.Ticket;
+import io.neond.genesis.domain.repository.MemberRepository;
 import io.neond.genesis.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -33,6 +35,7 @@ import java.util.Optional;
 public class MemberController {
 
     private final MemberService memberService;
+    private final MemberRepository memberRepository;
 
     @Operation(summary = "가입 승인된 유저 권한 테스트")
     @ApiResponses(value = {
@@ -148,6 +151,11 @@ public class MemberController {
         return memberService.getMonthlyRank(date);
     }
 
-
+    @Operation(summary = "유저닉네임 검색")
+    @ApiResponse(responseCode = "200", description = "가끔씩 이상한데 이건 뭐 내가 만든게 아니라서;;")
+    @GetMapping("/search")
+    public List<SearchNicknameDto> search(@RequestParam String nickname) {
+        return memberRepository.findByNicknameContains(nickname);
+    }
 
 }
