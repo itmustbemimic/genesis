@@ -2,9 +2,11 @@ package io.neond.genesis.service;
 
 import io.neond.genesis.domain.dto.request.MemberCreateDto;
 import io.neond.genesis.domain.dto.response.MyGamesDto;
+import io.neond.genesis.domain.dto.response.MyTicketResponseDto;
 import io.neond.genesis.domain.dto.response.RankingResponseDto;
 import io.neond.genesis.domain.entity.Member;
 import io.neond.genesis.domain.entity.MemberGameResult;
+import io.neond.genesis.domain.entity.Ticket;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,5 +31,6 @@ public interface MemberService {
     List<MyGamesDto> getMemberGameResult(Member member);
     List<RankingResponseDto> getWeeklyRank(Date weekStart);
     List<RankingResponseDto> getMonthlyRank(Date weekStart);
+    MyTicketResponseDto getMyTicket(Member member);
 
 }

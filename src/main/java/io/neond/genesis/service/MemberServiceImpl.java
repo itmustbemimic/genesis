@@ -11,6 +11,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import io.neond.genesis.domain.dto.response.MyGamesDto;
+import io.neond.genesis.domain.dto.response.MyTicketResponseDto;
 import io.neond.genesis.domain.dto.response.RankingResponseDto;
 import io.neond.genesis.domain.entity.Member;
 import io.neond.genesis.domain.dto.request.MemberCreateDto;
@@ -264,5 +265,12 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
         String monthEnd = dateFormat.format(cal.getTime());
 
         return memberGameResultRepository.getRank(monthStart, monthEnd);
+    }
+
+    @Override
+    public MyTicketResponseDto getMyTicket(Member member) {
+        Ticket ticket = member.getTicket();
+
+        return new MyTicketResponseDto(ticket.getBlack(), ticket.getRed(), ticket.getGold());
     }
 }

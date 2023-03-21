@@ -1,6 +1,7 @@
 package io.neond.genesis.controller;
 
 import io.neond.genesis.domain.dto.response.MyGamesDto;
+import io.neond.genesis.domain.dto.response.MyTicketResponseDto;
 import io.neond.genesis.domain.dto.response.RankingResponseDto;
 import io.neond.genesis.domain.dto.response.SearchNicknameDto;
 import io.neond.genesis.domain.entity.MemberGameResult;
@@ -52,9 +53,8 @@ public class MemberController {
             @ApiResponse(responseCode = "200", description = "블랙 레드 골드 티켓 수량 리턴")
     })
     @GetMapping("/tickets")
-    public Ticket getMyTickets(HttpServletRequest request) {
-        // TODO ticket_id 출력 안되게
-        return memberService.findMemberByAccessToken(request).getTicket();
+    public MyTicketResponseDto getMyTickets(HttpServletRequest request) {
+        return memberService.getMyTicket(memberService.findMemberByAccessToken(request));
     }
 
     @Operation(summary = "닉네임 변경")
