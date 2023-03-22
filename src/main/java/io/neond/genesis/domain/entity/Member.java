@@ -51,6 +51,8 @@ public class Member {
 
     private String refreshToken;
 
+    private String registerDate;
+
     public void updateNickname(String newNickname) {
         this.nickname = newNickname;
     }

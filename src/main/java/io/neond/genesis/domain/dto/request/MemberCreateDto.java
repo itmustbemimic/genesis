@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.Instant;
 import java.util.UUID;
 
 @Getter
@@ -47,6 +48,7 @@ public class MemberCreateDto {
                 .birth(birth)
                 .gender(gender)
                 .ticket(ticket)
+                .registerDate(Instant.now().toString())
                 .build();
     }
 
