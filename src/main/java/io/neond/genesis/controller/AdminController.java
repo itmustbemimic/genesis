@@ -63,6 +63,4 @@ public class AdminController {
         return adminService.verifyQrToken(request.getHeader("qrToken"));
     }
 
-
-
 }

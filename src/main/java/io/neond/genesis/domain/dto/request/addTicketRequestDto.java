@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class addTicketRequestDto {
-    private String memberId;
+    private String uuid;
     private int blackAmount;
     private int redAmount;
     private int goldAmount;

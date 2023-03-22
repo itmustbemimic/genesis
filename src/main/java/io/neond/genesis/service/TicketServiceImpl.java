@@ -22,7 +22,7 @@ public class TicketServiceImpl implements TicketService{
 
     @Override
     public Ticket addTickets(addTicketRequestDto requestDto) {
-        Member member = memberRepository.findByMemberId(requestDto.getMemberId()).orElseThrow(() -> new RuntimeException("찾을 수 없는 아이디"));
+        Member member = memberRepository.findByUuid(requestDto.getUuid()).orElseThrow(() -> new RuntimeException("찾을 수 없는 아이디"));
 
         Ticket ticket = member.getTicket();
 

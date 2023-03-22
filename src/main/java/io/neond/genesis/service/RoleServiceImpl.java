@@ -27,7 +27,7 @@ public class RoleServiceImpl implements RoleService{
 
     @Override
     public String permitMember(RoleToMemberRequestDto requestDto) {
-        Member member = memberRepository.findByMemberId(requestDto.getMemberId()).orElseThrow(() -> new RuntimeException("찾을 수 없는 아이디 "));
+        Member member = memberRepository.findByUuid(requestDto.getUuid()).orElseThrow(() -> new RuntimeException("찾을 수 없는 아이디 "));
         Role role = roleRepository.findByName("ROLE_PERMITTED").orElseThrow(() -> new RuntimeException("찾을 수 없는 role"));
         member.getRoles().add(role);
 
