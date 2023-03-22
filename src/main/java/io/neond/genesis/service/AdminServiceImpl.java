@@ -8,8 +8,10 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import io.neond.genesis.domain.dto.response.ErrorResponse;
+import io.neond.genesis.domain.dto.response.WaitingMemberDto;
 import io.neond.genesis.domain.entity.Member;
 import io.neond.genesis.domain.repository.MemberRepository;
+import io.neond.genesis.domain.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 import static io.neond.genesis.security.Constants.TOKEN_HEADER_PREFIX;
@@ -26,6 +29,8 @@ import static io.neond.genesis.security.Constants.TOKEN_HEADER_PREFIX;
 @Slf4j
 public class AdminServiceImpl implements AdminService{
     private final MemberRepository memberRepository;
+    private final RoleRepository roleRepository;
+
     @Value("${jwt.secret.qr")
     private String qrSecretKey;
 
@@ -53,6 +58,12 @@ public class AdminServiceImpl implements AdminService{
         }
     }
 
+    @Override
+    public List<WaitingMemberDto> getWaitingMember() {
+        return memberRepository.findMembersByRolesNotContains(
+                roleRepository.findByName("ROLE_PERMITTED").orElseThrow(() -> new RuntimeException("찾을 수 없는 role"))
+        );
+    }
 
 
 }

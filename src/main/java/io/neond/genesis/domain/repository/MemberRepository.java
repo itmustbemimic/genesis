@@ -1,7 +1,9 @@
 package io.neond.genesis.domain.repository;
 
 import io.neond.genesis.domain.dto.response.SearchNicknameDto;
+import io.neond.genesis.domain.dto.response.WaitingMemberDto;
 import io.neond.genesis.domain.entity.Member;
+import io.neond.genesis.domain.entity.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -13,4 +15,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     boolean existsByMemberId(String memberId);
     boolean existsByNickname(String nickname);
     List<SearchNicknameDto> findByNicknameContains(String nickname);
+
+    List<WaitingMemberDto> findMembersByRolesNotContains(Role role);
 }

@@ -2,6 +2,7 @@ package io.neond.genesis.controller;
 
 import io.neond.genesis.domain.dto.request.RoleToMemberRequestDto;
 import io.neond.genesis.domain.dto.request.addTicketRequestDto;
+import io.neond.genesis.domain.dto.response.WaitingMemberDto;
 import io.neond.genesis.domain.entity.Ticket;
 import io.neond.genesis.service.AdminService;
 import io.neond.genesis.service.RoleService;
@@ -14,6 +15,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RequiredArgsConstructor
@@ -61,6 +64,16 @@ public class AdminController {
     @GetMapping("/verifyqr")
     public ResponseEntity verifyQr(HttpServletRequest request) {
         return adminService.verifyQrToken(request.getHeader("qrToken"));
+    }
+
+    @Operation(summary = "가입 승인 대기 유저들 리스트")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "가입 승인 대기 유저들 리스트"),
+            @ApiResponse(responseCode = "500", description = "에러 날 일이 없는데?")
+    })
+    @GetMapping("/waiting")
+    public List<WaitingMemberDto> getWaitingMembers(){
+        return adminService.getWaitingMember();
     }
 
 }
