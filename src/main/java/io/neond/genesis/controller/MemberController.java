@@ -4,8 +4,6 @@ import io.neond.genesis.domain.dto.response.MyGamesDto;
 import io.neond.genesis.domain.dto.response.MyTicketResponseDto;
 import io.neond.genesis.domain.dto.response.RankingResponseDto;
 import io.neond.genesis.domain.dto.response.SearchNicknameDto;
-import io.neond.genesis.domain.entity.MemberGameResult;
-import io.neond.genesis.domain.entity.Ticket;
 import io.neond.genesis.domain.repository.MemberRepository;
 import io.neond.genesis.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,10 +21,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @RestController

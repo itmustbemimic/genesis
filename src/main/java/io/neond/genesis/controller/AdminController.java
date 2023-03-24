@@ -1,7 +1,7 @@
 package io.neond.genesis.controller;
 
 import io.neond.genesis.domain.dto.request.RoleToMemberRequestDto;
-import io.neond.genesis.domain.dto.request.addTicketRequestDto;
+import io.neond.genesis.domain.dto.request.AddTicketRequestDto;
 import io.neond.genesis.domain.dto.response.WaitingMemberDto;
 import io.neond.genesis.domain.entity.Ticket;
 import io.neond.genesis.service.AdminService;
@@ -52,7 +52,7 @@ public class AdminController {
             @ApiResponse(responseCode = "400", description = "찾을 수 없는 아이디 or 입력값 에러")
     })
     @PutMapping("/addtickets")
-    public ResponseEntity<Ticket> addBlackTicketToUser(@RequestBody addTicketRequestDto requestDto) {
+    public ResponseEntity<Ticket> addBlackTicketToUser(@RequestBody AddTicketRequestDto requestDto) {
         return ResponseEntity.created(null).body(ticketService.addTickets(requestDto));
     }
 
