@@ -13,7 +13,6 @@ public class UseTicketRequestDto {
     private String type;
     private String usage;
     private int amount;
-    private String date;
 
     public TicketHistory toEntity(String _uuid){
         return TicketHistory.builder()

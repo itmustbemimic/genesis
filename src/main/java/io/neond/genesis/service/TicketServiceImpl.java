@@ -17,6 +17,8 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+
 
 @Transactional
 @Service
@@ -41,14 +43,30 @@ public class TicketServiceImpl implements TicketService{
                 ticket.getGold() + requestDto.getGoldAmount()
                 );
 
+        if (requestDto.getBlackAmount() != 0) {
+            ticketHistoryRepository.save(requestDto.toEntity(member.getUuid(), "black", requestDto.getBlackAmount()));
+        }
+
+        if (requestDto.getRedAmount() != 0) {
+            ticketHistoryRepository.save(requestDto.toEntity(member.getUuid(), "red", requestDto.getRedAmount()));
+        }
+
+        if (requestDto.getGoldAmount() != 0) {
+            ticketHistoryRepository.save(requestDto.toEntity(member.getUuid(), "gold", requestDto.getGoldAmount()));
+        }
+
         return ticketRepository.save(update);
     }
 
     @Override
     public ResponseEntity useTickets(UseTicketRequestDto requestDto) {
         Member member = memberRepository.findByUuid(requestDto.getUuid()).orElseThrow();
-        ticketHistoryRepository.save(requestDto.toEntity(member.getUuid()));
         Ticket ticket = member.getTicket();
+
+        if (requestDto.getAmount() <= 0) {
+            log.warn("TicketService: requestDto.getAmount 0 이하 " + member.getMemberId() + member.getUuid());
+            return new ResponseEntity("비정상적인 접근", null, HttpStatus.BAD_REQUEST);
+        }
 
         switch (requestDto.getType()) {
             case "red":
@@ -59,7 +77,8 @@ public class TicketServiceImpl implements TicketService{
                         member.getUuid(),
                         0,
                         0 - requestDto.getAmount(),
-                        0
+                        0,
+                        requestDto.getUsage()
                 ));
                 break;
 
@@ -71,7 +90,8 @@ public class TicketServiceImpl implements TicketService{
                         member.getUuid(),
                         0 - requestDto.getAmount(),
                         0 ,
-                        0
+                        0,
+                        requestDto.getUsage()
                 ));
                 break;
 
@@ -83,14 +103,15 @@ public class TicketServiceImpl implements TicketService{
                         member.getUuid(),
                         0,
                         0,
-                        0 - requestDto.getAmount()
+                        0 - requestDto.getAmount(),
+                        requestDto.getUsage()
                 ));
                 break;
 
             default:
-                log.info("뭘 봐 팍씨");
+                return new ResponseEntity("티켓 타입 확인", null, HttpStatus.BAD_REQUEST);
 
         }
-        return new ResponseEntity<>(HttpStatusCode.valueOf(200));
+        return new ResponseEntity<>(HttpStatusCode.valueOf(201));
     }
 }

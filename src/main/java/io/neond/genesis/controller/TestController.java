@@ -1,25 +1,21 @@
 package io.neond.genesis.controller;
 
+import io.neond.genesis.domain.dto.request.AddTicketRequestDto;
 import io.neond.genesis.domain.dto.request.UseTicketRequestDto;
-import io.neond.genesis.domain.dto.response.ErrorResponse;
 import io.neond.genesis.domain.dto.response.SearchNicknameDto;
 import io.neond.genesis.domain.dto.response.WaitingMemberDto;
 import io.neond.genesis.domain.entity.Member;
-import io.neond.genesis.domain.entity.TicketHistory;
+import io.neond.genesis.domain.entity.Ticket;
 import io.neond.genesis.domain.repository.MemberRepository;
 import io.neond.genesis.service.AdminService;
-import io.neond.genesis.service.MemberService;
 import io.neond.genesis.service.RoleService;
 import io.neond.genesis.service.TicketService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
@@ -55,6 +51,11 @@ public class TestController {
     @PutMapping("/usetickets")
     public ResponseEntity useTickets(@RequestBody UseTicketRequestDto requestDto) {
         return ticketService.useTickets(requestDto);
+    }
+
+    @PutMapping("/addtickets")
+    public Ticket addTickets(@RequestBody AddTicketRequestDto requestDto) {
+        return ticketService.addTickets(requestDto);
     }
 
 }
