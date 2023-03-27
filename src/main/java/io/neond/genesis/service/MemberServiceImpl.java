@@ -1,7 +1,5 @@
 package io.neond.genesis.service;
 
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.*;
 import com.amazonaws.util.IOUtils;
@@ -13,12 +11,14 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import io.neond.genesis.domain.dto.response.MyGamesDto;
 import io.neond.genesis.domain.dto.response.MyTicketResponseDto;
 import io.neond.genesis.domain.dto.response.RankingResponseDto;
+import io.neond.genesis.domain.dto.response.TicketHistoryResponseDto;
 import io.neond.genesis.domain.entity.Member;
 import io.neond.genesis.domain.dto.request.MemberCreateDto;
 import io.neond.genesis.domain.entity.Ticket;
 import io.neond.genesis.domain.repository.MemberGameResultRepository;
 import io.neond.genesis.domain.repository.MemberRepository;
 import io.neond.genesis.domain.entity.Role;
+import io.neond.genesis.domain.repository.TicketHistoryRepository;
 import io.neond.genesis.domain.repository.TicketRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
@@ -54,11 +54,11 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
 
     private final MemberRepository memberRepository;
     private final TicketRepository ticketRepository;
+    private final TicketHistoryRepository ticketHistoryRepository;
     private final MemberGameResultRepository memberGameResultRepository;
     private final PasswordEncoder passwordEncoder;
     private final AmazonS3 amazonS3;
-    private final AmazonDynamoDB amazonDynamoDB;
-    private final DynamoDBMapper dbMapper;
+
 
     @Value("${jwt.secret}")
     private String secretKey;
@@ -270,5 +270,10 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
         Ticket ticket = member.getTicket();
 
         return new MyTicketResponseDto(ticket.getBlack(), ticket.getRed(), ticket.getGold());
+    }
+
+    @Override
+    public List<TicketHistoryResponseDto> getMyTicketHistory(Member member) {
+        return ticketHistoryRepository.findByUuidOrderByDateDesc(member.getUuid());
     }
 }

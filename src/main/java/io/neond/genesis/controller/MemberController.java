@@ -1,9 +1,6 @@
 package io.neond.genesis.controller;
 
-import io.neond.genesis.domain.dto.response.MyGamesDto;
-import io.neond.genesis.domain.dto.response.MyTicketResponseDto;
-import io.neond.genesis.domain.dto.response.RankingResponseDto;
-import io.neond.genesis.domain.dto.response.SearchNicknameDto;
+import io.neond.genesis.domain.dto.response.*;
 import io.neond.genesis.domain.repository.MemberRepository;
 import io.neond.genesis.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -152,6 +149,14 @@ public class MemberController {
     @GetMapping("/search")
     public List<SearchNicknameDto> search(@RequestParam String nickname) {
         return memberRepository.findByNicknameContains(nickname);
+    }
+
+    @GetMapping("/ticket/history")
+    public List<TicketHistoryResponseDto> getMyTicketHitory(HttpServletRequest request){
+        return memberService.getMyTicketHistory(
+                memberService.findMemberByAccessToken(request)
+        );
+
     }
 
 }

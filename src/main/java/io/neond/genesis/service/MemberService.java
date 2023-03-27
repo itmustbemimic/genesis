@@ -4,6 +4,7 @@ import io.neond.genesis.domain.dto.request.MemberCreateDto;
 import io.neond.genesis.domain.dto.response.MyGamesDto;
 import io.neond.genesis.domain.dto.response.MyTicketResponseDto;
 import io.neond.genesis.domain.dto.response.RankingResponseDto;
+import io.neond.genesis.domain.dto.response.TicketHistoryResponseDto;
 import io.neond.genesis.domain.entity.Member;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
@@ -29,5 +30,6 @@ public interface MemberService {
     List<RankingResponseDto> getWeeklyRank(Date weekStart);
     List<RankingResponseDto> getMonthlyRank(Date weekStart);
     MyTicketResponseDto getMyTicket(Member member);
+    List<TicketHistoryResponseDto> getMyTicketHistory(Member member);
 
 }
