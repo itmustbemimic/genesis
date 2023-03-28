@@ -11,4 +11,5 @@ public class WaitingMemberDto {
     private String memberId;
     private String nickname;
     private String registerDate;
+    private String uuid;
 }
