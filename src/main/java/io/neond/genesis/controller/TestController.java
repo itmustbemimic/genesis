@@ -13,6 +13,7 @@ import io.neond.genesis.service.TicketService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -44,8 +45,8 @@ public class TestController {
     }
 
     @GetMapping("/waiting")
-    public List<WaitingMemberDto> getWaiting() {
-        return adminService.getWaitingMember();
+    public List<WaitingMemberDto> getWaitingMembers(@RequestParam @Nullable String nickname){
+        return nickname == null ? adminService.getWaitingMember() : adminService.searchWaitingMember(nickname);
     }
 
     @PutMapping("/usetickets")

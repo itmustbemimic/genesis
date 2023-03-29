@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -73,8 +74,8 @@ public class AdminController {
             @ApiResponse(responseCode = "500", description = "에러 날 일이 없는데?")
     })
     @GetMapping("/waiting")
-    public List<WaitingMemberDto> getWaitingMembers(){
-        return adminService.getWaitingMember();
+    public List<WaitingMemberDto> getWaitingMembers(@RequestParam @Nullable String nickname){
+        return nickname == null ? adminService.getWaitingMember() : adminService.searchWaitingMember(nickname);
     }
 
     @Operation(summary = "유저 티켓 사용")

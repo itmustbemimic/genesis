@@ -10,4 +10,5 @@ public interface AdminService {
     ResponseEntity verifyQrToken(String qrToken);
 
     List<WaitingMemberDto> getWaitingMember();
+    List<WaitingMemberDto> searchWaitingMember(String nickname);
 }

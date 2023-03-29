@@ -16,4 +16,5 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     boolean existsByNickname(String nickname);
     List<SearchNicknameDto> findByNicknameContains(String nickname);
     List<WaitingMemberDto> findMembersByRolesNotContains(Role role);
+    List<WaitingMemberDto> findMembersByRolesNotContainsAndAndNicknameContains(Role role, String nickname);
 }
