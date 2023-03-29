@@ -10,7 +10,7 @@ import java.time.Instant;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AddTicketRequestDto {
+public class AddMultipleTicketRequestDto {
     private String uuid;
     private int blackAmount;
     private int redAmount;

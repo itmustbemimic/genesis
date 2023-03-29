@@ -1,7 +1,8 @@
 package io.neond.genesis.controller;
 
-import io.neond.genesis.domain.dto.request.AddTicketRequestDto;
+import io.neond.genesis.domain.dto.request.AddMultipleTicketRequestDto;
 import io.neond.genesis.domain.dto.request.UseTicketRequestDto;
+import io.neond.genesis.domain.dto.response.MyTicketResponseDto;
 import io.neond.genesis.domain.dto.response.SearchNicknameDto;
 import io.neond.genesis.domain.dto.response.WaitingMemberDto;
 import io.neond.genesis.domain.entity.Member;
@@ -55,8 +56,8 @@ public class TestController {
     }
 
     @PutMapping("/addtickets")
-    public Ticket addTickets(@RequestBody AddTicketRequestDto requestDto) {
-        return ticketService.addTickets(requestDto);
+    public MyTicketResponseDto addTickets(@RequestBody AddMultipleTicketRequestDto requestDto) {
+        return ticketService.addMultipleTickets(requestDto);
     }
 
 }

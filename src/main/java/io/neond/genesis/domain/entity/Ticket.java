@@ -1,5 +1,6 @@
 package io.neond.genesis.domain.entity;
 
+import io.neond.genesis.domain.dto.response.MyTicketResponseDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,5 +21,13 @@ public class Ticket {
     private int black;
     private int red;
     private int gold;
+
+    public MyTicketResponseDto toResponseDto() {
+        return MyTicketResponseDto.builder()
+                .red(red)
+                .black(black)
+                .gold(gold)
+                .build();
+    }
 
 }

@@ -1,11 +1,10 @@
 package io.neond.genesis.service;
 
-import io.neond.genesis.domain.dto.request.AddTicketRequestDto;
+import io.neond.genesis.domain.dto.request.AddMultipleTicketRequestDto;
 import io.neond.genesis.domain.dto.request.UseTicketRequestDto;
-import io.neond.genesis.domain.dto.response.ErrorResponse;
+import io.neond.genesis.domain.dto.response.MyTicketResponseDto;
 import io.neond.genesis.domain.entity.Member;
 import io.neond.genesis.domain.entity.Ticket;
-import io.neond.genesis.domain.entity.TicketHistory;
 import io.neond.genesis.domain.repository.MemberRepository;
 import io.neond.genesis.domain.repository.TicketHistoryRepository;
 import io.neond.genesis.domain.repository.TicketRepository;
@@ -16,8 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
-import java.time.Instant;
 
 
 @Transactional
@@ -31,7 +28,7 @@ public class TicketServiceImpl implements TicketService{
     private final TicketHistoryRepository ticketHistoryRepository;
 
     @Override
-    public Ticket addTickets(AddTicketRequestDto requestDto) {
+    public MyTicketResponseDto addMultipleTickets(AddMultipleTicketRequestDto requestDto) {
         Member member = memberRepository.findByUuid(requestDto.getUuid()).orElseThrow(() -> new RuntimeException("찾을 수 없는 아이디"));
 
         Ticket ticket = member.getTicket();
@@ -55,7 +52,7 @@ public class TicketServiceImpl implements TicketService{
             ticketHistoryRepository.save(requestDto.toEntity(member.getUuid(), "gold", requestDto.getGoldAmount()));
         }
 
-        return ticketRepository.save(update);
+        return ticketRepository.save(update).toResponseDto();
     }
 
     @Override
@@ -73,7 +70,7 @@ public class TicketServiceImpl implements TicketService{
                 if (ticket.getRed() <= 0) {
                     return new ResponseEntity("티켓 부족", null, HttpStatus.CONFLICT);
                 }
-                addTickets(new AddTicketRequestDto(
+                addMultipleTickets(new AddMultipleTicketRequestDto(
                         member.getUuid(),
                         0,
                         0 - requestDto.getAmount(),
@@ -86,7 +83,7 @@ public class TicketServiceImpl implements TicketService{
                 if (ticket.getBlack() <= 0) {
                     return new ResponseEntity("티켓 부족", null, HttpStatus.CONFLICT);
                 }
-                addTickets(new AddTicketRequestDto(
+                addMultipleTickets(new AddMultipleTicketRequestDto(
                         member.getUuid(),
                         0 - requestDto.getAmount(),
                         0 ,
@@ -99,7 +96,7 @@ public class TicketServiceImpl implements TicketService{
                 if (ticket.getGold() <= 0) {
                     return new ResponseEntity("티켓 부족", null, HttpStatus.CONFLICT);
                 }
-                addTickets(new AddTicketRequestDto(
+                addMultipleTickets(new AddMultipleTicketRequestDto(
                         member.getUuid(),
                         0,
                         0,

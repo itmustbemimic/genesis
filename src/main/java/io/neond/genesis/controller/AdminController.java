@@ -1,8 +1,9 @@
 package io.neond.genesis.controller;
 
 import io.neond.genesis.domain.dto.request.RoleToMemberRequestDto;
-import io.neond.genesis.domain.dto.request.AddTicketRequestDto;
+import io.neond.genesis.domain.dto.request.AddMultipleTicketRequestDto;
 import io.neond.genesis.domain.dto.request.UseTicketRequestDto;
+import io.neond.genesis.domain.dto.response.MyTicketResponseDto;
 import io.neond.genesis.domain.dto.response.WaitingMemberDto;
 import io.neond.genesis.domain.entity.Ticket;
 import io.neond.genesis.service.AdminService;
@@ -54,8 +55,8 @@ public class AdminController {
             @ApiResponse(responseCode = "400", description = "찾을 수 없는 아이디 or 입력값 에러")
     })
     @PutMapping("/addtickets")
-    public ResponseEntity<Ticket> addTickets(@RequestBody AddTicketRequestDto requestDto) {
-        return ResponseEntity.created(null).body(ticketService.addTickets(requestDto));
+    public ResponseEntity<MyTicketResponseDto> addTickets(@RequestBody AddMultipleTicketRequestDto requestDto) {
+        return ResponseEntity.created(null).body(ticketService.addMultipleTickets(requestDto));
     }
 
     @Operation(summary = "qr코드 토큰 검증")
@@ -70,7 +71,7 @@ public class AdminController {
 
     @Operation(summary = "가입 승인 대기 유저들 리스트")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "가입 승인 대기 유저들 리스트"),
+            @ApiResponse(responseCode = "200", description = "파라미터 있으면 가입 승인 대기 유저들 검색"),
             @ApiResponse(responseCode = "500", description = "에러 날 일이 없는데?")
     })
     @GetMapping("/waiting")

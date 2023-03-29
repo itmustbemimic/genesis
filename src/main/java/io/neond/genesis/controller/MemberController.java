@@ -1,8 +1,11 @@
 package io.neond.genesis.controller;
 
+import io.neond.genesis.domain.dto.request.GiveTicketsRequestDto;
+import io.neond.genesis.domain.dto.request.UseTicketRequestDto;
 import io.neond.genesis.domain.dto.response.*;
 import io.neond.genesis.domain.repository.MemberRepository;
 import io.neond.genesis.service.MemberService;
+import io.neond.genesis.service.TicketService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -30,6 +33,7 @@ public class MemberController {
 
     private final MemberService memberService;
     private final MemberRepository memberRepository;
+    private final TicketService ticketService;
 
     @Operation(summary = "가입 승인된 유저 권한 테스트")
     @ApiResponses(value = {
@@ -156,6 +160,18 @@ public class MemberController {
         return memberService.getMyTicketHistory(
                 memberService.findMemberByAccessToken(request)
         );
+    }
+
+    @GetMapping("/ticket/gift")
+    public void giveTickets(HttpServletRequest request, @RequestBody GiveTicketsRequestDto requestDto) {
+        ticketService.useTickets(
+                new UseTicketRequestDto(memberService.findMemberByAccessToken(request).getUuid(),
+                        requestDto.getType(),
+                        memberRepository.findByUuid(requestDto.getTo()).get().getNickname() + " 에게 선물하기",
+                        requestDto.getAmount()
+                ));
+
+
 
     }
 
