@@ -2,10 +2,9 @@ package io.neond.genesis.controller;
 
 import io.neond.genesis.domain.dto.request.RoleToMemberRequestDto;
 import io.neond.genesis.domain.dto.request.AddMultipleTicketRequestDto;
-import io.neond.genesis.domain.dto.request.UseTicketRequestDto;
+import io.neond.genesis.domain.dto.request.SingleTicketRequestDto;
 import io.neond.genesis.domain.dto.response.MyTicketResponseDto;
 import io.neond.genesis.domain.dto.response.WaitingMemberDto;
-import io.neond.genesis.domain.entity.Ticket;
 import io.neond.genesis.service.AdminService;
 import io.neond.genesis.service.RoleService;
 import io.neond.genesis.service.TicketService;
@@ -85,7 +84,7 @@ public class AdminController {
             @ApiResponse(responseCode = "400", description = "티켓 타입 확인 or 티켓 숫자 0 이하")
     })
     @PutMapping("/usetickets")
-    public ResponseEntity useTickets(@RequestBody UseTicketRequestDto requestDto) {
+    public ResponseEntity useTickets(@RequestBody SingleTicketRequestDto requestDto) {
         return ticketService.useTickets(requestDto);
     }
 

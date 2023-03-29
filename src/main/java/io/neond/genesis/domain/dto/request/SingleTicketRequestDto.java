@@ -9,7 +9,7 @@ import java.time.Instant;
 
 @Getter
 @AllArgsConstructor
-public class UseTicketRequestDto {
+public class SingleTicketRequestDto {
 
     @Schema(example = "7a034705-7207-4791-9d0a-1e8371008b4b")
     private String uuid;
@@ -23,9 +23,9 @@ public class UseTicketRequestDto {
     @Schema(example = "2")
     private int amount;
 
-    public TicketHistory toEntity(String _uuid){
+    public TicketHistory toEntity(){
         return TicketHistory.builder()
-                .uuid(_uuid)
+                .uuid(uuid)
                 .type(type)
                 .summary(usage)
                 .amount(amount)

@@ -1,7 +1,7 @@
 package io.neond.genesis.service;
 
 import io.neond.genesis.domain.dto.request.AddMultipleTicketRequestDto;
-import io.neond.genesis.domain.dto.request.UseTicketRequestDto;
+import io.neond.genesis.domain.dto.request.SingleTicketRequestDto;
 import io.neond.genesis.domain.dto.response.MyTicketResponseDto;
 import io.neond.genesis.domain.entity.Member;
 import io.neond.genesis.domain.entity.Ticket;
@@ -56,7 +56,50 @@ public class TicketServiceImpl implements TicketService{
     }
 
     @Override
-    public ResponseEntity useTickets(UseTicketRequestDto requestDto) {
+    public MyTicketResponseDto addSingleTickets(SingleTicketRequestDto requestDto) {
+        Member member = memberRepository.findByUuid(requestDto.getUuid()).orElseThrow(() -> new RuntimeException("찾을 수 없는 아이디 "));
+        Ticket ticket = member.getTicket();
+
+        Ticket update = ticket;
+
+        switch (requestDto.getType()) {
+            case "red":
+                update = new Ticket(
+                        ticket.getId(),
+                        ticket.getBlack(),
+                        ticket.getRed() + requestDto.getAmount(),
+                        ticket.getGold()
+                );
+                break;
+
+            case "black":
+                update = new Ticket(
+                        ticket.getId(),
+                        ticket.getBlack() + requestDto.getAmount(),
+                        ticket.getRed(),
+                        ticket.getGold()
+                );
+                break;
+
+            case "gold":
+                update = new Ticket(
+                        ticket.getId(),
+                        ticket.getBlack(),
+                        ticket.getRed(),
+                        ticket.getGold() + requestDto.getAmount()
+                );
+                break;
+
+            default:
+                break;
+        }
+
+        ticketHistoryRepository.save(requestDto.toEntity());
+        return ticketRepository.save(update).toResponseDto();
+    }
+
+    @Override
+    public ResponseEntity useTickets(SingleTicketRequestDto requestDto) {
         Member member = memberRepository.findByUuid(requestDto.getUuid()).orElseThrow();
         Ticket ticket = member.getTicket();
 
@@ -67,7 +110,7 @@ public class TicketServiceImpl implements TicketService{
 
         switch (requestDto.getType()) {
             case "red":
-                if (ticket.getRed() <= 0) {
+                if (ticket.getRed() - requestDto.getAmount() < 0) {
                     return new ResponseEntity("티켓 부족", null, HttpStatus.CONFLICT);
                 }
                 addMultipleTickets(new AddMultipleTicketRequestDto(
@@ -80,7 +123,7 @@ public class TicketServiceImpl implements TicketService{
                 break;
 
             case "black":
-                if (ticket.getBlack() <= 0) {
+                if (ticket.getBlack() - requestDto.getAmount() < 0) {
                     return new ResponseEntity("티켓 부족", null, HttpStatus.CONFLICT);
                 }
                 addMultipleTickets(new AddMultipleTicketRequestDto(
@@ -93,7 +136,7 @@ public class TicketServiceImpl implements TicketService{
                 break;
 
             case "gold":
-                if (ticket.getGold() <= 0) {
+                if (ticket.getGold() - requestDto.getAmount() < 0) {
                     return new ResponseEntity("티켓 부족", null, HttpStatus.CONFLICT);
                 }
                 addMultipleTickets(new AddMultipleTicketRequestDto(
@@ -111,4 +154,6 @@ public class TicketServiceImpl implements TicketService{
         }
         return new ResponseEntity<>(HttpStatusCode.valueOf(201));
     }
+
+
 }

@@ -1,12 +1,11 @@
 package io.neond.genesis.controller;
 
 import io.neond.genesis.domain.dto.request.AddMultipleTicketRequestDto;
-import io.neond.genesis.domain.dto.request.UseTicketRequestDto;
+import io.neond.genesis.domain.dto.request.SingleTicketRequestDto;
 import io.neond.genesis.domain.dto.response.MyTicketResponseDto;
 import io.neond.genesis.domain.dto.response.SearchNicknameDto;
 import io.neond.genesis.domain.dto.response.WaitingMemberDto;
 import io.neond.genesis.domain.entity.Member;
-import io.neond.genesis.domain.entity.Ticket;
 import io.neond.genesis.domain.repository.MemberRepository;
 import io.neond.genesis.service.AdminService;
 import io.neond.genesis.service.RoleService;
@@ -51,13 +50,18 @@ public class TestController {
     }
 
     @PutMapping("/usetickets")
-    public ResponseEntity useTickets(@RequestBody UseTicketRequestDto requestDto) {
+    public ResponseEntity useTickets(@RequestBody SingleTicketRequestDto requestDto) {
         return ticketService.useTickets(requestDto);
     }
 
     @PutMapping("/addtickets")
     public MyTicketResponseDto addTickets(@RequestBody AddMultipleTicketRequestDto requestDto) {
         return ticketService.addMultipleTickets(requestDto);
+    }
+
+    @PutMapping("addsingle")
+    public MyTicketResponseDto addSingle(@RequestBody SingleTicketRequestDto requestDto) {
+        return ticketService.addSingleTickets(requestDto);
     }
 
 }

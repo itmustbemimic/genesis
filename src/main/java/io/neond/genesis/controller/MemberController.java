@@ -1,7 +1,8 @@
 package io.neond.genesis.controller;
 
+import com.amazonaws.Response;
 import io.neond.genesis.domain.dto.request.GiveTicketsRequestDto;
-import io.neond.genesis.domain.dto.request.UseTicketRequestDto;
+import io.neond.genesis.domain.dto.request.SingleTicketRequestDto;
 import io.neond.genesis.domain.dto.response.*;
 import io.neond.genesis.domain.repository.MemberRepository;
 import io.neond.genesis.service.MemberService;
@@ -162,14 +163,36 @@ public class MemberController {
         );
     }
 
-    @GetMapping("/ticket/gift")
-    public void giveTickets(HttpServletRequest request, @RequestBody GiveTicketsRequestDto requestDto) {
-        ticketService.useTickets(
-                new UseTicketRequestDto(memberService.findMemberByAccessToken(request).getUuid(),
+    @PutMapping("/ticket/gift")
+    public ResponseEntity giveTickets(HttpServletRequest request, @RequestBody GiveTicketsRequestDto requestDto) {
+        ResponseEntity flag = ticketService.useTickets(
+                new SingleTicketRequestDto(
+                        memberService.findMemberByAccessToken(request).getUuid(),
                         requestDto.getType(),
                         memberRepository.findByUuid(requestDto.getTo()).get().getNickname() + " 에게 선물하기",
                         requestDto.getAmount()
-                ));
+                )
+        );
+
+        log.info(flag.getStatusCode().toString());
+
+        if (flag.getStatusCode().equals(HttpStatusCode.valueOf(201))) {
+            ticketService.addSingleTickets(
+                    new SingleTicketRequestDto(
+                            requestDto.getTo(),
+                            requestDto.getType(),
+                            memberService.findMemberByAccessToken(request).getUuid() + " 님이 보낸 선물",
+                            requestDto.getAmount()
+                    )
+            );
+
+            return new ResponseEntity(
+                    memberService.findMemberByAccessToken(request).getTicket().toResponseDto(),
+                    HttpStatusCode.valueOf(201));
+
+        } else return flag;
+
+
 
 
 
