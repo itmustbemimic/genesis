@@ -65,7 +65,7 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
             response.setContentType(APPLICATION_JSON_VALUE);
             response.setCharacterEncoding("utf-8");
             ErrorResponse errorResponse = new ErrorResponse(401, "토큰 만료");
-            new ObjectMapper().writeValue(response.getWriter(), errorResponse);
+            new ObjectMapper().writeValue(response.getWriter(), new ErrorResponse(401, "토큰 만료"));
         } catch (Exception e) {
             log.info("토큰 에러 " + e.getMessage());
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);

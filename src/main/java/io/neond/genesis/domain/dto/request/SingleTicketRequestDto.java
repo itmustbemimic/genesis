@@ -1,14 +1,18 @@
 package io.neond.genesis.domain.dto.request;
 
+import io.neond.genesis.domain.entity.Member;
 import io.neond.genesis.domain.entity.TicketHistory;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 import java.time.Instant;
 
 @Getter
 @AllArgsConstructor
+@Builder
 public class SingleTicketRequestDto {
 
     @Schema(example = "7a034705-7207-4791-9d0a-1e8371008b4b")
@@ -30,6 +34,15 @@ public class SingleTicketRequestDto {
                 .summary(usage)
                 .amount(amount)
                 .date(Instant.now().toString())
+                .build();
+    }
+
+    public SingleTicketRequestDto toJoinGame(Member member) {
+        return SingleTicketRequestDto.builder()
+                .uuid(member.getUuid())
+                .type(type)
+                .usage(usage)
+                .amount(amount)
                 .build();
     }
 }

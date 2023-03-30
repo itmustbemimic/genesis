@@ -169,7 +169,7 @@ public class MemberController {
                 new SingleTicketRequestDto(
                         memberService.findMemberByAccessToken(request).getUuid(),
                         requestDto.getType(),
-                        memberRepository.findByUuid(requestDto.getTo()).get().getNickname() + " 에게 선물하기",
+                        memberRepository.findByUuid(requestDto.getTo()).get().getNickname() + "에게 선물하기",
                         requestDto.getAmount()
                 )
         );
@@ -181,7 +181,7 @@ public class MemberController {
                     new SingleTicketRequestDto(
                             requestDto.getTo(),
                             requestDto.getType(),
-                            memberService.findMemberByAccessToken(request).getUuid() + " 님이 보낸 선물",
+                            memberService.findMemberByAccessToken(request).getNickname() + "님이 보낸 선물",
                             requestDto.getAmount()
                     )
             );
@@ -191,11 +191,14 @@ public class MemberController {
                     HttpStatusCode.valueOf(201));
 
         } else return flag;
+    }
 
-
-
-
-
+    @PutMapping("/joingame")
+    public ResponseEntity joinGame(HttpServletRequest request, @RequestBody SingleTicketRequestDto requestDto) {
+        return ticketService.useTickets(
+                requestDto.toJoinGame(
+                        memberService.findMemberByAccessToken(request)
+                ));
     }
 
 }

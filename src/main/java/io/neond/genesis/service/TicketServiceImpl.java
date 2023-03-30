@@ -154,6 +154,4 @@ public class TicketServiceImpl implements TicketService{
         }
         return new ResponseEntity<>(HttpStatusCode.valueOf(201));
     }
-
-
 }
