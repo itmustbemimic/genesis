@@ -171,6 +171,8 @@ public class MemberController {
     @ApiResponse(responseCode = "200", description = "가끔씩 이상한데 이건 뭐 내가 만든게 아니라서;;")
     @GetMapping("/search")
     public List<SearchNicknameDto> search(@RequestParam String nickname) {
+        // TODO 승인 안된친구들 안나오게
+        // TODO 파라미터 없으면 전체 출력
         return memberRepository.findByNicknameContains(nickname);
     }
 
@@ -210,8 +212,6 @@ public class MemberController {
                         requestDto.getAmount()
                 )
         );
-
-        log.info(flag.getStatusCode().toString());
 
         if (flag.getStatusCode().equals(HttpStatusCode.valueOf(201))) {
             ticketService.addSingleTickets(

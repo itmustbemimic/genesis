@@ -3,6 +3,7 @@ package io.neond.genesis.controller;
 import io.neond.genesis.domain.dto.request.RoleToMemberRequestDto;
 import io.neond.genesis.domain.dto.request.AddMultipleTicketRequestDto;
 import io.neond.genesis.domain.dto.request.SingleTicketRequestDto;
+import io.neond.genesis.domain.dto.response.AdminMemberDto;
 import io.neond.genesis.domain.dto.response.MyTicketResponseDto;
 import io.neond.genesis.domain.dto.response.WaitingMemberDto;
 import io.neond.genesis.service.AdminService;
@@ -86,6 +87,13 @@ public class AdminController {
     @PutMapping("/usetickets")
     public ResponseEntity useTickets(@RequestBody SingleTicketRequestDto requestDto) {
         return ticketService.useTickets(requestDto);
+    }
+
+    @Operation(summary = "어드민 리스트")
+    @ApiResponse(responseCode = "200")
+    @GetMapping("/list")
+    public List<AdminMemberDto> getAdminList() {
+        return adminService.getAdminMember();
     }
 
 }

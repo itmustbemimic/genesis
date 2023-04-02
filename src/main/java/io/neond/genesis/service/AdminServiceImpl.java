@@ -7,6 +7,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import io.neond.genesis.domain.dto.response.AdminMemberDto;
 import io.neond.genesis.domain.dto.response.ErrorResponse;
 import io.neond.genesis.domain.dto.response.WaitingMemberDto;
 import io.neond.genesis.domain.entity.Member;
@@ -70,6 +71,13 @@ public class AdminServiceImpl implements AdminService{
         return memberRepository.findMembersByRolesNotContainsAndAndNicknameContains(
                 roleRepository.findByName("ROLE_PERMITTED").orElseThrow(() -> new RuntimeException("찾을 수 없는 role")),
                 nickname
+        );
+    }
+
+    @Override
+    public List<AdminMemberDto> getAdminMember() {
+        return memberRepository.findByRoles(
+                roleRepository.findByName("ROLE_ADMIN").orElseThrow(() -> new RuntimeException("찾을 수 없는 role"))
         );
     }
 

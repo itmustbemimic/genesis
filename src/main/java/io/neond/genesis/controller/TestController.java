@@ -2,6 +2,7 @@ package io.neond.genesis.controller;
 
 import io.neond.genesis.domain.dto.request.AddMultipleTicketRequestDto;
 import io.neond.genesis.domain.dto.request.SingleTicketRequestDto;
+import io.neond.genesis.domain.dto.response.AdminMemberDto;
 import io.neond.genesis.domain.dto.response.MyTicketResponseDto;
 import io.neond.genesis.domain.dto.response.SearchNicknameDto;
 import io.neond.genesis.domain.dto.response.WaitingMemberDto;
@@ -59,9 +60,14 @@ public class TestController {
         return ticketService.addMultipleTickets(requestDto);
     }
 
-    @PutMapping("addsingle")
+    @PutMapping("/addsingle")
     public MyTicketResponseDto addSingle(@RequestBody SingleTicketRequestDto requestDto) {
         return ticketService.addSingleTickets(requestDto);
+    }
+
+    @GetMapping("/admins")
+    public List<AdminMemberDto> getAdmins() {
+        return adminService.getAdminMember();
     }
 
 }
