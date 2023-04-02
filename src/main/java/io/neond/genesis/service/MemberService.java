@@ -28,6 +28,8 @@ public interface MemberService {
     List<RankingResponseDto> getWeeklyRank(Date weekStart);
     List<RankingResponseDto> getMonthlyRank(Date weekStart);
     MyTicketResponseDto getMyTicket(Member member);
+    List<SearchNicknameDto> getAllPermittedMember();
+    List<SearchNicknameDto> searchPermittedMember(String nickname);
 
 
 }

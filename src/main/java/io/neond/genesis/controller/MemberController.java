@@ -1,10 +1,8 @@
 package io.neond.genesis.controller;
 
-import com.amazonaws.Response;
 import io.neond.genesis.domain.dto.request.GiveTicketsRequestDto;
 import io.neond.genesis.domain.dto.request.SingleTicketRequestDto;
 import io.neond.genesis.domain.dto.response.*;
-import io.neond.genesis.domain.entity.TicketHistory;
 import io.neond.genesis.domain.repository.MemberRepository;
 import io.neond.genesis.service.MemberService;
 import io.neond.genesis.service.TicketService;
@@ -19,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -168,12 +167,12 @@ public class MemberController {
     }
 
     @Operation(summary = "유저닉네임 검색")
-    @ApiResponse(responseCode = "200", description = "가끔씩 이상한데 이건 뭐 내가 만든게 아니라서;;")
+    @ApiResponse(responseCode = "200", description = "파라미터 없으면 전체 출력, 있으면 검색")
     @GetMapping("/search")
-    public List<SearchNicknameDto> search(@RequestParam String nickname) {
-        // TODO 승인 안된친구들 안나오게
-        // TODO 파라미터 없으면 전체 출력
-        return memberRepository.findByNicknameContains(nickname);
+    public List<SearchNicknameDto> search(@RequestParam @Nullable String nickname) {
+        return nickname == null ?
+                memberService.getAllPermittedMember() :
+                memberService.searchPermittedMember(nickname);
     }
 
     @Operation(summary = "내 티켓 내역 전체 검색")

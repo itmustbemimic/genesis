@@ -12,11 +12,8 @@ import io.neond.genesis.domain.dto.response.*;
 import io.neond.genesis.domain.entity.Member;
 import io.neond.genesis.domain.dto.request.MemberCreateDto;
 import io.neond.genesis.domain.entity.Ticket;
-import io.neond.genesis.domain.repository.MemberGameResultRepository;
-import io.neond.genesis.domain.repository.MemberRepository;
+import io.neond.genesis.domain.repository.*;
 import io.neond.genesis.domain.entity.Role;
-import io.neond.genesis.domain.repository.TicketHistoryRepository;
-import io.neond.genesis.domain.repository.TicketRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -51,7 +48,7 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
 
     private final MemberRepository memberRepository;
     private final TicketRepository ticketRepository;
-    private final TicketHistoryRepository ticketHistoryRepository;
+    private final RoleRepository roleRepository;
     private final MemberGameResultRepository memberGameResultRepository;
     private final PasswordEncoder passwordEncoder;
     private final AmazonS3 amazonS3;
@@ -288,6 +285,21 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
         Ticket ticket = member.getTicket();
 
         return new MyTicketResponseDto(ticket.getBlack(), ticket.getRed(), ticket.getGold());
+    }
+
+    @Override
+    public List<SearchNicknameDto> getAllPermittedMember() {
+        return memberRepository.findAllByRoles(
+                roleRepository.findByName("ROLE_PERMITTED").orElseThrow(() -> new RuntimeException("찾을 수 없는 role"))
+                );
+    }
+
+    @Override
+    public List<SearchNicknameDto> searchPermittedMember(String nickname) {
+        return memberRepository.findByNicknameContainsAndRoles(
+                nickname,
+                roleRepository.findByName("ROLE_PERMITTED").orElseThrow(() -> new RuntimeException("찾을 수 없는 role"))
+                );
     }
 
 

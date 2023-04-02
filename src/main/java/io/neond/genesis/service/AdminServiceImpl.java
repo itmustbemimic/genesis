@@ -68,7 +68,7 @@ public class AdminServiceImpl implements AdminService{
 
     @Override
     public List<WaitingMemberDto> searchWaitingMember(String nickname) {
-        return memberRepository.findMembersByRolesNotContainsAndAndNicknameContains(
+        return memberRepository.findMembersByRolesNotContainsAndNicknameContains(
                 roleRepository.findByName("ROLE_PERMITTED").orElseThrow(() -> new RuntimeException("찾을 수 없는 role")),
                 nickname
         );

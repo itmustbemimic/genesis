@@ -40,11 +40,6 @@ public class TestController {
         return memberRepository.findAll();
     }
 
-    @GetMapping("/search")
-    public List<SearchNicknameDto> search(@RequestParam String nickname) {
-        return memberRepository.findByNicknameContains(nickname);
-    }
-
     @GetMapping("/waiting")
     public List<WaitingMemberDto> getWaitingMembers(@RequestParam @Nullable String nickname){
         return nickname == null ? adminService.getWaitingMember() : adminService.searchWaitingMember(nickname);

@@ -15,8 +15,9 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findByUuid(String uuid);
     boolean existsByMemberId(String memberId);
     boolean existsByNickname(String nickname);
-    List<SearchNicknameDto> findByNicknameContains(String nickname);
+    List<SearchNicknameDto> findByNicknameContainsAndRoles(String nickname, Role role);
+    List<SearchNicknameDto> findAllByRoles(Role role);
     List<WaitingMemberDto> findMembersByRolesNotContains(Role role);
-    List<WaitingMemberDto> findMembersByRolesNotContainsAndAndNicknameContains(Role role, String nickname);
+    List<WaitingMemberDto> findMembersByRolesNotContainsAndNicknameContains(Role role, String nickname);
     List<AdminMemberDto> findByRoles(Role role);
 }
