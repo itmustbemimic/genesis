@@ -156,6 +156,7 @@ public class MemberController {
         return memberRepository.findByNicknameContains(nickname);
     }
 
+    @Operation(summary = "내 티켓 내역 전체 검색")
     @GetMapping("/ticket/history")
     public List<TicketHistoryResponseDto> getMyTicketHitory(HttpServletRequest request){
         return memberService.getMyTicketHistory(
@@ -163,6 +164,7 @@ public class MemberController {
         );
     }
 
+    @Operation(summary = "멤버들끼리 티켓 선물")
     @PutMapping("/ticket/gift")
     public ResponseEntity giveTickets(HttpServletRequest request, @RequestBody GiveTicketsRequestDto requestDto) {
         ResponseEntity flag = ticketService.useTickets(
@@ -193,6 +195,7 @@ public class MemberController {
         } else return flag;
     }
 
+    @Operation(summary = "소켓 서버에서 게임 참여 할때 쓰는거")
     @PutMapping("/joingame")
     public ResponseEntity joinGame(HttpServletRequest request, @RequestBody SingleTicketRequestDto requestDto) {
         return ticketService.useTickets(

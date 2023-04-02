@@ -3,7 +3,6 @@ package io.neond.genesis.domain.dto.request;
 import io.neond.genesis.domain.entity.Member;
 import io.neond.genesis.domain.entity.TicketHistory;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
