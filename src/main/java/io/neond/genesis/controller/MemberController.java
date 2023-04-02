@@ -4,6 +4,7 @@ import com.amazonaws.Response;
 import io.neond.genesis.domain.dto.request.GiveTicketsRequestDto;
 import io.neond.genesis.domain.dto.request.SingleTicketRequestDto;
 import io.neond.genesis.domain.dto.response.*;
+import io.neond.genesis.domain.entity.TicketHistory;
 import io.neond.genesis.domain.repository.MemberRepository;
 import io.neond.genesis.service.MemberService;
 import io.neond.genesis.service.TicketService;
@@ -159,7 +160,22 @@ public class MemberController {
     @Operation(summary = "내 티켓 내역 전체 검색")
     @GetMapping("/ticket/history")
     public List<TicketHistoryResponseDto> getMyTicketHitory(HttpServletRequest request){
-        return memberService.getMyTicketHistory(
+        return ticketService.getMyTicketHistory(
+                memberService.findMemberByAccessToken(request)
+        );
+    }
+
+    @GetMapping("/ticket/history/use")
+    public List<TicketHistoryResponseDto> getMyUseTicketHistory(HttpServletRequest request){
+        return ticketService.getMyUseTicketHistory(
+                memberService.findMemberByAccessToken(request)
+        );
+
+    }
+
+    @GetMapping("/ticket/history/add")
+    public List<TicketHistoryResponseDto> getMyAddTicketHistory(HttpServletRequest request){
+        return ticketService.getMyAddTicketHistory(
                 memberService.findMemberByAccessToken(request)
         );
     }

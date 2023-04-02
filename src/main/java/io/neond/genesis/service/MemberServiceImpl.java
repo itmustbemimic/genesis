@@ -272,8 +272,5 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
         return new MyTicketResponseDto(ticket.getBlack(), ticket.getRed(), ticket.getGold());
     }
 
-    @Override
-    public List<TicketHistoryResponseDto> getMyTicketHistory(Member member) {
-        return ticketHistoryRepository.findByUuidOrderByDateDesc(member.getUuid());
-    }
+
 }

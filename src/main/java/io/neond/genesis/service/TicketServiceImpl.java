@@ -3,6 +3,7 @@ package io.neond.genesis.service;
 import io.neond.genesis.domain.dto.request.AddMultipleTicketRequestDto;
 import io.neond.genesis.domain.dto.request.SingleTicketRequestDto;
 import io.neond.genesis.domain.dto.response.MyTicketResponseDto;
+import io.neond.genesis.domain.dto.response.TicketHistoryResponseDto;
 import io.neond.genesis.domain.entity.Member;
 import io.neond.genesis.domain.entity.Ticket;
 import io.neond.genesis.domain.repository.MemberRepository;
@@ -15,6 +16,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 
 @Transactional
@@ -153,5 +156,20 @@ public class TicketServiceImpl implements TicketService{
 
         }
         return new ResponseEntity<>(HttpStatusCode.valueOf(201));
+    }
+
+    @Override
+    public List<TicketHistoryResponseDto> getMyTicketHistory(Member member) {
+        return ticketHistoryRepository.findByUuidOrderByDateDesc(member.getUuid());
+    }
+
+    @Override
+    public List<TicketHistoryResponseDto> getMyUseTicketHistory(Member member) {
+        return ticketHistoryRepository.findByUuidAndAmountLessThanOrderByDateDesc(member.getUuid(), 0);
+    }
+
+    @Override
+    public List<TicketHistoryResponseDto> getMyAddTicketHistory(Member member) {
+        return ticketHistoryRepository.findByUuidAndAmountGreaterThanOrderByDateDesc(member.getUuid(), 0);
     }
 }

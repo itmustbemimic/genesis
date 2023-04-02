@@ -30,6 +30,6 @@ public interface MemberService {
     List<RankingResponseDto> getWeeklyRank(Date weekStart);
     List<RankingResponseDto> getMonthlyRank(Date weekStart);
     MyTicketResponseDto getMyTicket(Member member);
-    List<TicketHistoryResponseDto> getMyTicketHistory(Member member);
+
 
 }
