@@ -1,10 +1,7 @@
 package io.neond.genesis.service;
 
 import io.neond.genesis.domain.dto.request.MemberCreateDto;
-import io.neond.genesis.domain.dto.response.MyGamesDto;
-import io.neond.genesis.domain.dto.response.MyTicketResponseDto;
-import io.neond.genesis.domain.dto.response.RankingResponseDto;
-import io.neond.genesis.domain.dto.response.TicketHistoryResponseDto;
+import io.neond.genesis.domain.dto.response.*;
 import io.neond.genesis.domain.entity.Member;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +23,7 @@ public interface MemberService {
     String uploadImage(Member member, MultipartFile file) throws IOException;
     ResponseEntity<byte[]> getImage(String memberId) throws IOException;
     ResponseEntity getQrToken(Member member);
+    List<MyMonthlyGameDto> getMonthlyMemberGameResult(Member member, Date date);
     List<MyGamesDto> getMemberGameResult(Member member);
     List<RankingResponseDto> getWeeklyRank(Date weekStart);
     List<RankingResponseDto> getMonthlyRank(Date weekStart);

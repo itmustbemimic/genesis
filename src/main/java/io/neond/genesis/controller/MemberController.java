@@ -112,7 +112,24 @@ public class MemberController {
     }
 
 
-    @Operation(summary = "마이페이지 - 내 게임 기록")
+    @Operation(summary = "내 월간 게임 기록")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "최신순으로 주르륵"),
+            @ApiResponse(responseCode = "500", description = "DB에러 로그 확인 필요")
+    })
+    @GetMapping("/mygames/monthly")
+    public List<MyMonthlyGameDto> getMonthlyMemberGameResult(HttpServletRequest request,
+                                                @Parameter(name = "날짜", description = "해당 날짜가 속한 주의 랭킹. 2023-03-08 입력 시 3월 둘째주 랭킹 출력")
+                                                @RequestParam
+                                                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+                                                Date date) {
+        return memberService.getMonthlyMemberGameResult(
+                memberService.findMemberByAccessToken(request),
+                date
+        );
+    }
+
+    @Operation(summary = "내 전체 게임 기록")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "최신순으로 주르륵"),
             @ApiResponse(responseCode = "500", description = "DB에러 로그 확인 필요")

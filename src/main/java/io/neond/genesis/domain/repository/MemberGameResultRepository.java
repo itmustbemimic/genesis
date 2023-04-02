@@ -1,6 +1,7 @@
 package io.neond.genesis.domain.repository;
 
 import io.neond.genesis.domain.dto.response.MyGamesDto;
+import io.neond.genesis.domain.dto.response.MyMonthlyGameDto;
 import io.neond.genesis.domain.dto.response.RankingResponseDto;
 import io.neond.genesis.domain.entity.MemberGameResult;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -27,4 +28,6 @@ public interface MemberGameResultRepository extends JpaRepository<MemberGameResu
             "ORDER BY game_date DESC",
     nativeQuery = true)
     List<MyGamesDto> getMyGames(@Param("uuid") String uuid);
+
+    List<MyMonthlyGameDto> findByUserUuidAndGameDateBetweenOrderByGameDateDesc(String uuid, String dayStart, String dayEnd);
 }

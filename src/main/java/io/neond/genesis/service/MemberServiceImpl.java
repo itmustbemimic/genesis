@@ -8,10 +8,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import io.neond.genesis.domain.dto.response.MyGamesDto;
-import io.neond.genesis.domain.dto.response.MyTicketResponseDto;
-import io.neond.genesis.domain.dto.response.RankingResponseDto;
-import io.neond.genesis.domain.dto.response.TicketHistoryResponseDto;
+import io.neond.genesis.domain.dto.response.*;
 import io.neond.genesis.domain.entity.Member;
 import io.neond.genesis.domain.dto.request.MemberCreateDto;
 import io.neond.genesis.domain.entity.Ticket;
@@ -227,6 +224,27 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
         String body = "{\"qrToken\" : \"" + qrToken + "\"}";
 
         return new ResponseEntity(body, headers, HttpStatus.OK);
+    }
+
+    @Override
+    public List<MyMonthlyGameDto> getMonthlyMemberGameResult(Member member, Date date) {
+//        return memberGameResultRepository.getMyGames(member.getUuid());
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+
+        cal.set(Calendar.DAY_OF_MONTH, cal.getMinimum(Calendar.DAY_OF_MONTH));
+        String monthStart = dateFormat.format(cal.getTime());
+        cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH) +1);
+        String monthEnd = dateFormat.format(cal.getTime());
+
+        return memberGameResultRepository.findByUserUuidAndGameDateBetweenOrderByGameDateDesc(
+                member.getUuid(),
+                monthStart,
+                monthEnd
+        );
     }
 
     @Override
