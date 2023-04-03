@@ -7,6 +7,7 @@ import io.neond.genesis.domain.dto.response.AdminMemberDto;
 import io.neond.genesis.domain.dto.response.MyTicketResponseDto;
 import io.neond.genesis.domain.dto.response.WaitingMemberDto;
 import io.neond.genesis.service.AdminService;
+import io.neond.genesis.service.MemberService;
 import io.neond.genesis.service.RoleService;
 import io.neond.genesis.service.TicketService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,6 +31,7 @@ public class AdminController {
     private final RoleService roleService;
     private final TicketService ticketService;
     private final AdminService adminService;
+    private final MemberService memberService;
 
     @Operation(summary = "admin 권한 테스트")
     @ApiResponses(value = {
@@ -55,8 +57,11 @@ public class AdminController {
             @ApiResponse(responseCode = "400", description = "찾을 수 없는 아이디 or 입력값 에러")
     })
     @PutMapping("/addtickets")
-    public ResponseEntity<MyTicketResponseDto> addTickets(@RequestBody AddMultipleTicketRequestDto requestDto) {
-        return ResponseEntity.created(null).body(ticketService.addMultipleTickets(requestDto));
+    public ResponseEntity<MyTicketResponseDto> addTickets(HttpServletRequest request, @RequestBody AddMultipleTicketRequestDto requestDto) {
+        return ResponseEntity.created(null).body(
+                ticketService.addMultipleTickets(requestDto.byAdmin(
+                        memberService.findMemberByAccessToken(request)
+                )));
     }
 
     @Operation(summary = "qr코드 토큰 검증")

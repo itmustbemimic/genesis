@@ -1,7 +1,9 @@
 package io.neond.genesis.domain.dto.request;
 
+import io.neond.genesis.domain.entity.Member;
 import io.neond.genesis.domain.entity.TicketHistory;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -10,6 +12,7 @@ import java.time.Instant;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class AddMultipleTicketRequestDto {
     private String uuid;
     private int blackAmount;
@@ -24,6 +27,16 @@ public class AddMultipleTicketRequestDto {
                 .summary(summary)
                 .amount(_amount)
                 .date(Instant.now().toString())
+                .build();
+    }
+
+    public AddMultipleTicketRequestDto byAdmin(Member member) {
+        return AddMultipleTicketRequestDto.builder()
+                .uuid(uuid)
+                .blackAmount(blackAmount)
+                .redAmount(redAmount)
+                .goldAmount(goldAmount)
+                .summary("Admin: " + member.getMemberId())
                 .build();
     }
 }
