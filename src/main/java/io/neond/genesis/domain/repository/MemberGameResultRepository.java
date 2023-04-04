@@ -16,7 +16,8 @@ public interface MemberGameResultRepository extends JpaRepository<MemberGameResu
             "FROM user_game_history ugh " +
             "RIGHT JOIN member m ON ugh.user_uuid = m.uuid " +
             "WHERE game_date BETWEEN :startDate AND :endDate " +
-            "GROUP BY user_uuid",
+            "GROUP BY user_uuid " +
+            "HAVING SUM(point) > 10",
         nativeQuery = true)
     List<RankingResponseDto> getRank(@Param("startDate") String startDate, @Param("endDate") String endDate);
 
