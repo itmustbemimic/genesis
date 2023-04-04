@@ -32,4 +32,5 @@ public interface MemberService {
     List<SearchNicknameDto> searchPermittedMember(String nickname);
 
 
+
 }
