@@ -16,6 +16,7 @@ import io.neond.genesis.service.AdminService;
 import io.neond.genesis.service.RoleService;
 import io.neond.genesis.service.TicketService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -94,6 +95,7 @@ public class TestController {
         return ResponseEntity.ok(null);
     }
 
+    @Getter
     public class FcmTestDto {
         private String title;
         private String body;
