@@ -53,6 +53,8 @@ public class Member {
 
     private String registerDate;
 
+    private String fcmToken;
+
     public void updateNickname(String newNickname) {
         this.nickname = newNickname;
     }

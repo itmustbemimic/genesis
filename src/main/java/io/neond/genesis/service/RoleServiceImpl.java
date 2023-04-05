@@ -68,9 +68,6 @@ public class RoleServiceImpl implements RoleService{
             memberRepository.delete(member);
             return ResponseEntity.ok(null);
         }
-
         return new ResponseEntity(HttpStatusCode.valueOf(409));
     }
-
-
 }

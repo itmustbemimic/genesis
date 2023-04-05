@@ -37,6 +37,8 @@ public class MemberCreateDto {
     @Schema(example = "male")
     private String gender;
 
+    private String fcmToken;
+
     public Member toEntity(Ticket ticket){
         return Member.builder()
                 .uuid(UUID.randomUUID().toString())
@@ -49,6 +51,7 @@ public class MemberCreateDto {
                 .gender(gender)
                 .ticket(ticket)
                 .registerDate(Instant.now().toString())
+                .fcmToken(fcmToken)
                 .build();
     }
 
