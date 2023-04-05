@@ -11,11 +11,15 @@ import io.neond.genesis.domain.repository.RoleRepository;
 import io.neond.genesis.domain.dto.request.RoleToMemberRequestDto;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Transactional
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class RoleServiceImpl implements RoleService{
 
     private final RoleRepository roleRepository;
@@ -54,6 +58,18 @@ public class RoleServiceImpl implements RoleService{
         }
 
         return member.getMemberId();
+    }
+
+    @Override
+    public ResponseEntity rejectMember(RoleToMemberRequestDto requestDto) {
+        Member member = memberRepository.findByUuid(requestDto.getUuid()).orElseThrow();
+
+        if (member.getRoles().isEmpty()){
+            memberRepository.delete(member);
+            return ResponseEntity.ok(null);
+        }
+
+        return new ResponseEntity(HttpStatusCode.valueOf(409));
     }
 
 

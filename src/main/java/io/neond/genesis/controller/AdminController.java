@@ -51,6 +51,16 @@ public class AdminController {
         return ResponseEntity.created(null).body(roleService.permitMember(requestDto));
     }
 
+    @Operation(summary = "유저 가입 거부")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "해당 유저 정보 삭제"),
+            @ApiResponse(responseCode = "409", description = "해당 유저에게 권한이 있으면 삭제 x")
+    })
+    @PutMapping("/reject")
+    public ResponseEntity rejectMember(@RequestBody RoleToMemberRequestDto requestDto) {
+        return roleService.rejectMember(requestDto);
+    }
+
     @Operation(summary = "유저에게 티켓 추가")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "티켓 추가 성공. 해당 티켓 테이블 리턴"),
