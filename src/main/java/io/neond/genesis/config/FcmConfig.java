@@ -15,7 +15,7 @@ import java.io.InputStream;
 public class FcmConfig {
     @Bean
     FirebaseMessaging firebaseMessaging() throws IOException {
-        ClassPathResource resource = new ClassPathResource("genesis-80771-firebase-adminsdk-kmid5-8af5300c13.json");
+        ClassPathResource resource = new ClassPathResource("king-azit-firebase-adminsdk-m0ud4-09f3a7ae65.json");
 
         InputStream refreshToken = resource.getInputStream();
 

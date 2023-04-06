@@ -35,4 +35,5 @@ build/
 #######
 src/main/resources/application.properties
 src/main/resources/genesis-80771-firebase-adminsdk-kmid5-8af5300c13.json
+src/main/resources/king-azit-firebase-adminsdk-m0ud4-09f3a7ae65.json
 logs/**
