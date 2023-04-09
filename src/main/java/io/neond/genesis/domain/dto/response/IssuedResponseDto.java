@@ -3,7 +3,12 @@ package io.neond.genesis.domain.dto.response;
 import lombok.Builder;
 import lombok.Getter;
 
-public interface IssuedResponseDto {
-    int getMonth();
-    int getAmount();
+import java.util.List;
+
+@Builder
+@Getter
+public class IssuedResponseDto {
+    List<TicketSet> userBuy;
+    List<TicketSet> prize;
 }
+

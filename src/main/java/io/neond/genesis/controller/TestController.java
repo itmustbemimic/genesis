@@ -6,12 +6,10 @@ import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.Notification;
 import io.neond.genesis.domain.dto.request.AddMultipleTicketRequestDto;
 import io.neond.genesis.domain.dto.request.SingleTicketRequestDto;
-import io.neond.genesis.domain.dto.response.AdminMemberDto;
-import io.neond.genesis.domain.dto.response.MyTicketResponseDto;
-import io.neond.genesis.domain.dto.response.SearchNicknameDto;
-import io.neond.genesis.domain.dto.response.WaitingMemberDto;
+import io.neond.genesis.domain.dto.response.*;
 import io.neond.genesis.domain.entity.Member;
 import io.neond.genesis.domain.repository.MemberRepository;
+import io.neond.genesis.domain.repository.TicketHistoryRepository;
 import io.neond.genesis.service.AdminService;
 import io.neond.genesis.service.RoleService;
 import io.neond.genesis.service.TicketService;
@@ -37,6 +35,7 @@ public class TestController {
     private final AdminService adminService;
     private final TicketService ticketService;
     private final FirebaseMessaging firebaseMessaging;
+    private final TicketHistoryRepository ticketHistoryRepository;
 
     @PostMapping("/addrole")
     public ResponseEntity<Long> saveRole(@RequestBody String roleName) {
@@ -101,6 +100,11 @@ public class TestController {
         private String body;
         private String image;
         private String fcmToken;
+    }
+
+    @GetMapping("/issued")
+    public List<TicketSet> issued() {
+        return ticketHistoryRepository.IssuedUserBuy();
     }
 
 }
