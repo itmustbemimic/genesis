@@ -44,8 +44,8 @@ public class AccountController {
     }
 
     @GetMapping("/issued/details/custom")
-    public void issuedDetails(@RequestParam Date startDate, @RequestParam Date endDate) {
-
+    public List<TicketSet> issuedDetails(@RequestParam Date startDate, @RequestParam Date endDate) {
+        return accountService.issuedCustom(startDate, endDate);
     }
 
     @Operation(summary = "월별 유저소모량. 최근 5개월만")
