@@ -5,6 +5,7 @@ import io.neond.genesis.domain.dto.response.IssuedResponseDto;
 import io.neond.genesis.domain.dto.response.TicketSet;
 import io.neond.genesis.domain.repository.TicketHistoryRepository;
 import io.neond.genesis.service.AccountService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +24,7 @@ public class AccountController {
     private final TicketHistoryRepository ticketHistoryRepository;
     private final AccountService accountService;
 
+    @Operation(summary = "처음부터 지금까지 총 발행량")
     @GetMapping("/issued")
     public IssuedResponseDto issuedMonthly() {
         return accountService.issued();
@@ -33,6 +35,7 @@ public class AccountController {
 
     }
 
+    @Operation(summary = "월별 유저소모량. 최근 5개월만")
     @GetMapping("/consumption")
     public List<ConsumptionResponseDto> userConsumption() {
         return ticketHistoryRepository.consumptionMonthly();
@@ -43,6 +46,7 @@ public class AccountController {
 
     }
 
+    @Operation(summary = "처음부터 지금까지 유통량 = 총 발행량 - 총 소모량")
     @GetMapping("/circulation")
     public List<TicketSet> circulation() {
         return ticketHistoryRepository.circulation();
