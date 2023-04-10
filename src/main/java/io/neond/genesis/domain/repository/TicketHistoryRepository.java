@@ -21,7 +21,7 @@ public interface TicketHistoryRepository extends JpaRepository<TicketHistory, Lo
             "WHERE amount > 0 AND summary like \"Admin:%\"" +
             "GROUP BY type",
             nativeQuery = true)
-    List<TicketSet> IssuedUserBuy();
+    List<TicketSet> issuedUserBuy();
 
     @Query(value =
             "SELECT type, SUM(amount) as amount " +
@@ -29,7 +29,16 @@ public interface TicketHistoryRepository extends JpaRepository<TicketHistory, Lo
             "WHERE amount > 0 AND summary like \"%Game\"" +
             "GROUP BY type",
             nativeQuery = true)
-    List<TicketSet> IssuedPrize();
+    List<TicketSet> issuedPrize();
+
+    @Query(value =
+            "SELECT type, SUM(amount) as amount " +
+            "FROM ticket_history " +
+            "WHERE date BETWEEN :startDate AND :endDate AND summary NOT LIKE \"%선물%\" " +
+            "GROUP BY type " +
+            "HAVING amount > 0"
+            ,nativeQuery = true)
+    List<TicketSet> issuedBetween(@Param("startDate") String startDate, @Param("endDate") String endDate);
 
     @Query(value =
             "SELECT SUM(amount) as amount, MONTH(date) as month " +

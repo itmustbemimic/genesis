@@ -14,6 +14,7 @@ import io.neond.genesis.domain.dto.request.MemberCreateDto;
 import io.neond.genesis.domain.entity.Ticket;
 import io.neond.genesis.domain.repository.*;
 import io.neond.genesis.domain.entity.Role;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -267,17 +268,9 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
 
     @Override
     public List<RankingResponseDto> getMonthlyRank(Date date) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
+        List<String> monthBorder = getMonthBorder(date);
 
-        cal.set(Calendar.DAY_OF_MONTH, cal.getMinimum(Calendar.DAY_OF_MONTH));
-        String monthStart = dateFormat.format(cal.getTime());
-        cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH) +1);
-        String monthEnd = dateFormat.format(cal.getTime());
-
-        return memberGameResultRepository.getRank(monthStart, monthEnd);
+        return memberGameResultRepository.getRank(monthBorder.get(0), monthBorder.get(1));
     }
 
     @Override
@@ -300,6 +293,25 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
                 nickname,
                 roleRepository.findByName("ROLE_PERMITTED").orElseThrow(() -> new RuntimeException("찾을 수 없는 role"))
                 );
+    }
+
+    @Operation
+    public List<String> getMonthBorder(Date date) {
+        List<String> result = new ArrayList<>();
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+
+        cal.set(Calendar.DAY_OF_MONTH, cal.getMinimum(Calendar.DAY_OF_MONTH));
+        String monthStart = dateFormat.format(cal.getTime());
+        result.add(monthStart);
+        cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH) +1);
+        String monthEnd = dateFormat.format(cal.getTime());
+        result.add(monthEnd);
+
+        return result;
     }
 
 

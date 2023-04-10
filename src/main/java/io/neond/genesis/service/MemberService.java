@@ -30,7 +30,7 @@ public interface MemberService {
     MyTicketResponseDto getMyTicket(Member member);
     List<SearchNicknameDto> getAllPermittedMember();
     List<SearchNicknameDto> searchPermittedMember(String nickname);
-
+    List<String> getMonthBorder(Date date);
 
 
 }

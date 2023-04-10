@@ -9,10 +9,13 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -26,12 +29,22 @@ public class AccountController {
 
     @Operation(summary = "처음부터 지금까지 총 발행량")
     @GetMapping("/issued")
-    public IssuedResponseDto issuedMonthly() {
+    public IssuedResponseDto issued() {
         return accountService.issued();
     }
 
-    @GetMapping("/issued/details")
-    public void issuedDetails() {
+    @GetMapping("/issued/details/monthly")
+    public List<TicketSet> issuedMonthly(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date date) {
+        return accountService.issuedMonthly(date);
+    }
+
+    @GetMapping("/issued/details/daily")
+    public List<TicketSet> issuedDaily(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date date) {
+        return accountService.issuedDaily(date);
+    }
+
+    @GetMapping("/issued/details/custom")
+    public void issuedDetails(@RequestParam Date startDate, @RequestParam Date endDate) {
 
     }
 
