@@ -2,6 +2,7 @@ package io.neond.genesis.controller;
 
 import io.neond.genesis.domain.dto.response.ConsumptionResponseDto;
 import io.neond.genesis.domain.dto.response.IssuedResponseDto;
+import io.neond.genesis.domain.dto.response.TicketHistoryResponseDto;
 import io.neond.genesis.domain.dto.response.TicketSet;
 import io.neond.genesis.domain.repository.TicketHistoryRepository;
 import io.neond.genesis.service.AccountService;
@@ -52,6 +53,16 @@ public class AccountController {
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
             Date date) {
         return accountService.issuedDaily(date);
+    }
+
+    @Operation(summary = "하루동안 발행된 티켓 리스트")
+    @GetMapping("/issued/details/daily/list")
+    public List<TicketHistoryResponseDto> issuedDailyList(
+            @Parameter(name = "날짜", example = "2023-03-08")
+            @RequestParam
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            Date date) {
+        return accountService.issuedDailyList(date);
     }
 
     @Operation(summary = "지정된 기간동안 발행된 티켓")

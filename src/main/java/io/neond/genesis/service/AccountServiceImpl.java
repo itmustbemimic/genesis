@@ -1,6 +1,7 @@
 package io.neond.genesis.service;
 
 import io.neond.genesis.domain.dto.response.IssuedResponseDto;
+import io.neond.genesis.domain.dto.response.TicketHistoryResponseDto;
 import io.neond.genesis.domain.dto.response.TicketSet;
 import io.neond.genesis.domain.repository.TicketHistoryRepository;
 import lombok.RequiredArgsConstructor;
@@ -45,6 +46,12 @@ public class AccountServiceImpl implements AccountService{
         String day2 = dateFormat.format(cal.getTime());
         return ticketHistoryRepository.issuedBetween(day, day2);
     }
+
+    @Override
+    public List<TicketHistoryResponseDto> issuedDailyList(Date date) {
+        return ticketHistoryRepository.findByAmountGreaterThanAndDateContainsAndSummaryNotContains(0, formatDate(date), "선물");
+    }
+
 
     @Override
     public List<TicketSet> issuedCustom(Date startDate, Date endDate) {

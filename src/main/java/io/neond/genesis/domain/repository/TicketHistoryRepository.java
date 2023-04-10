@@ -14,6 +14,7 @@ public interface TicketHistoryRepository extends JpaRepository<TicketHistory, Lo
     List<TicketHistoryResponseDto> findByUuidOrderByDateDesc(String uuid);
     List<TicketHistoryResponseDto> findByUuidAndAmountGreaterThanOrderByDateDesc(String uuid, int amount);
     List<TicketHistoryResponseDto> findByUuidAndAmountLessThanOrderByDateDesc(String uuid, int amount);
+    List<TicketHistoryResponseDto> findByAmountGreaterThanAndDateContainsAndSummaryNotContains(int amount, String date, String summary);
 
     @Query(value =
             "SELECT type, SUM(amount) as amount " +

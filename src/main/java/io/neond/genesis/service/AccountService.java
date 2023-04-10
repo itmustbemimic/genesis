@@ -1,6 +1,7 @@
 package io.neond.genesis.service;
 
 import io.neond.genesis.domain.dto.response.IssuedResponseDto;
+import io.neond.genesis.domain.dto.response.TicketHistoryResponseDto;
 import io.neond.genesis.domain.dto.response.TicketSet;
 
 import java.util.Date;
@@ -10,6 +11,8 @@ public interface AccountService {
     IssuedResponseDto issued();
     List<TicketSet> issuedMonthly(Date date);
     List<TicketSet> issuedDaily(Date date);
+    List<TicketHistoryResponseDto> issuedDailyList(Date date);
     List<TicketSet> issuedCustom(Date startDate, Date endDate);
+
 
 }
