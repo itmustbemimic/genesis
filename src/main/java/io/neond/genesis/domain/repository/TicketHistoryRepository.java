@@ -25,12 +25,11 @@ public interface TicketHistoryRepository extends JpaRepository<TicketHistory, Lo
 
     @Query(value =
             "SELECT type, SUM(amount) as amount " +
-                    "FROM ticket_history " +
-                    "WHERE amount > 0 AND summary like \"%Game\"" +
-                    "GROUP BY type",
+            "FROM ticket_history " +
+            "WHERE amount > 0 AND summary like \"%Game\"" +
+            "GROUP BY type",
             nativeQuery = true)
     List<TicketSet> IssuedPrize();
-
 
     @Query(value =
             "SELECT SUM(amount) as amount, MONTH(date) as month " +
@@ -40,4 +39,11 @@ public interface TicketHistoryRepository extends JpaRepository<TicketHistory, Lo
             "LIMIT 5",
             nativeQuery = true)
     List<ConsumptionResponseDto> consumptionMonthly();
+
+    @Query(value =
+            "SELECT type, SUM(amount) as amount " +
+            "FROM ticket_history " +
+            "GROUP BY type"
+            ,nativeQuery = true)
+    List<TicketSet> circulation();
 }

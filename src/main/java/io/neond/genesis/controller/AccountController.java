@@ -44,8 +44,8 @@ public class AccountController {
     }
 
     @GetMapping("/circulation")
-    public void circulation() {
-
+    public List<TicketSet> circulation() {
+        return ticketHistoryRepository.circulation();
     }
 
     @GetMapping("/circulation/details")
