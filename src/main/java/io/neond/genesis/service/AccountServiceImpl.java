@@ -48,6 +48,14 @@ public class AccountServiceImpl implements AccountService{
 
     @Override
     public List<TicketSet> issuedCustom(Date startDate, Date endDate) {
-        return null;
+        return ticketHistoryRepository.issuedBetween(formatDate(startDate), formatDate(endDate));
+    }
+
+    public String formatDate(Date date) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        return dateFormat.format(cal.getTime());
     }
 }
