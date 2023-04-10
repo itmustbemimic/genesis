@@ -6,6 +6,7 @@ import io.neond.genesis.domain.dto.response.TicketSet;
 import io.neond.genesis.domain.repository.TicketHistoryRepository;
 import io.neond.genesis.service.AccountService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,18 +34,38 @@ public class AccountController {
         return accountService.issued();
     }
 
+    @Operation(summary = "한달동안 발행된 티켓")
     @GetMapping("/issued/details/monthly")
-    public List<TicketSet> issuedMonthly(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date date) {
+    public List<TicketSet> issuedMonthly(
+            @Parameter(name = "날짜", description = "해당 날짜가 속한 월의 발행량. 2023-03-08 입력 시 3월 발행량 출력")
+            @RequestParam
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            Date date) {
         return accountService.issuedMonthly(date);
     }
 
+    @Operation(summary = "하루동안 발행된 티켓")
     @GetMapping("/issued/details/daily")
-    public List<TicketSet> issuedDaily(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date date) {
+    public List<TicketSet> issuedDaily(
+            @Parameter(name = "날짜", example = "2023-03-08")
+            @RequestParam
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            Date date) {
         return accountService.issuedDaily(date);
     }
 
+    @Operation(summary = "지정된 기간동안 발행된 티켓")
     @GetMapping("/issued/details/custom")
-    public List<TicketSet> issuedDetails(@RequestParam Date startDate, @RequestParam Date endDate) {
+    public List<TicketSet> issuedDetails(
+            @Parameter(name = "날짜", description = "시작 날짜", example = "2023-03-01")
+            @RequestParam
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            Date startDate,
+
+            @Parameter(name = "날짜", description = "마지막 날짜", example = "2023-04-27")
+            @RequestParam
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            Date endDate) {
         return accountService.issuedCustom(startDate, endDate);
     }
 
