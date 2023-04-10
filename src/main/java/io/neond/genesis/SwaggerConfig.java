@@ -38,4 +38,12 @@ public class SwaggerConfig {
                 .pathsToMatch("/test/**")
                 .build();
     }
+
+    @Bean
+    public GroupedOpenApi accountOpenApi() {
+        return GroupedOpenApi.builder()
+                .group("account")
+                .pathsToMatch("/account/**")
+                .build();
+    }
 }
