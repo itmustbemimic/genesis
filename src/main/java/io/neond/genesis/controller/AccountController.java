@@ -38,7 +38,7 @@ public class AccountController {
     @Operation(summary = "한달동안 발행된 티켓")
     @GetMapping("/issued/details/monthly")
     public List<TicketSet> issuedMonthly(
-            @Parameter(name = "날짜", description = "해당 날짜가 속한 월의 발행량. 2023-03-08 입력 시 3월 발행량 출력")
+            @Parameter(name = "date", description = "해당 날짜가 속한 월의 발행량. 2023-03-08 입력 시 3월 발행량 출력")
             @RequestParam
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
             Date date) {
@@ -48,7 +48,7 @@ public class AccountController {
     @Operation(summary = "하루동안 발행된 티켓")
     @GetMapping("/issued/details/daily")
     public List<TicketSet> issuedDaily(
-            @Parameter(name = "날짜", example = "2023-03-08")
+            @Parameter(name = "date", example = "2023-03-08")
             @RequestParam
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
             Date date) {
@@ -58,7 +58,7 @@ public class AccountController {
     @Operation(summary = "하루동안 발행된 티켓 리스트")
     @GetMapping("/issued/details/daily/list")
     public List<TicketHistoryResponseDto> issuedDailyList(
-            @Parameter(name = "날짜", example = "2023-03-08")
+            @Parameter(name = "date", example = "2023-03-08")
             @RequestParam
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
             Date date) {
@@ -73,7 +73,7 @@ public class AccountController {
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
             Date startDate,
 
-            @Parameter(name = "날짜", description = "마지막 날짜", example = "2023-04-27")
+            @Parameter(name = "date", description = "마지막 날짜", example = "2023-04-27")
             @RequestParam
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
             Date endDate) {
@@ -86,9 +86,24 @@ public class AccountController {
         return ticketHistoryRepository.consumptionMonthly();
     }
 
+    @Operation(summary = "티켓별 유저 월 소모량")
     @GetMapping("/consumption/details")
-    public void consumptionDetails() {
+    public List<TicketSet> consumptionDetails(
+            @Parameter(name = "date", description = "해당 날짜가 속한 월의 소모량. 2023-03-08 입력 시 3월 소모량 출력")
+            @RequestParam
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            Date date) {
+        return accountService.consumptionDetails(date);
+    }
 
+    @Operation(summary = "월별 유저 소모량 세부 내역")
+    @GetMapping("/consumption/details/list")
+    public List<TicketHistoryResponseDto> consumptionDetailsList(
+            @Parameter(name = "date", description = "해당 날짜가 속한 월의 소모량. 2023-03-08 입력 시 3월 소모내역 출력")
+            @RequestParam
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            Date date) {
+        return accountService.consumptionDetailsList(date);
     }
 
     @Operation(summary = "처음부터 지금까지 유통량 = 총 발행량 - 총 소모량")

@@ -146,7 +146,7 @@ public class MemberController {
     })
     @GetMapping("/ranking/weekly")
     public List<RankingResponseDto> getWeeklyRank(
-            @Parameter(name = "날짜", description = "해당 날짜가 속한 주의 랭킹. 2023-03-08 입력 시 3월 둘째주 랭킹 출력")
+            @Parameter(name = "date", description = "해당 날짜가 속한 주의 랭킹. 2023-03-08 입력 시 3월 둘째주 랭킹 출력")
             @RequestParam
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
             Date date) {
@@ -159,7 +159,7 @@ public class MemberController {
     })
     @GetMapping("/ranking/monthly")
     public List<RankingResponseDto> getMonthlyRank(
-            @Parameter(name = "날짜", description = "해당 날짜가 속한 월의 랭킹. 2023-03-08 입력 시 3월 랭킹 출력")
+            @Parameter(name = "date", description = "해당 날짜가 속한 월의 랭킹. 2023-03-08 입력 시 3월 랭킹 출력")
             @RequestParam
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
             Date date) {

@@ -15,6 +15,7 @@ public interface TicketHistoryRepository extends JpaRepository<TicketHistory, Lo
     List<TicketHistoryResponseDto> findByUuidAndAmountGreaterThanOrderByDateDesc(String uuid, int amount);
     List<TicketHistoryResponseDto> findByUuidAndAmountLessThanOrderByDateDesc(String uuid, int amount);
     List<TicketHistoryResponseDto> findByAmountGreaterThanAndDateContainsAndSummaryNotContains(int amount, String date, String summary);
+    List<TicketHistoryResponseDto> findByAmountLessThanAndDateBetweenAndSummaryNotContainsOrderByDateAsc(int amount, String startDate, String endDate, String summary);
 
     @Query(value =
             "SELECT type, SUM(amount) as amount " +
@@ -35,9 +36,8 @@ public interface TicketHistoryRepository extends JpaRepository<TicketHistory, Lo
     @Query(value =
             "SELECT type, SUM(amount) as amount " +
             "FROM ticket_history " +
-            "WHERE date BETWEEN :startDate AND :endDate AND summary NOT LIKE \"%선물%\" " +
-            "GROUP BY type " +
-            "HAVING amount > 0"
+            "WHERE amount > 0 AND date BETWEEN :startDate AND :endDate AND summary NOT LIKE \"%선물%\" " +
+            "GROUP BY type "
             ,nativeQuery = true)
     List<TicketSet> issuedBetween(@Param("startDate") String startDate, @Param("endDate") String endDate);
 
@@ -49,6 +49,14 @@ public interface TicketHistoryRepository extends JpaRepository<TicketHistory, Lo
             "LIMIT 5",
             nativeQuery = true)
     List<ConsumptionResponseDto> consumptionMonthly();
+
+    @Query(value =
+            "SELECT type, SUM(amount) as amount " +
+            "FROM ticket_history " +
+            "WHERE amount < 0 AND date BETWEEN :startDate AND :endDate AND summary NOT LIKE \"%선물%\" " +
+            "GROUP BY type "
+            ,nativeQuery = true)
+    List<TicketSet> consumptionDetails(@Param("startDate") String startDate, @Param("endDate") String endDate);
 
     @Query(value =
             "SELECT type, SUM(amount) as amount " +

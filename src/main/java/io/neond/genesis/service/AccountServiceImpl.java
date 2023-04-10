@@ -58,6 +58,19 @@ public class AccountServiceImpl implements AccountService{
         return ticketHistoryRepository.issuedBetween(formatDate(startDate), formatDate(endDate));
     }
 
+    @Override
+    public List<TicketSet> consumptionDetails(Date date) {
+        List<String> border = memberService.getMonthBorder(date);
+        log.info(border.get(0));
+        return ticketHistoryRepository.consumptionDetails(border.get(0), border.get(1));
+    }
+
+    @Override
+    public List<TicketHistoryResponseDto> consumptionDetailsList(Date date) {
+        List<String> border = memberService.getMonthBorder(date);
+        return ticketHistoryRepository.findByAmountLessThanAndDateBetweenAndSummaryNotContainsOrderByDateAsc(0, border.get(0), border.get(1), "선물");
+    }
+
     public String formatDate(Date date) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
