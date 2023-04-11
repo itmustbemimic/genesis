@@ -234,6 +234,7 @@ public class MemberController {
         } else return flag; // 티켓이 모자라거나 할때
     }
 
+    @Operation(summary = "블랙 레드 골드 한번에 선물")
     @PutMapping("/ticket/giftset")
     public ResponseEntity giveTicketSet(HttpServletRequest request, @RequestBody GiveTicketSetRequestDto requestDto) {
         Member from = memberService.findMemberByAccessToken(request);
