@@ -5,7 +5,6 @@ import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.Notification;
 import io.neond.genesis.domain.dto.request.AddMultipleTicketRequestDto;
-import io.neond.genesis.domain.dto.request.BestHandRequestDto;
 import io.neond.genesis.domain.dto.request.SingleTicketRequestDto;
 import io.neond.genesis.domain.dto.response.*;
 import io.neond.genesis.domain.entity.Member;
@@ -54,7 +53,7 @@ public class TestController {
 
     @PutMapping("/usetickets")
     public ResponseEntity useTickets(@RequestBody SingleTicketRequestDto requestDto) {
-        return ticketService.useTickets(requestDto);
+        return ticketService.useSingleTickets(requestDto);
     }
 
     @PutMapping("/addtickets")

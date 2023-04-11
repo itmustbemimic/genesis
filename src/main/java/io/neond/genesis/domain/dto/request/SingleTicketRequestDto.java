@@ -44,4 +44,13 @@ public class SingleTicketRequestDto {
                 .amount(amount)
                 .build();
     }
+
+    public SingleTicketRequestDto useToAdd() {
+        return SingleTicketRequestDto.builder()
+                .uuid(uuid)
+                .type(type)
+                .usage(usage)
+                .amount(amount * -1)
+                .build();
+    }
 }

@@ -201,7 +201,7 @@ public class MemberController {
     @Operation(summary = "멤버들끼리 티켓 선물")
     @PutMapping("/ticket/gift")
     public ResponseEntity giveTickets(HttpServletRequest request, @RequestBody GiveTicketsRequestDto requestDto) {
-        ResponseEntity flag = ticketService.useTickets(
+        ResponseEntity flag = ticketService.useSingleTickets(
                 new SingleTicketRequestDto(
                         memberService.findMemberByAccessToken(request).getUuid(),
                         requestDto.getType(),
@@ -210,6 +210,7 @@ public class MemberController {
                 )
         );
 
+        // useticket이 성공했을때만 상대유저에게 충전
         if (flag.getStatusCode().equals(HttpStatusCode.valueOf(201))) {
             ticketService.addSingleTickets(
                     new SingleTicketRequestDto(
@@ -224,13 +225,13 @@ public class MemberController {
                     memberService.findMemberByAccessToken(request).getTicket().toResponseDto(),
                     HttpStatusCode.valueOf(201));
 
-        } else return flag;
+        } else return flag; // 티켓이 모자라거나 할때
     }
 
     @Operation(summary = "소켓 서버에서 게임 참여 할때 쓰는거")
     @PutMapping("/joingame")
     public ResponseEntity joinGame(HttpServletRequest request, @RequestBody SingleTicketRequestDto requestDto) {
-        return ticketService.useTickets(
+        return ticketService.useSingleTickets(
                 requestDto.toJoinGame(
                         memberService.findMemberByAccessToken(request)
                 ));

@@ -102,7 +102,7 @@ public class TicketServiceImpl implements TicketService{
     }
 
     @Override
-    public ResponseEntity useTickets(SingleTicketRequestDto requestDto) {
+    public ResponseEntity useSingleTickets(SingleTicketRequestDto requestDto) {
         Member member = memberRepository.findByUuid(requestDto.getUuid()).orElseThrow();
         Ticket ticket = member.getTicket();
 
@@ -116,45 +116,26 @@ public class TicketServiceImpl implements TicketService{
                 if (ticket.getRed() - requestDto.getAmount() < 0) {
                     return new ResponseEntity("티켓 부족", null, HttpStatus.CONFLICT);
                 }
-                addMultipleTickets(new AddMultipleTicketRequestDto(
-                        member.getUuid(),
-                        0,
-                        0 - requestDto.getAmount(),
-                        0,
-                        requestDto.getUsage()
-                ));
                 break;
 
             case "black":
                 if (ticket.getBlack() - requestDto.getAmount() < 0) {
                     return new ResponseEntity("티켓 부족", null, HttpStatus.CONFLICT);
                 }
-                addMultipleTickets(new AddMultipleTicketRequestDto(
-                        member.getUuid(),
-                        0 - requestDto.getAmount(),
-                        0 ,
-                        0,
-                        requestDto.getUsage()
-                ));
                 break;
 
             case "gold":
                 if (ticket.getGold() - requestDto.getAmount() < 0) {
                     return new ResponseEntity("티켓 부족", null, HttpStatus.CONFLICT);
                 }
-                addMultipleTickets(new AddMultipleTicketRequestDto(
-                        member.getUuid(),
-                        0,
-                        0,
-                        0 - requestDto.getAmount(),
-                        requestDto.getUsage()
-                ));
                 break;
 
             default:
                 return new ResponseEntity("티켓 타입 확인", null, HttpStatus.BAD_REQUEST);
 
         }
+
+        addSingleTickets(requestDto.useToAdd());
         return new ResponseEntity<>(HttpStatusCode.valueOf(201));
     }
 

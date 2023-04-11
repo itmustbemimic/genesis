@@ -52,7 +52,6 @@ public class AccountServiceImpl implements AccountService{
         return ticketHistoryRepository.findByAmountGreaterThanAndDateContainsAndSummaryNotContains(0, formatDate(date), "선물");
     }
 
-
     @Override
     public List<TicketSet> issuedCustom(Date startDate, Date endDate) {
         return ticketHistoryRepository.issuedBetween(formatDate(startDate), formatDate(endDate));

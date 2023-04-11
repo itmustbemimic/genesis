@@ -226,22 +226,13 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
 
     @Override
     public List<MyMonthlyGameDto> getMonthlyMemberGameResult(Member member, Date date) {
-//        return memberGameResultRepository.getMyGames(member.getUuid());
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-
-        cal.set(Calendar.DAY_OF_MONTH, cal.getMinimum(Calendar.DAY_OF_MONTH));
-        String monthStart = dateFormat.format(cal.getTime());
-        cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH) +1);
-        String monthEnd = dateFormat.format(cal.getTime());
+        List<String> border = getMonthBorder(date);
 
         return memberGameResultRepository.findByUserUuidAndGameDateBetweenOrderByGameDateDesc(
                 member.getUuid(),
-                monthStart,
-                monthEnd
+                border.get(0),
+                border.get(1)
         );
     }
 
