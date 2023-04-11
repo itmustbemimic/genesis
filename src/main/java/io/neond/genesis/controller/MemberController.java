@@ -6,6 +6,7 @@ import io.neond.genesis.domain.dto.request.GiveTicketsRequestDto;
 import io.neond.genesis.domain.dto.request.MultipleTicketRequestDto;
 import io.neond.genesis.domain.dto.request.SingleTicketRequestDto;
 import io.neond.genesis.domain.dto.response.*;
+import io.neond.genesis.domain.entity.Member;
 import io.neond.genesis.domain.repository.MemberRepository;
 import io.neond.genesis.service.MemberService;
 import io.neond.genesis.service.TicketService;
@@ -204,9 +205,11 @@ public class MemberController {
     @Operation(summary = "멤버들끼리 티켓 선물")
     @PutMapping("/ticket/gift")
     public ResponseEntity giveTickets(HttpServletRequest request, @RequestBody GiveTicketsRequestDto requestDto) {
+        Member from = memberService.findMemberByAccessToken(request);
+
         ResponseEntity flag = ticketService.useSingleTickets(
                 new SingleTicketRequestDto(
-                        memberService.findMemberByAccessToken(request).getUuid(),
+                        from.getUuid(),
                         requestDto.getType(),
                         memberRepository.findByUuid(requestDto.getTo()).get().getNickname() + "에게 선물하기",
                         requestDto.getAmount()
@@ -219,13 +222,13 @@ public class MemberController {
                     new SingleTicketRequestDto(
                             requestDto.getTo(),
                             requestDto.getType(),
-                            memberService.findMemberByAccessToken(request).getNickname() + "님이 보낸 선물",
+                            from.getNickname() + "님이 보낸 선물",
                             requestDto.getAmount()
                     )
             );
 
             return new ResponseEntity(
-                    memberService.findMemberByAccessToken(request).getTicket().toResponseDto(),
+                    from.getTicket().toResponseDto(),
                     HttpStatusCode.valueOf(201));
 
         } else return flag; // 티켓이 모자라거나 할때
@@ -233,9 +236,11 @@ public class MemberController {
 
     @PutMapping("/ticket/giftset")
     public ResponseEntity giveTicketSet(HttpServletRequest request, @RequestBody GiveTicketSetRequestDto requestDto) {
+        Member from = memberService.findMemberByAccessToken(request);
+
         ResponseEntity flag = ticketService.useMultipleTickets(
                 new MultipleTicketRequestDto(
-                        memberService.findMemberByAccessToken(request).getUuid(),
+                        from.getUuid(),
                         requestDto.getBlackAmount(),
                         requestDto.getRedAmount(),
                         requestDto.getGoldAmount(),
@@ -250,12 +255,12 @@ public class MemberController {
                             requestDto.getBlackAmount(),
                             requestDto.getRedAmount(),
                             requestDto.getGoldAmount(),
-                            memberService.findMemberByAccessToken(request).getNickname() + "님이 보낸 선물"
+                            from.getNickname() + "님이 보낸 선물"
                     )
             );
 
             return new ResponseEntity(
-                    memberService.findMemberByAccessToken(request).getTicket().toResponseDto(),
+                    from.getTicket().toResponseDto(),
                     HttpStatusCode.valueOf(201)
             );
 
