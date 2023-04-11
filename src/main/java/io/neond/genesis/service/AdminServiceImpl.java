@@ -7,10 +7,13 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import io.neond.genesis.domain.dto.request.BestHandRequestDto;
 import io.neond.genesis.domain.dto.response.AdminMemberDto;
+import io.neond.genesis.domain.dto.response.BestHandResponseDto;
 import io.neond.genesis.domain.dto.response.ErrorResponse;
 import io.neond.genesis.domain.dto.response.WaitingMemberDto;
 import io.neond.genesis.domain.entity.Member;
+import io.neond.genesis.domain.repository.BestHandRepository;
 import io.neond.genesis.domain.repository.MemberRepository;
 import io.neond.genesis.domain.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +34,7 @@ import static io.neond.genesis.security.Constants.TOKEN_HEADER_PREFIX;
 public class AdminServiceImpl implements AdminService{
     private final MemberRepository memberRepository;
     private final RoleRepository roleRepository;
+    private final BestHandRepository bestHandRepository;
 
     @Value("${jwt.secret.qr")
     private String qrSecretKey;

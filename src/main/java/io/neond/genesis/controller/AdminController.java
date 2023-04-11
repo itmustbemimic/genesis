@@ -1,15 +1,14 @@
 package io.neond.genesis.controller;
 
+import io.neond.genesis.domain.dto.request.BestHandRequestDto;
 import io.neond.genesis.domain.dto.request.RoleToMemberRequestDto;
 import io.neond.genesis.domain.dto.request.AddMultipleTicketRequestDto;
 import io.neond.genesis.domain.dto.request.SingleTicketRequestDto;
 import io.neond.genesis.domain.dto.response.AdminMemberDto;
+import io.neond.genesis.domain.dto.response.BestHandResponseDto;
 import io.neond.genesis.domain.dto.response.MyTicketResponseDto;
 import io.neond.genesis.domain.dto.response.WaitingMemberDto;
-import io.neond.genesis.service.AdminService;
-import io.neond.genesis.service.MemberService;
-import io.neond.genesis.service.RoleService;
-import io.neond.genesis.service.TicketService;
+import io.neond.genesis.service.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -32,6 +31,7 @@ public class AdminController {
     private final TicketService ticketService;
     private final AdminService adminService;
     private final MemberService memberService;
+    private final GameService gameService;
 
     @Operation(summary = "admin 권한 테스트")
     @ApiResponses(value = {
@@ -109,6 +109,12 @@ public class AdminController {
     @GetMapping("/list")
     public List<AdminMemberDto> getAdminList() {
         return adminService.getAdminMember();
+    }
+
+    @Operation(summary = "베스트핸드 입력")
+    @PostMapping("/besthand")
+    public BestHandResponseDto setBestHand(BestHandRequestDto requestDto) {
+        return gameService.setBestHand(requestDto);
     }
 
 }
