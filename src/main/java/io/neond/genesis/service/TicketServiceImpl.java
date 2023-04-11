@@ -1,6 +1,6 @@
 package io.neond.genesis.service;
 
-import io.neond.genesis.domain.dto.request.AddMultipleTicketRequestDto;
+import io.neond.genesis.domain.dto.request.MultipleTicketRequestDto;
 import io.neond.genesis.domain.dto.request.SingleTicketRequestDto;
 import io.neond.genesis.domain.dto.response.MyTicketResponseDto;
 import io.neond.genesis.domain.dto.response.TicketHistoryResponseDto;
@@ -31,7 +31,7 @@ public class TicketServiceImpl implements TicketService{
     private final TicketHistoryRepository ticketHistoryRepository;
 
     @Override
-    public MyTicketResponseDto addMultipleTickets(AddMultipleTicketRequestDto requestDto) {
+    public MyTicketResponseDto addMultipleTickets(MultipleTicketRequestDto requestDto) {
         Member member = memberRepository.findByUuid(requestDto.getUuid()).orElseThrow(() -> new RuntimeException("찾을 수 없는 아이디"));
 
         Ticket ticket = member.getTicket();
@@ -56,6 +56,36 @@ public class TicketServiceImpl implements TicketService{
         }
 
         return ticketRepository.save(update).toResponseDto();
+    }
+
+    @Override
+    public ResponseEntity useMultipleTickets(MultipleTicketRequestDto requestDto) {
+        Member member = memberRepository.findByUuid(requestDto.getUuid()).orElseThrow();
+        Ticket ticket = member.getTicket();
+
+        if (requestDto.getRedAmount() < 0 || requestDto.getBlackAmount() < 0 || requestDto.getGoldAmount() < 0) {
+            log.warn("TicketService.useMultipleTickets: requestDto amount 0 미만 " + member.getMemberId() + member.getUuid());
+            return new ResponseEntity("비정상적인 접근", null, HttpStatus.BAD_REQUEST);
+        }
+
+        if (ticket.getRed() - requestDto.getRedAmount() < 0) {
+            // not enough red tickets
+            return new ResponseEntity("레드 티켓 부족", null, HttpStatus.CONFLICT);
+        }
+
+        if (ticket.getBlack() - requestDto.getBlackAmount() < 0) {
+            // not enough black tickets
+            return new ResponseEntity("블랙 티켓 부족", null, HttpStatus.CONFLICT);
+        }
+
+        if (ticket.getGold() - requestDto.getGoldAmount() < 0) {
+            // not enough gold tickets
+            return new ResponseEntity("골드 티켓 부족", null, HttpStatus.CONFLICT);
+        }
+
+        addMultipleTickets(requestDto.useToAdd());
+
+        return new ResponseEntity<>(HttpStatusCode.valueOf(201));
     }
 
     @Override
@@ -106,8 +136,8 @@ public class TicketServiceImpl implements TicketService{
         Member member = memberRepository.findByUuid(requestDto.getUuid()).orElseThrow();
         Ticket ticket = member.getTicket();
 
-        if (requestDto.getAmount() <= 0) {
-            log.warn("TicketService: requestDto.getAmount 0 이하 " + member.getMemberId() + member.getUuid());
+        if (requestDto.getAmount() < 0) {
+            log.warn("TicketService: requestDto.getAmount 0 미만 " + member.getMemberId() + member.getUuid());
             return new ResponseEntity("비정상적인 접근", null, HttpStatus.BAD_REQUEST);
         }
 

@@ -1,6 +1,9 @@
 package io.neond.genesis.controller;
 
+import com.amazonaws.Response;
+import io.neond.genesis.domain.dto.request.GiveTicketSetRequestDto;
 import io.neond.genesis.domain.dto.request.GiveTicketsRequestDto;
+import io.neond.genesis.domain.dto.request.MultipleTicketRequestDto;
 import io.neond.genesis.domain.dto.request.SingleTicketRequestDto;
 import io.neond.genesis.domain.dto.response.*;
 import io.neond.genesis.domain.repository.MemberRepository;
@@ -226,6 +229,39 @@ public class MemberController {
                     HttpStatusCode.valueOf(201));
 
         } else return flag; // 티켓이 모자라거나 할때
+    }
+
+    @PutMapping("/ticket/giftset")
+    public ResponseEntity giveTicketSet(HttpServletRequest request, @RequestBody GiveTicketSetRequestDto requestDto) {
+        ResponseEntity flag = ticketService.useMultipleTickets(
+                new MultipleTicketRequestDto(
+                        memberService.findMemberByAccessToken(request).getUuid(),
+                        requestDto.getBlackAmount(),
+                        requestDto.getRedAmount(),
+                        requestDto.getGoldAmount(),
+                        memberRepository.findByUuid(requestDto.getTo()).get().getNickname() + "에게 선물하기"
+                )
+        );
+
+        if (flag.getStatusCode().equals(HttpStatusCode.valueOf(201))) {
+            ticketService.addMultipleTickets(
+                    new MultipleTicketRequestDto(
+                            requestDto.getTo(),
+                            requestDto.getBlackAmount(),
+                            requestDto.getRedAmount(),
+                            requestDto.getGoldAmount(),
+                            memberService.findMemberByAccessToken(request).getNickname() + "님이 보낸 선물"
+                    )
+            );
+
+            return new ResponseEntity(
+                    memberService.findMemberByAccessToken(request).getTicket().toResponseDto(),
+                    HttpStatusCode.valueOf(201)
+            );
+
+
+        } else return flag;
+
     }
 
     @Operation(summary = "소켓 서버에서 게임 참여 할때 쓰는거")

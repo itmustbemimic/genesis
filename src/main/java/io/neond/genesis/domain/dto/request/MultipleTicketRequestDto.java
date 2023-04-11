@@ -13,7 +13,7 @@ import java.time.Instant;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AddMultipleTicketRequestDto {
+public class MultipleTicketRequestDto {
     private String uuid;
     private int blackAmount;
     private int redAmount;
@@ -30,13 +30,23 @@ public class AddMultipleTicketRequestDto {
                 .build();
     }
 
-    public AddMultipleTicketRequestDto byAdmin(Member member) {
-        return AddMultipleTicketRequestDto.builder()
+    public MultipleTicketRequestDto byAdmin(Member member) {
+        return MultipleTicketRequestDto.builder()
                 .uuid(uuid)
                 .blackAmount(blackAmount)
                 .redAmount(redAmount)
                 .goldAmount(goldAmount)
                 .summary("Admin: " + member.getMemberId())
+                .build();
+    }
+
+    public MultipleTicketRequestDto useToAdd() {
+        return MultipleTicketRequestDto.builder()
+                .uuid(uuid)
+                .blackAmount(blackAmount * -1)
+                .redAmount(redAmount * -1)
+                .goldAmount(goldAmount* -1)
+                .summary(summary)
                 .build();
     }
 }

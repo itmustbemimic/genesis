@@ -2,7 +2,7 @@ package io.neond.genesis.controller;
 
 import io.neond.genesis.domain.dto.request.BestHandRequestDto;
 import io.neond.genesis.domain.dto.request.RoleToMemberRequestDto;
-import io.neond.genesis.domain.dto.request.AddMultipleTicketRequestDto;
+import io.neond.genesis.domain.dto.request.MultipleTicketRequestDto;
 import io.neond.genesis.domain.dto.request.SingleTicketRequestDto;
 import io.neond.genesis.domain.dto.response.AdminMemberDto;
 import io.neond.genesis.domain.dto.response.BestHandResponseDto;
@@ -67,7 +67,7 @@ public class AdminController {
             @ApiResponse(responseCode = "400", description = "찾을 수 없는 아이디 or 입력값 에러")
     })
     @PutMapping("/addtickets")
-    public ResponseEntity<MyTicketResponseDto> addTickets(HttpServletRequest request, @RequestBody AddMultipleTicketRequestDto requestDto) {
+    public ResponseEntity<MyTicketResponseDto> addTickets(HttpServletRequest request, @RequestBody MultipleTicketRequestDto requestDto) {
         return ResponseEntity.created(null).body(
                 ticketService.addMultipleTickets(requestDto.byAdmin(
                         memberService.findMemberByAccessToken(request)
