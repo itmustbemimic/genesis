@@ -20,7 +20,7 @@ public interface TicketHistoryRepository extends JpaRepository<TicketHistory, Lo
     @Query(value =
             "SELECT type, SUM(amount) as amount " +
             "FROM ticket_history " +
-            "WHERE amount > 0 AND summary like \"Admin:%\"" +
+            "WHERE amount > 0 AND flag=\"charge\"" +
             "GROUP BY type",
             nativeQuery = true)
     List<TicketSet> issuedUserBuy();
@@ -28,7 +28,7 @@ public interface TicketHistoryRepository extends JpaRepository<TicketHistory, Lo
     @Query(value =
             "SELECT type, SUM(amount) as amount " +
             "FROM ticket_history " +
-            "WHERE amount > 0 AND summary like \"%Game\"" +
+            "WHERE amount > 0 AND flag=\"game\"" +
             "GROUP BY type",
             nativeQuery = true)
     List<TicketSet> issuedPrize();
@@ -36,7 +36,7 @@ public interface TicketHistoryRepository extends JpaRepository<TicketHistory, Lo
     @Query(value =
             "SELECT type, SUM(amount) as amount " +
             "FROM ticket_history " +
-            "WHERE amount > 0 AND date BETWEEN :startDate AND :endDate AND summary NOT LIKE \"%선물%\" " +
+            "WHERE amount > 0 AND date BETWEEN :startDate AND :endDate AND flag IN ('charge', 'game') " +
             "GROUP BY type "
             ,nativeQuery = true)
     List<TicketSet> issuedBetween(@Param("startDate") String startDate, @Param("endDate") String endDate);
@@ -44,7 +44,7 @@ public interface TicketHistoryRepository extends JpaRepository<TicketHistory, Lo
     @Query(value =
             "SELECT SUM(amount) as amount, MONTH(date) as month " +
             "FROM ticket_history " +
-            "WHERE amount < 0 AND summary not like \"%선물%\" " +
+            "WHERE amount < 0 AND flag NOT IN ('gift') " +
             "GROUP BY month " +
             "LIMIT 5",
             nativeQuery = true)
@@ -53,7 +53,7 @@ public interface TicketHistoryRepository extends JpaRepository<TicketHistory, Lo
     @Query(value =
             "SELECT type, SUM(amount) as amount " +
             "FROM ticket_history " +
-            "WHERE amount < 0 AND date BETWEEN :startDate AND :endDate AND summary NOT LIKE \"%선물%\" " +
+            "WHERE amount < 0 AND date BETWEEN :startDate AND :endDate AND flag NOT IN ('gift') " +
             "GROUP BY type "
             ,nativeQuery = true)
     List<TicketSet> consumptionDetails(@Param("startDate") String startDate, @Param("endDate") String endDate);

@@ -245,7 +245,8 @@ public class MemberController {
                         requestDto.getBlackAmount(),
                         requestDto.getRedAmount(),
                         requestDto.getGoldAmount(),
-                        memberRepository.findByUuid(requestDto.getTo()).get().getNickname() + "에게 선물하기"
+                        memberRepository.findByUuid(requestDto.getTo()).get().getNickname() + "에게 선물하기",
+                        "gift"
                 )
         );
 
@@ -256,7 +257,8 @@ public class MemberController {
                             requestDto.getBlackAmount(),
                             requestDto.getRedAmount(),
                             requestDto.getGoldAmount(),
-                            from.getNickname() + "님이 보낸 선물"
+                            from.getNickname() + "님이 보낸 선물",
+                            "gift"
                     )
             );
 

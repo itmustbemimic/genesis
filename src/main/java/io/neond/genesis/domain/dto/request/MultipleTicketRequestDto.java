@@ -19,6 +19,7 @@ public class MultipleTicketRequestDto {
     private int redAmount;
     private int goldAmount;
     private String summary;
+    private String flag;
 
     public TicketHistory toEntity(String _uuid, String _type, int _amount) {
         return TicketHistory.builder()
@@ -27,6 +28,7 @@ public class MultipleTicketRequestDto {
                 .summary(summary)
                 .amount(_amount)
                 .date(Instant.now().toString())
+                .flag(flag)
                 .build();
     }
 
@@ -37,6 +39,7 @@ public class MultipleTicketRequestDto {
                 .redAmount(redAmount)
                 .goldAmount(goldAmount)
                 .summary("Admin: " + member.getMemberId())
+                .flag("charge")
                 .build();
     }
 
@@ -47,6 +50,7 @@ public class MultipleTicketRequestDto {
                 .redAmount(redAmount * -1)
                 .goldAmount(goldAmount* -1)
                 .summary(summary)
+                .flag(flag)
                 .build();
     }
 }

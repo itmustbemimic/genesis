@@ -66,12 +66,12 @@ public class AccountController {
     @Operation(summary = "지정된 기간동안 발행된 티켓")
     @GetMapping("/issued/details/custom")
     public List<TicketSet> issuedDetails(
-            @Parameter(name = "날짜", description = "시작 날짜", example = "2023-03-01")
+            @Parameter(name = "startDate", description = "시작 날짜", example = "2023-03-01")
             @RequestParam
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
             Date startDate,
 
-            @Parameter(name = "date", description = "마지막 날짜", example = "2023-04-27")
+            @Parameter(name = "endDate", description = "마지막 날짜", example = "2023-04-27")
             @RequestParam
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
             Date endDate) {

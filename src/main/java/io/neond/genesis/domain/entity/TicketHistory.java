@@ -21,4 +21,5 @@ public class TicketHistory {
     private String summary;
     private int amount;
     private String date;
+    private String flag;
 }
