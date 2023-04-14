@@ -16,7 +16,7 @@ public class GameController {
 
     private final GameService gameService;
 
-    @GetMapping
+    @GetMapping("/besthand")
     public BestHandResponseDto getBestHand() {
         return gameService.getBestHand();
     }

@@ -58,6 +58,11 @@ public class AccountServiceImpl implements AccountService{
     }
 
     @Override
+    public List<TicketHistoryResponseDto> issuedCustomList(Date startDate, Date endDate) {
+        return ticketHistoryRepository.findByDateBetweenAndFlagNotContainsOrderByDateAsc(formatDate(startDate), formatDate(endDate), "gift");
+    }
+
+    @Override
     public List<TicketSet> consumptionDetails(Date date) {
         List<String> border = memberService.getMonthBorder(date);
         log.info(border.get(0));

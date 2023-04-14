@@ -13,6 +13,7 @@ public interface AccountService {
     List<TicketSet> issuedDaily(Date date);
     List<TicketHistoryResponseDto> issuedDailyList(Date date);
     List<TicketSet> issuedCustom(Date startDate, Date endDate);
+    List<TicketHistoryResponseDto> issuedCustomList(Date startDate, Date endDate);
     List<TicketSet> consumptionDetails(Date date);
     List<TicketHistoryResponseDto> consumptionDetailsList(Date date);
 

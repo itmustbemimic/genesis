@@ -1,6 +1,5 @@
 package io.neond.genesis.controller;
 
-import com.amazonaws.Response;
 import io.neond.genesis.domain.dto.request.GiveTicketSetRequestDto;
 import io.neond.genesis.domain.dto.request.GiveTicketsRequestDto;
 import io.neond.genesis.domain.dto.request.MultipleTicketRequestDto;
@@ -280,5 +279,4 @@ public class MemberController {
                         memberService.findMemberByAccessToken(request)
                 ));
     }
-
 }

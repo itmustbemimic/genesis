@@ -32,7 +32,6 @@ import static io.neond.genesis.security.Constants.TOKEN_HEADER_PREFIX;
 public class AdminServiceImpl implements AdminService{
     private final MemberRepository memberRepository;
     private final RoleRepository roleRepository;
-    private final BestHandRepository bestHandRepository;
 
     @Value("${jwt.secret.qr")
     private String qrSecretKey;
