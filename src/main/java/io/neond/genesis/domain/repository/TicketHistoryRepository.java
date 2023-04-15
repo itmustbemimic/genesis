@@ -47,7 +47,7 @@ public interface TicketHistoryRepository extends JpaRepository<TicketHistory, Lo
             "FROM ticket_history " +
             "WHERE amount < 0 AND flag NOT IN ('gift') " +
             "GROUP BY month " +
-            "LIMIT 5",
+            "LIMIT 12",
             nativeQuery = true)
     List<ConsumptionResponseDto> consumptionMonthly();
 
