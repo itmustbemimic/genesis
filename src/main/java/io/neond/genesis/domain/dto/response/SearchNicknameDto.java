@@ -1,6 +1,10 @@
 package io.neond.genesis.domain.dto.response;
 
-public interface SearchNicknameDto {
-    String getNickname();
-    String getUuid();
+import lombok.Builder;
+
+@Builder
+public class SearchNicknameDto {
+    private String nickname;
+    private String uuid;
+
 }

@@ -15,4 +15,5 @@ public interface AdminService {
     List<WaitingMemberDto> getWaitingMember();
     List<WaitingMemberDto> searchWaitingMember(String nickname);
     List<AdminMemberDto> getAdminMember();
+    List<AdminMemberDto> searchAdminMember(String nickname);
 }

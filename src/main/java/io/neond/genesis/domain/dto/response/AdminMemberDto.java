@@ -12,4 +12,11 @@ public class AdminMemberDto {
     private String phone;
     private String uuid;
     private String registerDate;
+
+    public SearchNicknameDto toSearchNicknameDto() {
+        return SearchNicknameDto.builder()
+                .nickname(nickname)
+                .uuid(uuid)
+                .build();
+    }
 }

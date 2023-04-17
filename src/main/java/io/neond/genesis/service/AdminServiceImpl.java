@@ -82,5 +82,12 @@ public class AdminServiceImpl implements AdminService{
         );
     }
 
+    @Override
+    public List<AdminMemberDto> searchAdminMember(String nickname) {
+        return memberRepository.findByNicknameContainingAndRoles(
+                nickname,
+                roleRepository.findByName("ROLE_ADMIN").orElseThrow()
+        );
+    }
 
 }

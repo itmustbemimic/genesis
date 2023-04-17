@@ -282,7 +282,7 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     public List<SearchNicknameDto> searchPermittedMember(String nickname) {
         return memberRepository.findByNicknameContainsAndRoles(
                 nickname,
-                roleRepository.findByName("ROLE_PERMITTED").orElseThrow(() -> new RuntimeException("찾을 수 없는 role"))
+                roleRepository.findByName("ROLE_PERMITTED").orElseThrow()
                 );
     }
 

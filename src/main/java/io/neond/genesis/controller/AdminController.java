@@ -107,8 +107,8 @@ public class AdminController {
     @Operation(summary = "어드민 리스트")
     @ApiResponse(responseCode = "200")
     @GetMapping("/list")
-    public List<AdminMemberDto> getAdminList() {
-        return adminService.getAdminMember();
+    public List<AdminMemberDto> getAdminList(@RequestParam @Nullable String nickname) {
+        return nickname == null ? adminService.getAdminMember() : adminService.searchAdminMember(nickname);
     }
 
     @Operation(summary = "베스트핸드 입력")
