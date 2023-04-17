@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -104,8 +105,15 @@ public class AccountController {
             @Parameter(name = "date", description = "해당 날짜가 속한 월의 소모량. 2023-03-08 입력 시 3월 소모량 출력")
             @RequestParam
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-            Date date) {
-        return accountService.consumptionDetails(date);
+            Date date,
+
+            @Parameter(name = "endDate", description = "마지막 날짜도 있으면 기간내 소모량 출력")
+            @RequestParam
+            @Nullable
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            Date endDate
+    ) {
+        return accountService.consumptionDetails(date, endDate);
     }
 
     @Operation(summary = "월별 유저 소모량 세부 내역")
@@ -114,9 +122,18 @@ public class AccountController {
             @Parameter(name = "date", description = "해당 날짜가 속한 월의 소모량. 2023-03-08 입력 시 3월 소모내역 출력")
             @RequestParam
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-            Date date) {
-        return accountService.consumptionDetailsList(date);
+            Date date,
+
+            @Parameter(name = "endDate", description = "마지막 날짜도 있으면 기간내 소모량 출력")
+            @RequestParam
+            @Nullable
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            Date endDate
+            ) {
+        return accountService.consumptionDetailsList(date, endDate);
     }
+
+
 
     @Operation(summary = "처음부터 지금까지 유통량 = 총 발행량 - 총 소모량")
     @GetMapping("/circulation")

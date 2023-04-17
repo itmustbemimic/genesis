@@ -49,7 +49,7 @@ public class AccountServiceImpl implements AccountService{
 
     @Override
     public List<TicketHistoryResponseDto> issuedDailyList(Date date) {
-        return ticketHistoryRepository.findByAmountGreaterThanAndDateContainsAndSummaryNotContains(0, formatDate(date), "선물");
+        return ticketHistoryRepository.findByAmountGreaterThanAndDateContainsAndFlagNotContains(0, formatDate(date), "gift");
     }
 
     @Override
@@ -63,16 +63,27 @@ public class AccountServiceImpl implements AccountService{
     }
 
     @Override
-    public List<TicketSet> consumptionDetails(Date date) {
-        List<String> border = memberService.getMonthBorder(date);
-        log.info(border.get(0));
-        return ticketHistoryRepository.consumptionDetails(border.get(0), border.get(1));
+    public List<TicketSet> consumptionDetails(Date startDate, Date endDate) {
+        // endDate가 없으면 해당 월 출력
+        if (endDate == null) {
+            List<String> border = memberService.getMonthBorder(startDate);
+            return ticketHistoryRepository.consumptionDetails(border.get(0), border.get(1));
+        } else {
+            return ticketHistoryRepository.consumptionDetails(formatDate(startDate), formatDate(endDate));
+        }
+
     }
 
     @Override
-    public List<TicketHistoryResponseDto> consumptionDetailsList(Date date) {
-        List<String> border = memberService.getMonthBorder(date);
-        return ticketHistoryRepository.findByAmountLessThanAndDateBetweenAndSummaryNotContainsOrderByDateAsc(0, border.get(0), border.get(1), "선물");
+    public List<TicketHistoryResponseDto> consumptionDetailsList(Date startDate, Date endDate) {
+        // endDate가 없으면 해당 월 출력
+        if (endDate == null) {
+            List<String> border = memberService.getMonthBorder(startDate);
+            return ticketHistoryRepository.findByAmountLessThanAndDateBetweenAndFlagNotContainsOrderByDateAsc(0, border.get(0), border.get(1), "gift");
+        } else {
+            return ticketHistoryRepository.findByAmountLessThanAndDateBetweenAndFlagNotContainsOrderByDateAsc(0, formatDate(startDate), formatDate(endDate), "gift");
+        }
+
     }
 
     public String formatDate(Date date) {
