@@ -4,10 +4,9 @@ import io.neond.genesis.domain.dto.request.BestHandRequestDto;
 import io.neond.genesis.domain.dto.request.RoleToMemberRequestDto;
 import io.neond.genesis.domain.dto.request.MultipleTicketRequestDto;
 import io.neond.genesis.domain.dto.request.SingleTicketRequestDto;
-import io.neond.genesis.domain.dto.response.AdminMemberDto;
 import io.neond.genesis.domain.dto.response.BestHandResponseDto;
 import io.neond.genesis.domain.dto.response.MyTicketResponseDto;
-import io.neond.genesis.domain.dto.response.WaitingMemberDto;
+import io.neond.genesis.domain.dto.response.FullMemberDto;
 import io.neond.genesis.service.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -90,7 +89,7 @@ public class AdminController {
             @ApiResponse(responseCode = "500", description = "에러 날 일이 없는데?")
     })
     @GetMapping("/waiting")
-    public List<WaitingMemberDto> getWaitingMembers(@RequestParam @Nullable String nickname){
+    public List<FullMemberDto> getWaitingMembers(@RequestParam @Nullable String nickname){
         return nickname == null ? adminService.getWaitingMember() : adminService.searchWaitingMember(nickname);
     }
 
@@ -105,10 +104,17 @@ public class AdminController {
     }
 
     @Operation(summary = "어드민 리스트")
-    @ApiResponse(responseCode = "200")
+    @ApiResponse(responseCode = "200", description = "파라미터 있으면 어드민 닉네임 검색")
     @GetMapping("/list")
-    public List<AdminMemberDto> getAdminList(@RequestParam @Nullable String nickname) {
+    public List<FullMemberDto> getAdminList(@RequestParam @Nullable String nickname) {
         return nickname == null ? adminService.getAdminMember() : adminService.searchAdminMember(nickname);
+    }
+
+    @Operation(summary = "허가된 유저 리스트")
+    @ApiResponse(responseCode = "200", description = "파라미터 있으면 가입 허가된 유저들 검색")
+    @GetMapping("/members")
+    public List<FullMemberDto> getPermittedMembers(@RequestParam @Nullable String nickname) {
+        return nickname == null ? adminService.getPermittedMember() : adminService.searchPermittedMember(nickname);
     }
 
     @Operation(summary = "베스트핸드 입력")

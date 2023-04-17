@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class WaitingMemberDto {
+public class FullMemberDto {
     private String name;
     private String phone;
     private String memberId;

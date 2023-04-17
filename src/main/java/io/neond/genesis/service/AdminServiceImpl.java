@@ -7,11 +7,9 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import io.neond.genesis.domain.dto.response.AdminMemberDto;
 import io.neond.genesis.domain.dto.response.ErrorResponse;
-import io.neond.genesis.domain.dto.response.WaitingMemberDto;
+import io.neond.genesis.domain.dto.response.FullMemberDto;
 import io.neond.genesis.domain.entity.Member;
-import io.neond.genesis.domain.repository.BestHandRepository;
 import io.neond.genesis.domain.repository.MemberRepository;
 import io.neond.genesis.domain.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
@@ -61,14 +59,14 @@ public class AdminServiceImpl implements AdminService{
     }
 
     @Override
-    public List<WaitingMemberDto> getWaitingMember() {
+    public List<FullMemberDto> getWaitingMember() {
         return memberRepository.findMembersByRolesNotContains(
                 roleRepository.findByName("ROLE_PERMITTED").orElseThrow(() -> new RuntimeException("찾을 수 없는 role"))
         );
     }
 
     @Override
-    public List<WaitingMemberDto> searchWaitingMember(String nickname) {
+    public List<FullMemberDto> searchWaitingMember(String nickname) {
         return memberRepository.findMembersByRolesNotContainsAndNicknameContains(
                 roleRepository.findByName("ROLE_PERMITTED").orElseThrow(() -> new RuntimeException("찾을 수 없는 role")),
                 nickname
@@ -76,17 +74,32 @@ public class AdminServiceImpl implements AdminService{
     }
 
     @Override
-    public List<AdminMemberDto> getAdminMember() {
+    public List<FullMemberDto> getAdminMember() {
         return memberRepository.findByRoles(
                 roleRepository.findByName("ROLE_ADMIN").orElseThrow(() -> new RuntimeException("찾을 수 없는 role"))
         );
     }
 
     @Override
-    public List<AdminMemberDto> searchAdminMember(String nickname) {
+    public List<FullMemberDto> searchAdminMember(String nickname) {
         return memberRepository.findByNicknameContainingAndRoles(
                 nickname,
                 roleRepository.findByName("ROLE_ADMIN").orElseThrow()
+        );
+    }
+
+    @Override
+    public List<FullMemberDto> getPermittedMember() {
+        return memberRepository.findByRoles(
+                roleRepository.findByName("ROLE_PERMITTED").orElseThrow()
+        );
+    }
+
+    @Override
+    public List<FullMemberDto> searchPermittedMember(String nickname) {
+        return memberRepository.findByNicknameContainingAndRoles(
+                nickname ,
+                roleRepository.findByName("ROLE_PERMITTED").orElseThrow()
         );
     }
 

@@ -47,7 +47,7 @@ public class TestController {
     }
 
     @GetMapping("/waiting")
-    public List<WaitingMemberDto> getWaitingMembers(@RequestParam @Nullable String nickname){
+    public List<FullMemberDto> getWaitingMembers(@RequestParam @Nullable String nickname){
         return nickname == null ? adminService.getWaitingMember() : adminService.searchWaitingMember(nickname);
     }
 
@@ -67,7 +67,7 @@ public class TestController {
     }
 
     @GetMapping("/admins")
-    public List<AdminMemberDto> getAdmins() {
+    public List<FullMemberDto> getAdmins() {
         return adminService.getAdminMember();
     }
 

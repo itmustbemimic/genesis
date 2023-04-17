@@ -1,10 +1,6 @@
 package io.neond.genesis.service;
 
-import io.neond.genesis.domain.dto.request.BestHandRequestDto;
-import io.neond.genesis.domain.dto.response.AdminMemberDto;
-import io.neond.genesis.domain.dto.response.BestHandResponseDto;
-import io.neond.genesis.domain.dto.response.WaitingMemberDto;
-import io.neond.genesis.domain.entity.BestHand;
+import io.neond.genesis.domain.dto.response.FullMemberDto;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
@@ -12,8 +8,10 @@ import java.util.List;
 
 public interface AdminService {
     ResponseEntity verifyQrToken(String qrToken);
-    List<WaitingMemberDto> getWaitingMember();
-    List<WaitingMemberDto> searchWaitingMember(String nickname);
-    List<AdminMemberDto> getAdminMember();
-    List<AdminMemberDto> searchAdminMember(String nickname);
+    List<FullMemberDto> getWaitingMember();
+    List<FullMemberDto> searchWaitingMember(String nickname);
+    List<FullMemberDto> getAdminMember();
+    List<FullMemberDto> searchAdminMember(String nickname);
+    List<FullMemberDto> getPermittedMember();
+    List<FullMemberDto> searchPermittedMember(String nickname);
 }
