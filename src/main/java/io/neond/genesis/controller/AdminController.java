@@ -7,6 +7,7 @@ import io.neond.genesis.domain.dto.request.SingleTicketRequestDto;
 import io.neond.genesis.domain.dto.response.BestHandResponseDto;
 import io.neond.genesis.domain.dto.response.MyTicketResponseDto;
 import io.neond.genesis.domain.dto.response.FullMemberDto;
+import io.neond.genesis.domain.entity.Bingo;
 import io.neond.genesis.service.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -118,9 +119,14 @@ public class AdminController {
     }
 
     @Operation(summary = "베스트핸드 입력")
-    @PostMapping("/besthand")
-    public BestHandResponseDto setBestHand(BestHandRequestDto requestDto) {
+    @PostMapping("/game/besthand")
+    public BestHandResponseDto setBestHand(@RequestBody BestHandRequestDto requestDto) {
         return gameService.setBestHand(requestDto);
+    }
+
+    @PostMapping("/game/bingo")
+    public Bingo setBingo(@RequestBody Bingo bingo) {
+        return gameService.setBingo(bingo);
     }
 
 }
