@@ -50,8 +50,15 @@ public class AccountController {
             @Parameter(name = "date", example = "2023-03-08")
             @RequestParam
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-            Date date) {
-        return accountService.issuedDaily(date);
+            Date date,
+
+            @Parameter(name = "endDate", description = "마지막 날짜도 있으면 기간내 발행량 출력")
+            @RequestParam
+            @Nullable
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            Date endDate
+    ) {
+        return endDate == null ? accountService.issuedDaily(date) : accountService.issuedCustom(date, endDate);
     }
 
     @Operation(summary = "하루동안 발행된 티켓 리스트")
@@ -60,40 +67,19 @@ public class AccountController {
             @Parameter(name = "date", example = "2023-03-08")
             @RequestParam
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-            Date date) {
-        return accountService.issuedDailyList(date);
+            Date date,
+
+            @Parameter(name = "endDate", description = "마지막 날짜도 있으면 기간내 발행 리스트 출력")
+            @RequestParam
+            @Nullable
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            Date endDate
+
+    ) {
+        return endDate == null ? accountService.issuedDailyList(date) : accountService.issuedCustomList(date, endDate);
     }
 
-    @Operation(summary = "지정된 기간동안 발행된 티켓")
-    @GetMapping("/issued/details/custom")
-    public List<TicketSet> issuedDetails(
-            @Parameter(name = "startDate", description = "시작 날짜", example = "2023-03-01")
-            @RequestParam
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-            Date startDate,
-
-            @Parameter(name = "endDate", description = "마지막 날짜", example = "2023-04-27")
-            @RequestParam
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-            Date endDate) {
-        return accountService.issuedCustom(startDate, endDate);
-    }
-
-    @GetMapping("/issued/details/custom/list")
-    public List<TicketHistoryResponseDto> issuedCustomList(
-            @Parameter(name = "startDate", description = "시작 날짜", example = "2023-03-01")
-            @RequestParam
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-            Date startDate,
-
-            @Parameter(name = "endDate", description = "마지막 날짜", example = "2023-04-27")
-            @RequestParam
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-            Date endDate) {
-        return accountService.issuedCustomList(startDate, endDate);
-    }
-
-    @Operation(summary = "월별 유저소모량. 최근 5개월만")
+    @Operation(summary = "월별 유저소모량. 최근 12개월만")
     @GetMapping("/consumption")
     public List<ConsumptionResponseDto> userConsumption() {
         return ticketHistoryRepository.consumptionMonthly();

@@ -26,7 +26,6 @@ public class RootController {
 
     private final MemberService memberService;
 
-    //TODO 푸시 구현되면 회원 가입 리스폰스에 푸시용 폰 토큰 전송
     @Operation(summary = "회원가입")
     @ApiResponse(responseCode = "201", description = "닉네임 리턴")
     @PostMapping("/join")
