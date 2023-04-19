@@ -131,11 +131,13 @@ public class AdminController {
         return gameService.setBingo(bingo);
     }
 
+    @Operation(summary = "유저 충전내역 파라미터에 uuid")
     @GetMapping("/ticket/history/charge")
     public List<TicketHistoryResponseDto> getUserChargeHistory(@RequestParam String uuid) {
         return adminService.getUserChargeHistory(uuid);
     }
 
+    @Operation(summary = "유저 소모내역 파라미터에 uuid")
     @GetMapping("/ticket/history/use")
     public List<TicketHistoryResponseDto> getUserUseHistory(@RequestParam String uuid) {
         return adminService.getUserUseHistory(uuid);
