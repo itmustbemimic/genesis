@@ -12,8 +12,6 @@ import java.util.List;
 
 public interface TicketHistoryRepository extends JpaRepository<TicketHistory, Long> {
     List<TicketHistoryResponseDto> findByUuidOrderByDateDesc(String uuid);
-    List<TicketHistoryResponseDto> findByUuidAndAmountGreaterThanOrderByDateDesc(String uuid, int amount);
-    List<TicketHistoryResponseDto> findByUuidAndAmountLessThanOrderByDateDesc(String uuid, int amount);
     List<TicketHistoryResponseDto> findByUuidAndFlagOrderByDateDesc(String uuid, String flag);
     List<TicketHistoryResponseDto> findByAmountGreaterThanAndDateContainsAndFlagNotContains(int amount, String date, String summary);
     List<TicketHistoryResponseDto> findByAmountLessThanAndDateBetweenAndFlagNotContainsOrderByDateAsc(int amount, String startDate, String endDate, String summary);

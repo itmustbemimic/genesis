@@ -176,11 +176,13 @@ public class TicketServiceImpl implements TicketService{
 
     @Override
     public List<TicketHistoryResponseDto> getMyUseTicketHistory(Member member) {
-        return ticketHistoryRepository.findByUuidAndAmountLessThanOrderByDateDesc(member.getUuid(), 0);
+        return ticketHistoryRepository.findByUuidAndFlagOrderByDateDesc(member.getUuid(), "game");
+        //TODO flag 바꾸기
     }
 
     @Override
     public List<TicketHistoryResponseDto> getMyAddTicketHistory(Member member) {
-        return ticketHistoryRepository.findByUuidAndAmountGreaterThanOrderByDateDesc(member.getUuid(), 0);
+        return ticketHistoryRepository.findByUuidAndFlagOrderByDateDesc(member.getUuid(), "charge");
+        //TODO flag 바꾸기
     }
 }
