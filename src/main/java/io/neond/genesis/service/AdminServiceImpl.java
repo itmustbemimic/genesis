@@ -9,9 +9,11 @@ import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import io.neond.genesis.domain.dto.response.ErrorResponse;
 import io.neond.genesis.domain.dto.response.FullMemberDto;
+import io.neond.genesis.domain.dto.response.TicketHistoryResponseDto;
 import io.neond.genesis.domain.entity.Member;
 import io.neond.genesis.domain.repository.MemberRepository;
 import io.neond.genesis.domain.repository.RoleRepository;
+import io.neond.genesis.domain.repository.TicketHistoryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,6 +32,7 @@ import static io.neond.genesis.security.Constants.TOKEN_HEADER_PREFIX;
 public class AdminServiceImpl implements AdminService{
     private final MemberRepository memberRepository;
     private final RoleRepository roleRepository;
+    private final TicketHistoryRepository ticketHistoryRepository;
 
     @Value("${jwt.secret.qr")
     private String qrSecretKey;
@@ -102,5 +105,17 @@ public class AdminServiceImpl implements AdminService{
                 roleRepository.findByName("ROLE_PERMITTED").orElseThrow()
         );
     }
+
+    @Override
+    public List<TicketHistoryResponseDto> getUserChargeHistory(String uuid) {
+        return ticketHistoryRepository.findByUuidAndFlagOrderByDateDesc(uuid, "charge");
+    }
+
+    @Override
+    public List<TicketHistoryResponseDto> getUserUseHistory(String uuid) {
+        //TODO flag game말고 use로바꾸기 (DB작업 필요)
+        return ticketHistoryRepository.findByUuidAndFlagOrderByDateDesc(uuid, "game");
+    }
+
 
 }

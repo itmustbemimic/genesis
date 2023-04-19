@@ -7,7 +7,9 @@ import io.neond.genesis.domain.dto.request.SingleTicketRequestDto;
 import io.neond.genesis.domain.dto.response.BestHandResponseDto;
 import io.neond.genesis.domain.dto.response.MyTicketResponseDto;
 import io.neond.genesis.domain.dto.response.FullMemberDto;
+import io.neond.genesis.domain.dto.response.TicketHistoryResponseDto;
 import io.neond.genesis.domain.entity.Bingo;
+import io.neond.genesis.domain.repository.TicketHistoryRepository;
 import io.neond.genesis.service.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -129,4 +131,13 @@ public class AdminController {
         return gameService.setBingo(bingo);
     }
 
+    @GetMapping("/ticket/history/charge")
+    public List<TicketHistoryResponseDto> getUserChargeHistory(@RequestParam String uuid) {
+        return adminService.getUserChargeHistory(uuid);
+    }
+
+    @GetMapping("/ticket/history/use")
+    public List<TicketHistoryResponseDto> getUserUseHistory(@RequestParam String uuid) {
+        return adminService.getUserUseHistory(uuid);
+    }
 }

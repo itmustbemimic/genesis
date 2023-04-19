@@ -1,6 +1,7 @@
 package io.neond.genesis.service;
 
 import io.neond.genesis.domain.dto.response.FullMemberDto;
+import io.neond.genesis.domain.dto.response.TicketHistoryResponseDto;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
@@ -14,4 +15,6 @@ public interface AdminService {
     List<FullMemberDto> searchAdminMember(String nickname);
     List<FullMemberDto> getPermittedMember();
     List<FullMemberDto> searchPermittedMember(String nickname);
+    List<TicketHistoryResponseDto> getUserChargeHistory(String uuid);
+    List<TicketHistoryResponseDto> getUserUseHistory(String uuid);
 }
