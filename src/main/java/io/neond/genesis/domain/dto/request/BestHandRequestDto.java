@@ -15,17 +15,16 @@ public class BestHandRequestDto {
     private String card3;
     private String card4;
     private String card5;
-    private String nickname;
+    private String userUuid;
 
     public BestHand toEntity() {
-        log.info(Calendar.getInstance().toString());
         return BestHand.builder()
                 .card1(card1)
                 .card2(card2)
                 .card3(card3)
                 .card4(card4)
                 .card5(card5)
-                .nickname(nickname)
+                .userUuid(userUuid)
                 .date(Instant.now().toString())
                 .build();
     }
