@@ -9,8 +9,10 @@ import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import io.neond.genesis.domain.dto.response.ErrorResponse;
 import io.neond.genesis.domain.dto.response.FullMemberDto;
+import io.neond.genesis.domain.dto.response.MyTicketResponseDto;
 import io.neond.genesis.domain.dto.response.TicketHistoryResponseDto;
 import io.neond.genesis.domain.entity.Member;
+import io.neond.genesis.domain.entity.Ticket;
 import io.neond.genesis.domain.repository.MemberRepository;
 import io.neond.genesis.domain.repository.RoleRepository;
 import io.neond.genesis.domain.repository.TicketHistoryRepository;
@@ -115,6 +117,13 @@ public class AdminServiceImpl implements AdminService{
     public List<TicketHistoryResponseDto> getUserUseHistory(String uuid) {
         //TODO flag game말고 use로바꾸기 (DB작업 필요)
         return ticketHistoryRepository.findByUuidAndFlagOrderByDateDesc(uuid, "game");
+    }
+
+    @Override
+    public MyTicketResponseDto getUserTickets(String uuid) {
+        Member member = memberRepository.findByUuid(uuid).orElseThrow();
+        Ticket ticket = member.getTicket();
+        return new MyTicketResponseDto(ticket.getBlack(), ticket.getRed(), ticket.getGold());
     }
 
 

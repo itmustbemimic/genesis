@@ -137,9 +137,15 @@ public class AdminController {
         return adminService.getUserChargeHistory(uuid);
     }
 
-    @Operation(summary = "유저 소모내역 파라미터에 uuid")
+    @Operation(summary = "유저 소모내역 조회. 파라미터에 uuid")
     @GetMapping("/ticket/history/use")
     public List<TicketHistoryResponseDto> getUserUseHistory(@RequestParam String uuid) {
         return adminService.getUserUseHistory(uuid);
+    }
+
+    @Operation(summary = "유저 티켓 조회. 파라미터에 uuid")
+    @GetMapping("/ticket")
+    public MyTicketResponseDto getUserTickets(@RequestParam String uuid) {
+        return adminService.getUserTickets(uuid);
     }
 }
