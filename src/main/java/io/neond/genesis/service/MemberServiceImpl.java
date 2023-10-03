@@ -8,6 +8,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import io.neond.genesis.domain.dto.request.SmsMessageDto;
 import io.neond.genesis.domain.dto.response.*;
 import io.neond.genesis.domain.entity.Member;
 import io.neond.genesis.domain.dto.request.MemberCreateDto;

@@ -47,6 +47,7 @@ public class RootController {
         }
     }
 
+
     @Operation(summary = "닉네임 중복 체크")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "중복 아님. 사용 가능"),

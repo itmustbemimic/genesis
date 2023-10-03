@@ -1,6 +1,7 @@
 package io.neond.genesis.service;
 
 import io.neond.genesis.domain.dto.request.MemberCreateDto;
+import io.neond.genesis.domain.dto.request.SmsMessageDto;
 import io.neond.genesis.domain.dto.response.*;
 import io.neond.genesis.domain.entity.Member;
 import jakarta.servlet.http.HttpServletRequest;

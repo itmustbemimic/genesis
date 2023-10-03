@@ -7,7 +7,9 @@ import io.neond.genesis.domain.dto.request.SmsMessageDto;
 import io.neond.genesis.domain.dto.request.SmsRequestDto;
 import io.neond.genesis.domain.dto.response.SmsResponseDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -29,6 +31,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class SmsService {
     @Value("${naver-cloud-sms.accessKey}")
     private String accessKey;
@@ -46,7 +49,7 @@ public class SmsService {
         String space = " ";
         String newLine = "\n";
         String method = "POST";
-        String url = "sms/v2/services/"+ this.serviceId+"/messages";
+        String url = "sms/v2/services/" + this.serviceId + "/messages";
         String timestamp = time.toString();
         String accessKey = this.accessKey;
         String secretKey = this.secretKey;
@@ -87,8 +90,12 @@ public class SmsService {
                 .countryCode("82")
                 .from(senderPhone)
                 .content(messageDto.getContent())
-                .messageDtoList(messages)
+                .messages(messages)
                 .build();
+
+        log.info("====================================");
+        log.info(headers.toString());
+        log.info("====================================");
 
         ObjectMapper objectMapper = new ObjectMapper();
         String body = objectMapper.writeValueAsString(requestDto);
@@ -98,7 +105,7 @@ public class SmsService {
         restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
 
         return restTemplate.postForObject(
-                new URI("\"https://sens.apigw.ntruss.com/sms/v2/services/\"+ serviceId +\"/messages\")"),
+                new URI("https://sens.apigw.ntruss.com/sms/v2/services/" + serviceId + "/messages"),
                 httpBody,
                 SmsResponseDto.class);
     }

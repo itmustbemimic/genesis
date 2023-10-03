@@ -1,17 +1,20 @@
 package io.neond.genesis.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.Notification;
 import io.neond.genesis.domain.dto.request.MultipleTicketRequestDto;
 import io.neond.genesis.domain.dto.request.SingleTicketRequestDto;
+import io.neond.genesis.domain.dto.request.SmsMessageDto;
 import io.neond.genesis.domain.dto.response.*;
 import io.neond.genesis.domain.entity.Member;
 import io.neond.genesis.domain.repository.MemberRepository;
 import io.neond.genesis.domain.repository.TicketHistoryRepository;
 import io.neond.genesis.service.AdminService;
 import io.neond.genesis.service.RoleService;
+import io.neond.genesis.service.SmsService;
 import io.neond.genesis.service.TicketService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Getter;
@@ -19,8 +22,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -35,6 +43,7 @@ public class TestController {
     private final TicketService ticketService;
     private final FirebaseMessaging firebaseMessaging;
     private final TicketHistoryRepository ticketHistoryRepository;
+    private final SmsService smsService;
 
     @PostMapping("/addrole")
     public ResponseEntity<Long> saveRole(@RequestBody String roleName) {
@@ -104,6 +113,13 @@ public class TestController {
     @GetMapping("/issued")
     public List<TicketSet> issued() {
         return ticketHistoryRepository.issuedUserBuy();
+    }
+
+    @PostMapping("/sms")
+    public String smsTest(@RequestBody SmsMessageDto messageDto, Model model) throws UnsupportedEncodingException, NoSuchAlgorithmException, URISyntaxException, InvalidKeyException, JsonProcessingException {
+        SmsResponseDto response = smsService.sendSms(messageDto);
+        model.addAttribute("response", response);
+        return "hi";
     }
 
 }
