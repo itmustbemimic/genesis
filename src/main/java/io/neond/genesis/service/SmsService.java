@@ -107,7 +107,7 @@ public class SmsService {
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
 
-        redisUtil.setDataExpire(String.valueOf(authKey), messageDto.getUserPhone(), 1);
+        redisUtil.setDataExpire(String.valueOf(authKey), messageDto.getTo(), 1);
 
         return restTemplate.postForObject(
                 new URI("https://sens.apigw.ntruss.com/sms/v2/services/" + serviceId + "/messages"),
@@ -116,7 +116,7 @@ public class SmsService {
     }
 
     public HttpStatus verifySms(SmsMessageDto messageDto) {
-        if (messageDto.getUserPhone().equals(redisUtil.getData(messageDto.getAuthKey()))) {
+        if (messageDto.getTo().equals(redisUtil.getData(messageDto.getAuthKey()))) {
             redisUtil.deleteData(messageDto.getAuthKey());
             return OK;
         } else return CONFLICT;
