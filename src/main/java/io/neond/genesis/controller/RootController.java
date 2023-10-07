@@ -1,7 +1,10 @@
 package io.neond.genesis.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.neond.genesis.domain.dto.request.MemberCreateDto;
+import io.neond.genesis.domain.dto.request.SmsMessageDto;
 import io.neond.genesis.service.MemberService;
+import io.neond.genesis.service.SmsService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -9,15 +12,21 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 
 import static io.neond.genesis.security.Constants.*;
 import static io.neond.genesis.security.Constants.RT_HEADER;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,6 +34,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 public class RootController {
 
     private final MemberService memberService;
+    private final SmsService smsService;
 
     @Operation(summary = "회원가입")
     @ApiResponse(responseCode = "201", description = "닉네임 리턴")
@@ -47,6 +57,16 @@ public class RootController {
         }
     }
 
+    @PostMapping("/requestVerify")
+    public HttpStatus requestVerify(@RequestBody SmsMessageDto messageDto) throws UnsupportedEncodingException, NoSuchAlgorithmException, URISyntaxException, InvalidKeyException, JsonProcessingException {
+        smsService.sendSms(messageDto);
+        return CREATED;
+    }
+
+    @PostMapping("/verify")
+    public HttpStatus verify(@RequestBody SmsMessageDto messageDto) {
+        return smsService.verifySms(messageDto);
+    }
 
     @Operation(summary = "닉네임 중복 체크")
     @ApiResponses(value = {

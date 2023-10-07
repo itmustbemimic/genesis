@@ -9,10 +9,10 @@ import io.neond.genesis.domain.dto.response.SmsResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
-import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
@@ -28,11 +28,17 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+
+import static org.springframework.http.HttpStatus.CONFLICT;
+import static org.springframework.http.HttpStatus.OK;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class SmsService {
+    private final RedisUtil redisUtil;
+
     @Value("${naver-cloud-sms.accessKey}")
     private String accessKey;
 
@@ -45,11 +51,11 @@ public class SmsService {
     @Value("${naver-cloud.sms.senderPhone}")
     private String senderPhone;
 
-    public String makeSignature(Long time) throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException {
+    public String makeSignature(Long time) throws NoSuchAlgorithmException, InvalidKeyException {
         String space = " ";
         String newLine = "\n";
         String method = "POST";
-        String url = "sms/v2/services/" + this.serviceId + "/messages";
+        String url = "/sms/v2/services/" + this.serviceId + "/messages";
         String timestamp = time.toString();
         String accessKey = this.accessKey;
         String secretKey = this.secretKey;
@@ -74,6 +80,7 @@ public class SmsService {
 
     public SmsResponseDto sendSms(SmsMessageDto messageDto) throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException, URISyntaxException {
         Long time = System.currentTimeMillis();
+        int authKey = new Random().nextInt(999999);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -89,13 +96,9 @@ public class SmsService {
                 .contentType("COMM")
                 .countryCode("82")
                 .from(senderPhone)
-                .content(messageDto.getContent())
+                .content("[King's Azit] 인증번호는 " + authKey + " 입니다.")
                 .messages(messages)
                 .build();
-
-        log.info("====================================");
-        log.info(headers.toString());
-        log.info("====================================");
 
         ObjectMapper objectMapper = new ObjectMapper();
         String body = objectMapper.writeValueAsString(requestDto);
@@ -104,10 +107,19 @@ public class SmsService {
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
 
+        redisUtil.setDataExpire(String.valueOf(authKey), messageDto.getUserPhone(), 1);
+
         return restTemplate.postForObject(
                 new URI("https://sens.apigw.ntruss.com/sms/v2/services/" + serviceId + "/messages"),
                 httpBody,
                 SmsResponseDto.class);
+    }
+
+    public HttpStatus verifySms(SmsMessageDto messageDto) {
+        if (messageDto.getUserPhone().equals(redisUtil.getData(messageDto.getAuthKey()))) {
+            redisUtil.deleteData(messageDto.getAuthKey());
+            return OK;
+        } else return CONFLICT;
     }
 
 }
