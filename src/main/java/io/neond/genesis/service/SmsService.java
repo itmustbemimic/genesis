@@ -107,6 +107,8 @@ public class SmsService {
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
 
+        log.info(messageDto.getTo());
+
         redisUtil.setDataExpire(String.valueOf(authKey), messageDto.getTo(), 1);
 
         return restTemplate.postForObject(
