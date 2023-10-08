@@ -26,7 +26,7 @@ import java.util.Map;
 import static io.neond.genesis.security.Constants.*;
 import static io.neond.genesis.security.Constants.RT_HEADER;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -49,20 +49,30 @@ public class RootController {
             @ApiResponse(responseCode = "409", description = "중복. 사용 불가")
     })
     @GetMapping("/idcheck")
-    public ResponseEntity idCheck(@RequestParam String memberId) {
+    public HttpStatus idCheck(@RequestParam String memberId) {
         if (memberService.idCheck(memberId)) {
-            return new ResponseEntity<>(HttpStatusCode.valueOf(409));
+            return CONFLICT;
         } else {
-            return new ResponseEntity<>(HttpStatusCode.valueOf(200));
+            return OK;
         }
     }
 
+    @Operation(summary = "인증 번호 요청. authKey 안보내도 됨")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "sms 전송 성공!"),
+            @ApiResponse(responseCode = "500", description = "전송 실패. 다시 한번 시도")
+    })
     @PostMapping("/requestVerify")
-    public HttpStatus requestVerify(@RequestBody SmsMessageDto messageDto) throws UnsupportedEncodingException, NoSuchAlgorithmException, URISyntaxException, InvalidKeyException, JsonProcessingException {
+    public HttpStatusCode requestVerify(@RequestBody SmsMessageDto messageDto) throws UnsupportedEncodingException, NoSuchAlgorithmException, URISyntaxException, InvalidKeyException, JsonProcessingException {
         smsService.sendSms(messageDto);
         return CREATED;
     }
 
+    @Operation(summary = "인증번호 확인. 전화번호, 인증번호 둘다 보내야 됨")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "인증 성공"),
+            @ApiResponse(responseCode = "409", description = "인증 실패")
+    })
     @PostMapping("/verify")
     public HttpStatus verify(@RequestBody SmsMessageDto messageDto) {
         return smsService.verifySms(messageDto);
@@ -74,11 +84,11 @@ public class RootController {
             @ApiResponse(responseCode = "409", description = "중복. 사용 불가")
     })
     @GetMapping("/nicknamecheck")
-    public ResponseEntity nicknameCheck(@RequestParam String nickname) {
+    public HttpStatus nicknameCheck(@RequestParam String nickname) {
         if (memberService.nicknameCheck(nickname)) {
-            return new ResponseEntity<>(HttpStatusCode.valueOf(409));
+            return CONFLICT;
         } else {
-            return new ResponseEntity<>(HttpStatusCode.valueOf(200));
+            return OK;
         }
     }
 
