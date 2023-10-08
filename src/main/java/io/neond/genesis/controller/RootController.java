@@ -6,6 +6,7 @@ import io.neond.genesis.domain.dto.request.SmsMessageDto;
 import io.neond.genesis.service.MemberService;
 import io.neond.genesis.service.SmsService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -45,8 +46,8 @@ public class RootController {
 
     @Operation(summary = "아이디 중복 체크")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "중복 아님. 사용 가능"),
-            @ApiResponse(responseCode = "409", description = "중복. 사용 불가")
+            @ApiResponse(responseCode = "200", description = "중복 아님. 사용 가능", content = @Content),
+            @ApiResponse(responseCode = "409", description = "중복. 사용 불가", content = @Content)
     })
     @GetMapping("/idcheck")
     public HttpStatus idCheck(@RequestParam String memberId) {
@@ -59,11 +60,11 @@ public class RootController {
 
     @Operation(summary = "인증 번호 요청. authKey 안보내도 됨")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "sms 전송 성공!"),
-            @ApiResponse(responseCode = "500", description = "전송 실패. 다시 한번 시도")
+            @ApiResponse(responseCode = "200", description = "전송 성공", content = @Content),
+            @ApiResponse(responseCode = "500", description = "전송 실패. 다시 한번 시도", content = @Content)
     })
     @PostMapping("/requestVerify")
-    public HttpStatusCode requestVerify(@RequestBody SmsMessageDto messageDto) throws UnsupportedEncodingException, NoSuchAlgorithmException, URISyntaxException, InvalidKeyException, JsonProcessingException {
+    public HttpStatus requestVerify(@RequestBody SmsMessageDto messageDto) throws UnsupportedEncodingException, NoSuchAlgorithmException, URISyntaxException, InvalidKeyException, JsonProcessingException {
         smsService.sendSms(messageDto);
         return CREATED;
     }
