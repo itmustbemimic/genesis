@@ -80,7 +80,9 @@ public class SmsService {
 
     public SmsResponseDto sendSms(SmsMessageDto messageDto) throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException, URISyntaxException {
         Long time = System.currentTimeMillis();
-        int authKey = new Random().nextInt(999999);
+        String authKey = String.format("%04d", new Random().nextInt(9999));
+
+
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);

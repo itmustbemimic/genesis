@@ -19,6 +19,7 @@ import io.neond.genesis.service.TicketService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
@@ -30,7 +31,9 @@ import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.Random;
 
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/test")
@@ -117,8 +120,9 @@ public class TestController {
 
     @PostMapping("/sms")
     public String smsTest(@RequestBody SmsMessageDto messageDto, Model model) throws UnsupportedEncodingException, NoSuchAlgorithmException, URISyntaxException, InvalidKeyException, JsonProcessingException {
-        SmsResponseDto response = smsService.sendSms(messageDto);
-        model.addAttribute("response", response);
+        for (int i = 0; i < 100; i++) {
+            log.info(String.format("%04d", new Random().nextInt(9999)));
+        }
         return "hi";
     }
 
