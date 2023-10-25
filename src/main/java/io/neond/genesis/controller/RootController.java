@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
@@ -85,11 +86,11 @@ public class RootController {
             @ApiResponse(responseCode = "409", description = "중복. 사용 불가")
     })
     @GetMapping("/nicknamecheck")
-    public HttpStatus nicknameCheck(@RequestParam String nickname) {
+    public ResponseEntity<Void> nicknameCheck(@RequestParam String nickname) {
         if (memberService.nicknameCheck(nickname)) {
-            return CONFLICT;
+            return new ResponseEntity<>(CONFLICT);
         } else {
-            return OK;
+            return new ResponseEntity<>(OK);
         }
     }
 
