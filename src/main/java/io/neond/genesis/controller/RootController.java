@@ -51,11 +51,11 @@ public class RootController {
             @ApiResponse(responseCode = "409", description = "중복. 사용 불가", content = @Content)
     })
     @GetMapping("/idcheck")
-    public HttpStatus idCheck(@RequestParam String memberId) {
+    public ResponseEntity<Void> idCheck(@RequestParam String memberId) {
         if (memberService.idCheck(memberId)) {
-            return CONFLICT;
+            return new ResponseEntity<>(CONFLICT);
         } else {
-            return OK;
+            return new ResponseEntity<>(OK);
         }
     }
 
