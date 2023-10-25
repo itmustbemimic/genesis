@@ -59,28 +59,28 @@ public class TicketServiceImpl implements TicketService{
     }
 
     @Override
-    public ResponseEntity useMultipleTickets(MultipleTicketRequestDto requestDto) {
+    public ResponseEntity<String> useMultipleTickets(MultipleTicketRequestDto requestDto) {
         Member member = memberRepository.findByUuid(requestDto.getUuid()).orElseThrow();
         Ticket ticket = member.getTicket();
 
         if (requestDto.getRedAmount() < 0 || requestDto.getBlackAmount() < 0 || requestDto.getGoldAmount() < 0) {
             log.warn("TicketService.useMultipleTickets: requestDto amount 0 미만 " + member.getMemberId() + member.getUuid());
-            return new ResponseEntity("비정상적인 접근", null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("비정상적인 접근", null, HttpStatus.BAD_REQUEST);
         }
 
         if (ticket.getRed() - requestDto.getRedAmount() < 0) {
             // not enough red tickets
-            return new ResponseEntity("레드 티켓 부족", null, HttpStatus.CONFLICT);
+            return new ResponseEntity<>("레드 티켓 부족", null, HttpStatus.CONFLICT);
         }
 
         if (ticket.getBlack() - requestDto.getBlackAmount() < 0) {
             // not enough black tickets
-            return new ResponseEntity("블랙 티켓 부족", null, HttpStatus.CONFLICT);
+            return new ResponseEntity<>("블랙 티켓 부족", null, HttpStatus.CONFLICT);
         }
 
         if (ticket.getGold() - requestDto.getGoldAmount() < 0) {
             // not enough gold tickets
-            return new ResponseEntity("골드 티켓 부족", null, HttpStatus.CONFLICT);
+            return new ResponseEntity<>("골드 티켓 부족", null, HttpStatus.CONFLICT);
         }
 
         addMultipleTickets(requestDto.useToAdd());
@@ -96,35 +96,26 @@ public class TicketServiceImpl implements TicketService{
         Ticket update = ticket;
 
         switch (requestDto.getType()) {
-            case "red":
-                update = new Ticket(
-                        ticket.getId(),
-                        ticket.getBlack(),
-                        ticket.getRed() + requestDto.getAmount(),
-                        ticket.getGold()
-                );
-                break;
-
-            case "black":
-                update = new Ticket(
-                        ticket.getId(),
-                        ticket.getBlack() + requestDto.getAmount(),
-                        ticket.getRed(),
-                        ticket.getGold()
-                );
-                break;
-
-            case "gold":
-                update = new Ticket(
-                        ticket.getId(),
-                        ticket.getBlack(),
-                        ticket.getRed(),
-                        ticket.getGold() + requestDto.getAmount()
-                );
-                break;
-
-            default:
-                break;
+            case "red" -> update = new Ticket(
+                    ticket.getId(),
+                    ticket.getBlack(),
+                    ticket.getRed() + requestDto.getAmount(),
+                    ticket.getGold()
+            );
+            case "black" -> update = new Ticket(
+                    ticket.getId(),
+                    ticket.getBlack() + requestDto.getAmount(),
+                    ticket.getRed(),
+                    ticket.getGold()
+            );
+            case "gold" -> update = new Ticket(
+                    ticket.getId(),
+                    ticket.getBlack(),
+                    ticket.getRed(),
+                    ticket.getGold() + requestDto.getAmount()
+            );
+            default -> {
+            }
         }
 
         ticketHistoryRepository.save(requestDto.toEntity());
@@ -132,37 +123,34 @@ public class TicketServiceImpl implements TicketService{
     }
 
     @Override
-    public ResponseEntity useSingleTickets(SingleTicketRequestDto requestDto) {
+    public ResponseEntity<String> useSingleTickets(SingleTicketRequestDto requestDto) {
         Member member = memberRepository.findByUuid(requestDto.getUuid()).orElseThrow();
         Ticket ticket = member.getTicket();
 
         if (requestDto.getAmount() < 0) {
             log.warn("TicketService: requestDto.getAmount 0 미만 " + member.getMemberId() + member.getUuid());
-            return new ResponseEntity("비정상적인 접근", null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("비정상적인 접근", null, HttpStatus.BAD_REQUEST);
         }
 
         switch (requestDto.getType()) {
-            case "red":
+            case "red" -> {
                 if (ticket.getRed() - requestDto.getAmount() < 0) {
-                    return new ResponseEntity("티켓 부족", null, HttpStatus.CONFLICT);
+                    return new ResponseEntity<>("티켓 부족", null, HttpStatus.CONFLICT);
                 }
-                break;
-
-            case "black":
+            }
+            case "black" -> {
                 if (ticket.getBlack() - requestDto.getAmount() < 0) {
-                    return new ResponseEntity("티켓 부족", null, HttpStatus.CONFLICT);
+                    return new ResponseEntity<>("티켓 부족", null, HttpStatus.CONFLICT);
                 }
-                break;
-
-            case "gold":
+            }
+            case "gold" -> {
                 if (ticket.getGold() - requestDto.getAmount() < 0) {
-                    return new ResponseEntity("티켓 부족", null, HttpStatus.CONFLICT);
+                    return new ResponseEntity<>("티켓 부족", null, HttpStatus.CONFLICT);
                 }
-                break;
-
-            default:
-                return new ResponseEntity("티켓 타입 확인", null, HttpStatus.BAD_REQUEST);
-
+            }
+            default -> {
+                return new ResponseEntity<>("티켓 타입 확인", null, HttpStatus.BAD_REQUEST);
+            }
         }
 
         addSingleTickets(requestDto.useToAdd());
