@@ -103,7 +103,7 @@ public class AdminController {
     })
     @PutMapping("/usetickets")
     public ResponseEntity useTickets(@RequestBody SingleTicketRequestDto requestDto) {
-        return ticketService.useSingleTickets(requestDto);
+        return ticketService.useSingleTickets(requestDto, "? 이거 뭐지");
     }
 
     @Operation(summary = "어드민 리스트")

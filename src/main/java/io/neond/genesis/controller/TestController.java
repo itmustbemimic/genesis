@@ -63,20 +63,6 @@ public class TestController {
         return nickname == null ? adminService.getWaitingMember() : adminService.searchWaitingMember(nickname);
     }
 
-    @PutMapping("/usetickets")
-    public ResponseEntity useTickets(@RequestBody SingleTicketRequestDto requestDto) {
-        return ticketService.useSingleTickets(requestDto);
-    }
-
-    @PutMapping("/addtickets")
-    public MyTicketResponseDto addTickets(@RequestBody MultipleTicketRequestDto requestDto) {
-        return ticketService.addMultipleTickets(requestDto);
-    }
-
-    @PutMapping("/addsingle")
-    public MyTicketResponseDto addSingle(@RequestBody SingleTicketRequestDto requestDto) {
-        return ticketService.addSingleTickets(requestDto);
-    }
 
     @GetMapping("/admins")
     public List<FullMemberDto> getAdmins() {

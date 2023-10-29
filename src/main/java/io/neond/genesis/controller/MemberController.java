@@ -178,7 +178,7 @@ public class MemberController {
 
     @Operation(summary = "내 티켓 내역 전체 검색")
     @GetMapping("/ticket/history")
-    public List<TicketHistoryResponseDto> getMyTicketHitory(HttpServletRequest request){
+    public List<TicketHistoryResponseDto2> getMyTicketHitory(HttpServletRequest request){
         return ticketService.getMyTicketHistory(
                 memberService.findMemberByAccessToken(request)
         );
@@ -210,9 +210,9 @@ public class MemberController {
                 new SingleTicketRequestDto(
                         from.getUuid(),
                         requestDto.getType(),
-                        memberRepository.findByUuid(requestDto.getTo()).get().getNickname() + "에게 선물하기",
+                        requestDto.getTo(),
                         requestDto.getAmount()
-                )
+                ), "gift"
         );
 
         // useticket이 성공했을때만 상대유저에게 충전
@@ -221,9 +221,9 @@ public class MemberController {
                     new SingleTicketRequestDto(
                             requestDto.getTo(),
                             requestDto.getType(),
-                            from.getNickname() + "님이 보낸 선물",
+                            from.getUuid(),
                             requestDto.getAmount()
-                    )
+                    ), "gift"
             );
 
             return new ResponseEntity(
@@ -244,7 +244,7 @@ public class MemberController {
                         requestDto.getBlackAmount(),
                         requestDto.getRedAmount(),
                         requestDto.getGoldAmount(),
-                        memberRepository.findByUuid(requestDto.getTo()).get().getNickname() + "에게 선물하기",
+                        requestDto.getTo(),
                         "gift"
                 )
         );
@@ -256,7 +256,7 @@ public class MemberController {
                             requestDto.getBlackAmount(),
                             requestDto.getRedAmount(),
                             requestDto.getGoldAmount(),
-                            from.getNickname() + "님이 보낸 선물",
+                            from.getUuid(),
                             "gift"
                     )
             );
@@ -277,6 +277,6 @@ public class MemberController {
         return ticketService.useSingleTickets(
                 requestDto.toJoinGame(
                         memberService.findMemberByAccessToken(request)
-                ));
+                ), "game");
     }
 }

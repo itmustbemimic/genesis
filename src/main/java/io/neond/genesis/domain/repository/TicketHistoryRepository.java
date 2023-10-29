@@ -2,6 +2,7 @@ package io.neond.genesis.domain.repository;
 
 import io.neond.genesis.domain.dto.response.ConsumptionResponseDto;
 import io.neond.genesis.domain.dto.response.TicketHistoryResponseDto;
+import io.neond.genesis.domain.dto.response.TicketHistoryResponseDto2;
 import io.neond.genesis.domain.dto.response.TicketSet;
 import io.neond.genesis.domain.entity.TicketHistory;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,7 +12,8 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface TicketHistoryRepository extends JpaRepository<TicketHistory, Long> {
-    List<TicketHistoryResponseDto> findByUuidOrderByDateDesc(String uuid);
+    //List<TicketHistoryResponseDto> findByUuidOrderByDateDesc(String uuid);
+    List<TicketHistoryResponseDto2> findByUuidOrderByDateDesc(String uuid);
     List<TicketHistoryResponseDto> findByUuidAndFlagOrderByDateDesc(String uuid, String flag);
     List<TicketHistoryResponseDto> findByAmountGreaterThanAndDateContainsAndFlagNotContains(int amount, String date, String summary);
     List<TicketHistoryResponseDto> findByAmountLessThanAndDateBetweenAndFlagNotContainsOrderByDateAsc(int amount, String startDate, String endDate, String summary);

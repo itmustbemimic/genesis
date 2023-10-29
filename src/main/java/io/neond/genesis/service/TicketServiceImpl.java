@@ -4,6 +4,7 @@ import io.neond.genesis.domain.dto.request.MultipleTicketRequestDto;
 import io.neond.genesis.domain.dto.request.SingleTicketRequestDto;
 import io.neond.genesis.domain.dto.response.MyTicketResponseDto;
 import io.neond.genesis.domain.dto.response.TicketHistoryResponseDto;
+import io.neond.genesis.domain.dto.response.TicketHistoryResponseDto2;
 import io.neond.genesis.domain.entity.Member;
 import io.neond.genesis.domain.entity.Ticket;
 import io.neond.genesis.domain.repository.MemberRepository;
@@ -17,6 +18,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -89,7 +91,7 @@ public class TicketServiceImpl implements TicketService{
     }
 
     @Override
-    public MyTicketResponseDto addSingleTickets(SingleTicketRequestDto requestDto) {
+    public MyTicketResponseDto addSingleTickets(SingleTicketRequestDto requestDto, String flag) {
         Member member = memberRepository.findByUuid(requestDto.getUuid()).orElseThrow(() -> new RuntimeException("찾을 수 없는 아이디 "));
         Ticket ticket = member.getTicket();
 
@@ -118,12 +120,12 @@ public class TicketServiceImpl implements TicketService{
             }
         }
 
-        ticketHistoryRepository.save(requestDto.toEntity());
+        ticketHistoryRepository.save(requestDto.toEntity(flag));
         return ticketRepository.save(update).toResponseDto();
     }
 
     @Override
-    public ResponseEntity<String> useSingleTickets(SingleTicketRequestDto requestDto) {
+    public ResponseEntity<String> useSingleTickets(SingleTicketRequestDto requestDto, String flag) {
         Member member = memberRepository.findByUuid(requestDto.getUuid()).orElseThrow();
         Ticket ticket = member.getTicket();
 
@@ -153,13 +155,21 @@ public class TicketServiceImpl implements TicketService{
             }
         }
 
-        addSingleTickets(requestDto.useToAdd());
+        addSingleTickets(requestDto.useToAdd(), flag);
         return new ResponseEntity<>(HttpStatusCode.valueOf(201));
     }
 
     @Override
-    public List<TicketHistoryResponseDto> getMyTicketHistory(Member member) {
-        return ticketHistoryRepository.findByUuidOrderByDateDesc(member.getUuid());
+    public List<TicketHistoryResponseDto2> getMyTicketHistory(Member member) {
+        //List<TicketHistoryResponseDto> response = ticketHistoryRepository.findByUuidOrderByDateDesc(member.getUuid());
+
+        List<TicketHistoryResponseDto2> response = ticketHistoryRepository.findByUuidOrderByDateDesc(member.getUuid());
+        List<TicketHistoryResponseDto2> res = new ArrayList<>();
+        for (TicketHistoryResponseDto2 TH : response) {
+            res.add(TH.renderNickname(memberRepository.findByUuid(TH.getSummary()).get().getNickname()));
+        }
+
+        return res;
     }
 
     @Override

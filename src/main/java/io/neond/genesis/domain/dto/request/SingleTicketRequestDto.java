@@ -26,13 +26,14 @@ public class SingleTicketRequestDto {
     @Schema(example = "2")
     private int amount;
 
-    public TicketHistory toEntity(){
+    public TicketHistory toEntity(String flag){
         return TicketHistory.builder()
                 .uuid(uuid)
                 .type(type)
                 .summary(usage)
                 .amount(amount)
                 .date(Instant.now().toString())
+                .flag(flag)
                 .build();
     }
 
