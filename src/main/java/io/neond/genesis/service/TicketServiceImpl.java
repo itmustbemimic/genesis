@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -166,21 +167,45 @@ public class TicketServiceImpl implements TicketService{
         List<TicketHistoryResponseDto2> response = ticketHistoryRepository.findByUuidOrderByDateDesc(member.getUuid());
         List<TicketHistoryResponseDto2> res = new ArrayList<>();
         for (TicketHistoryResponseDto2 TH : response) {
-            res.add(TH.renderNickname(memberRepository.findByUuid(TH.getSummary()).get().getNickname()));
+            res.add(TH.renderNickname(memberRepository.findByUuid(TH.getSummary())
+                    .orElseThrow(() -> new UsernameNotFoundException("찾을 수 없는 유저"))
+                    .getNickname()));
         }
 
         return res;
     }
 
     @Override
-    public List<TicketHistoryResponseDto> getMyUseTicketHistory(Member member) {
-        return ticketHistoryRepository.findByUuidAndFlagOrderByDateDesc(member.getUuid(), "game");
+    public List<TicketHistoryResponseDto2> getMyUseTicketHistory(Member member) {
+        //return ticketHistoryRepository.findByUuidAndFlagOrderByDateDesc(member.getUuid(), "game");
+        List<TicketHistoryResponseDto2> response = ticketHistoryRepository.findByUuidAndAmountLessThan(member.getUuid(), 0);
+
+        List<TicketHistoryResponseDto2> res = new ArrayList<>();
+        for (TicketHistoryResponseDto2 TH : response) {
+            res.add(TH.renderNickname(memberRepository.findByUuid(TH.getSummary())
+                    .orElseThrow(() -> new UsernameNotFoundException("찾을 수 없는 유저"))
+                    .getNickname()));
+        }
+
+        return res;
         //TODO flag 바꾸기
+
     }
 
     @Override
-    public List<TicketHistoryResponseDto> getMyAddTicketHistory(Member member) {
-        return ticketHistoryRepository.findByUuidAndFlagOrderByDateDesc(member.getUuid(), "charge");
+    public List<TicketHistoryResponseDto2> getMyAddTicketHistory(Member member) {
+        //return ticketHistoryRepository.findByUuidAndFlagOrderByDateDesc(member.getUuid(), "charge");
+        List<TicketHistoryResponseDto2> response = ticketHistoryRepository.findByUuidAndAmountGreaterThan(member.getUuid(), 0);
+
+        List<TicketHistoryResponseDto2> res = new ArrayList<>();
+        for (TicketHistoryResponseDto2 TH : response) {
+            res.add(TH.renderNickname(memberRepository.findByUuid(TH.getSummary())
+                    .orElseThrow(() -> new UsernameNotFoundException("찾을 수 없는 유저"))
+                    .getNickname()));
+        }
+
+        return res;
         //TODO flag 바꾸기
+
     }
 }

@@ -4,6 +4,7 @@ import io.neond.genesis.domain.repository.MemberRepository;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 
 @Getter

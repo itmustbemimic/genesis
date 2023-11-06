@@ -17,6 +17,6 @@ public interface TicketService {
     MyTicketResponseDto addSingleTickets(SingleTicketRequestDto requestDto, String flag);
     ResponseEntity useSingleTickets(SingleTicketRequestDto requestDto, String flag);
     List<TicketHistoryResponseDto2> getMyTicketHistory(Member member);
-    List<TicketHistoryResponseDto> getMyUseTicketHistory(Member member);
-    List<TicketHistoryResponseDto> getMyAddTicketHistory(Member member);
+    List<TicketHistoryResponseDto2> getMyUseTicketHistory(Member member);
+    List<TicketHistoryResponseDto2> getMyAddTicketHistory(Member member);
 }

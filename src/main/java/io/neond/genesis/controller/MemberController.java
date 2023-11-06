@@ -186,7 +186,7 @@ public class MemberController {
 
     @Operation(summary = "사용 내역 전체 검색")
     @GetMapping("/ticket/history/use")
-    public List<TicketHistoryResponseDto> getMyUseTicketHistory(HttpServletRequest request){
+    public List<TicketHistoryResponseDto2> getMyUseTicketHistory(HttpServletRequest request){
         return ticketService.getMyUseTicketHistory(
                 memberService.findMemberByAccessToken(request)
         );
@@ -195,7 +195,7 @@ public class MemberController {
 
     @Operation(summary = "충전 내역 전체 검색")
     @GetMapping("/ticket/history/add")
-    public List<TicketHistoryResponseDto> getMyAddTicketHistory(HttpServletRequest request){
+    public List<TicketHistoryResponseDto2> getMyAddTicketHistory(HttpServletRequest request){
         return ticketService.getMyAddTicketHistory(
                 memberService.findMemberByAccessToken(request)
         );

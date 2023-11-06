@@ -51,11 +51,11 @@ public class RoleServiceImpl implements RoleService{
                 .setNotification(notification)
                 .build();
 
-        try {
-            firebaseMessaging.send(message);
-        } catch (FirebaseMessagingException e) {
-            throw new RuntimeException(e);
-        }
+//        try {
+//            firebaseMessaging.send(message);
+//        } catch (FirebaseMessagingException e) {
+//            throw new RuntimeException(e);
+//        }
 
         return member.getMemberId();
     }

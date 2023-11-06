@@ -4,10 +4,7 @@ import io.neond.genesis.domain.dto.request.BestHandRequestDto;
 import io.neond.genesis.domain.dto.request.RoleToMemberRequestDto;
 import io.neond.genesis.domain.dto.request.MultipleTicketRequestDto;
 import io.neond.genesis.domain.dto.request.SingleTicketRequestDto;
-import io.neond.genesis.domain.dto.response.BestHandResponseDto;
-import io.neond.genesis.domain.dto.response.MyTicketResponseDto;
-import io.neond.genesis.domain.dto.response.FullMemberDto;
-import io.neond.genesis.domain.dto.response.TicketHistoryResponseDto;
+import io.neond.genesis.domain.dto.response.*;
 import io.neond.genesis.domain.entity.Bingo;
 import io.neond.genesis.domain.repository.TicketHistoryRepository;
 import io.neond.genesis.service.*;
@@ -133,13 +130,13 @@ public class AdminController {
 
     @Operation(summary = "유저 충전내역 파라미터에 uuid")
     @GetMapping("/ticket/history/charge")
-    public List<TicketHistoryResponseDto> getUserChargeHistory(@RequestParam String uuid) {
+    public List<TicketHistoryResponseDto2> getUserChargeHistory(@RequestParam String uuid) {
         return adminService.getUserChargeHistory(uuid);
     }
 
     @Operation(summary = "유저 소모내역 조회. 파라미터에 uuid")
     @GetMapping("/ticket/history/use")
-    public List<TicketHistoryResponseDto> getUserUseHistory(@RequestParam String uuid) {
+    public List<TicketHistoryResponseDto2> getUserUseHistory(@RequestParam String uuid) {
         return adminService.getUserUseHistory(uuid);
     }
 

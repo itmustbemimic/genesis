@@ -14,10 +14,15 @@ import java.util.List;
 public interface TicketHistoryRepository extends JpaRepository<TicketHistory, Long> {
     //List<TicketHistoryResponseDto> findByUuidOrderByDateDesc(String uuid);
     List<TicketHistoryResponseDto2> findByUuidOrderByDateDesc(String uuid);
-    List<TicketHistoryResponseDto> findByUuidAndFlagOrderByDateDesc(String uuid, String flag);
+    //List<TicketHistoryResponseDto> findByUuidAndFlagOrderByDateDesc(String uuid, String flag);
+    List<TicketHistoryResponseDto2> findByUuidAndFlagOrderByDateDesc(String uuid, String flag);
     List<TicketHistoryResponseDto> findByAmountGreaterThanAndDateContainsAndFlagNotContains(int amount, String date, String summary);
     List<TicketHistoryResponseDto> findByAmountLessThanAndDateBetweenAndFlagNotContainsOrderByDateAsc(int amount, String startDate, String endDate, String summary);
     List<TicketHistoryResponseDto> findByDateBetweenAndFlagNotContainsOrderByDateAsc(String startDate, String endDate, String flag);
+
+
+    List<TicketHistoryResponseDto2> findByUuidAndAmountLessThan(String uuid, int amount);
+    List<TicketHistoryResponseDto2> findByUuidAndAmountGreaterThan(String uuid, int amount);
 
     @Query(value =
             "SELECT type, SUM(amount) as amount " +
