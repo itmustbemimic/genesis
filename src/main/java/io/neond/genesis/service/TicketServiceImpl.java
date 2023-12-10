@@ -176,6 +176,58 @@ public class TicketServiceImpl implements TicketService{
     }
 
     @Override
+    public List<TicketHistoryResponseDto2> getMyTicketHistoryByDate(Member member, String s_date, String e_date) {
+        return null;
+    }
+
+    @Override
+    public List<TicketHistoryResponseDto2> getMyTicketHistoryByType(Member member, String type) {
+
+        return null;
+    }
+
+    @Override
+    public List<TicketHistoryResponseDto2> getMyTicketHistoryByDateAndType(Member member, String s_date, String e_date, String type) {
+        if (s_date == null) s_date= "2020-01-01";
+        if (e_date == null) e_date = "9999-12-31";
+
+        List<TicketHistoryResponseDto2> response = new ArrayList<>();
+
+        if (type == null) {
+            log.info("1");
+            log.info(s_date);
+            log.info(e_date);
+            response =
+                    ticketHistoryRepository.findByUuidAndDateBetweenOrderByDateAsc(
+                            member.getUuid(),
+                            s_date,
+                            e_date
+                    );
+
+
+        } else {
+            log.info("2");
+            response =
+                    ticketHistoryRepository.findByUuidAndDateBetweenAndTypeOrderByDateAsc(
+                            member.getUuid(),
+                            s_date,
+                            e_date,
+                            type
+                    );
+        }
+
+
+        List<TicketHistoryResponseDto2> res = new ArrayList<>();
+        for (TicketHistoryResponseDto2 TH : response) {
+            res.add(TH.renderNickname(memberRepository.findByUuid(TH.getSummary())
+                    .orElseThrow(() -> new UsernameNotFoundException("찾을 수 없는 유저"))
+                    .getNickname()));
+        }
+
+        return res;
+    }
+
+    @Override
     public List<TicketHistoryResponseDto2> getMyUseTicketHistory(Member member) {
         //return ticketHistoryRepository.findByUuidAndFlagOrderByDateDesc(member.getUuid(), "game");
         List<TicketHistoryResponseDto2> response = ticketHistoryRepository.findByUuidAndAmountLessThan(member.getUuid(), 0);

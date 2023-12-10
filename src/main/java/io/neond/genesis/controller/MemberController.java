@@ -16,6 +16,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +28,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/member")
@@ -178,9 +180,22 @@ public class MemberController {
 
     @Operation(summary = "내 티켓 내역 전체 검색")
     @GetMapping("/ticket/history")
-    public List<TicketHistoryResponseDto2> getMyTicketHitory(HttpServletRequest request){
-        return ticketService.getMyTicketHistory(
-                memberService.findMemberByAccessToken(request)
+    public List<TicketHistoryResponseDto2> getMyTicketHistory(
+            HttpServletRequest request,
+            @RequestParam @Nullable String s_date,
+            @RequestParam @Nullable String e_date,
+            @RequestParam @Nullable String ticket_type){
+
+        log.info(s_date);
+        log.info(e_date);
+        log.info(ticket_type);
+
+
+        return ticketService.getMyTicketHistoryByDateAndType(
+                memberService.findMemberByAccessToken(request),
+                s_date,
+                e_date,
+                ticket_type
         );
     }
 

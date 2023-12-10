@@ -23,6 +23,8 @@ public interface TicketHistoryRepository extends JpaRepository<TicketHistory, Lo
 
     List<TicketHistoryResponseDto2> findByUuidAndAmountLessThan(String uuid, int amount);
     List<TicketHistoryResponseDto2> findByUuidAndAmountGreaterThan(String uuid, int amount);
+    List<TicketHistoryResponseDto2> findByUuidAndDateBetweenOrderByDateAsc(String uuid, String s_date, String e_date);
+    List<TicketHistoryResponseDto2> findByUuidAndDateBetweenAndTypeOrderByDateAsc(String uuid, String s_date, String e_date, String type);
 
     @Query(value =
             "SELECT type, SUM(amount) as amount " +
